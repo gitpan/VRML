@@ -26,7 +26,7 @@ use VRML::Color;
 use vars qw(@ISA $VERSION %supported);
 @ISA = qw(VRML::VRML2::Standard);
 
-$VERSION="1.04de";
+$VERSION="1.04";
 %supported = ('quote' => "Live3D|WorldView|Cosmo Player|CosmoPlayer",
  'gzip'   => "Live3D|WorldView|Cosmo Player|CosmoPlayer|libcosmoplayer|VRweb|GLview",
  'target' => "Live3D|WorldView|Cosmo Player|CosmoPlayer|libcosmoplayer|MSVRML2OCX"
@@ -930,7 +930,7 @@ __END__
 
 =head1 NAME
 
-VRML::VRML2.pm - VRML Methoden für den VRML 2.0/VRML97 Standard
+VRML::VRML2 - VRML methods with the VRML 2.0/97 standard
 
 =head1 SYNOPSIS
 
@@ -944,7 +944,7 @@ VRML::VRML2.pm - VRML Methoden für den VRML 2.0/VRML97 Standard
   $vrml->print;
   $vrml->save;
 
-  ODER mit dem gleichen Ergebnis
+  OR with the same result
 
   use VRML::VRML2;
 
@@ -955,23 +955,19 @@ VRML::VRML2.pm - VRML Methoden für den VRML 2.0/VRML97 Standard
 
 =head1 DESCRIPTION
 
-Die Beschreibung der implementierten VRML-Methoden befindet sich in dem Modul
-VRML, die der Basis-Methoden im Modul VRML::Base.
+The methods are identically implemented in VRML::VRML1 and VRML::VRML2. They
+described in modul VRML.
 
 =head1 SEE ALSO
 
 VRML
 
-VRML::VRML2::Standard
-
 VRML::Base
 
-Siehe auch http://www.gfz-potsdam.de/~palm/vrmlperl/ für weitere
-Informationen zu den F<VRML-Modulen> und wie man sie einsetzen kann.
+VRML::Color
 
-=head1 BUGS
-
-Nicht alle Methoden wurden ausgiebig getestet.
+http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of
+F<VRML-modules> and how to obtain it.
 
 =head1 AUTHOR
 

@@ -23,7 +23,7 @@ require 5.000;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = "1.03de";
+$VERSION = "1.03";
 $::pi = 3.1415926;
 $::pi_2 = $::pi/2;
 $::pi_2 += 0; # prevent warnings
@@ -306,10 +306,9 @@ sub bboxSize {
 
 __END__
 
-
 =head1 NAME
 
-VRML::Base.pm - Basis-Methoden für die VRML 1 und 2 Module
+VRML::Base.pm - common basic methods for VRML in/output
 
 =head1 SYNOPSIS
 
@@ -317,278 +316,130 @@ VRML::Base.pm - Basis-Methoden für die VRML 1 und 2 Module
 
 =head1 DESCRIPTION
 
-Folgende Methoden stehen zur Verfügung.
+Following methods are implemented.
 
 =over 4
 
 =item new
 
-F<new>
+C<new>
 
-erzeugt ein neues VRML-Szenen-Objekt. Diese Methode muß vor der Verwendung
-einer weiteren Methode aufgerufen werden.
-
-=item browser
-
-F<browser("vrml", "html")>
-
- vrml SFString ""
- html SFString ""
-
-
-Die Implementierung der VRML-Spezifikationen in den Browsern und Plug-ins ist
-je nach Entwicklungsstand und Hersteller unterschiedlich. Um einige
-allgemeine Besonderheiten berücksichtigen zu können und Anzeigefehler zu
-verhindern, sollte deshalb der F<browser>-Methode der Name des VRML- und
-HTML-Browsers mitgegeben werden. I<Leere Parameter> oder das Weglassen der
-Methode bewirken die Verwendung des I<kleinsten vertretbaren
-Implementationsstandes> aller unterstützten VRML-Browser.
-
-Beispiele für VRML-Browser:
-
-    Cosmo Player 1.0
-    Cosmo Player 2.0
-    Cosmo Player 2.1
-    libcosmoplayer.so
-    GLview
-    Live3D 1.0
-    Live3D 2.0
-    VRweb
-    WorldView 2.0 Plugin
-
-Gebräuchliche HTML-Browser:
-
-    Mozilla (Netscape)
-    Mosaic
-    MSIE (Microsoft Internet Explorer)
-
-Prinzipiell ist es auch möglich über das API eines VRML-2.0-Browsers, den
-Namen und die Version zu ermitteln. Dieses Verfahren besitzt jedoch einen
-entscheidenden Nachteil: Bevor über das API die Informationen abgefragt
-werden können, muß die Szenenquelle bereits erstellt und erfolgreich geladen
-worden sein. Dann ist es aber für syntaktische Änderungen bereits zu spät.
-
-Ein Beispiel für das unterschiedliche Verhalten der VRML-Browser ist die
-Interpretation eines escapten doppelten Anführungszeichens innerhalb einer
-Zeichenkette. Während einige Browser es, wie in der Spezifikation
-beschrieben, darstellen können, beenden andere Browser die Zeichenkette
-vorzeitig und erzeugen somit weitere Syntaxfehler. Ein weiteres Problem ist
-die unterstützte Sprache im Script-Knoten. Hier muß bei einigen Browsern
-'vrmlscript' angegeben werden.
-
-Beispiel:
-
-    $vrml->browser("Cosmo Player 2.0","Mozilla");
+Creates a new VRML scene object.
 
 =item comment
 
-F<comment('string')>
+C<comment('string')>
 
- string MFString []
-
-fügt an der aktuellen Szenenposition einen Kommentar ein. Jeder Zeichenkette
-aus dem Parameter I<string> wird ein Doppelkreuz vorangestellt und ein
-Zeilenvorschub angefügt.
+Inserts a single comment line at the current position.
+You don't need to write the # in front. If no string is given, the method
+inserts only a #.
 
 =item insert
 
-F<insert('string')>
+C<insert('string')>
 
- string SFString ""
-
-fügt vorhandenen VRML-Code in die Szene ein. Dieser kann als skalare Variable
-oder als konstante Zeichenkette dem Parameter I<string> übergeben werden.
-
-Beispiel:
-
-    $vrml
-    ->begin
-      ->insert("Shape { geometry Box {} }")
-    ->end
-    ->print;
-
-Befinden sich im vorhandenen VRML-Code doppelte Anführungszeichen, so sollte
-die Perl-Funktion qq verwendet werden, um den Code unverändert übernehmen zu
-können. Alternativ dazu besteht die Möglichkeit, die Anführungszeichen durch
-einen Backslash zu maskieren (\" ).
-
-    $vrml
-    ->begin
-      ->insert(qq(WorldInfo { title "Meine Welt" } ))
-    ->end
-    ->print;
-
-
-Der Szenenaufbau kann schnell unübersichtlich werden, wenn der VRML-Code
-einige Zeilen überschreitet. Für das Einfügen größerer Programmteile ist die
-Methode C<insert__DATA__> besser geeignet.
-
+Inserts the string at the current position in the VRML scene.
 
 =item insert__DATA__
 
-F<insert__DATA__()>
+C<insert__DATA__()>
 
-macht sich die Perl-Syntax zu nutze, in der alle folgenden Zeilen nach der
-Zeichenkette __DATA__ als Daten behandelt werden. Diese liest die Methode
-F<insert__DATA__> ein und fügt sie an der betreffenden Stelle in die Szene
-ein. Beachte die führenden und abschließenden ZWEI Unterstriche.
-
-Beispiel:
-
-    use VRML;
-    new VRML(2)
-    ->begin
-      ->insert__DATA__
-    ->end
-    ->print;
-
-    __DATA__
-    Shape {
-      geometry Sphere {}
-      appearance Appearance {
-	material Material {
-	  diffuseColor 0 0.5 0
-	}
-      }
-    }
-
-B<Hinweis:> Der __DATA__-Abschnitt in Perl-Skripten wird derzeit nicht von
-C<modperl> auf dem Apache-Server unterstützt. D.h. F<insert__DATA__>
-funktioniert dort nicht wie erwartet.
+Inserts the text block after __DATA__ of the current perl script
+in the VRML scene. Remember there are two underscores in front and
+at the end of the word DATA.
 
 =item include
 
-F<include('files')>
+C<include('filename')>
 
- files MFString []
-
-fügt vorhandene VRML-Dateien in die aktuelle Szene ein. Der Parameter
-I<files> kann eine Liste von Dateinamen enthalten, die der Reihenfolge nach
-eingebunden werden.
-
-Beispiel:
-
-    $vrml->include("c:/vrml/cubes.wrl");
+Inserts the VRML code of the specified file in the current scene.
 
 =item print
 
-F<print('mime', 'pipe')>
+C<print('mime', 'pipe')>
 
- mime SFBool   0
- pipe SFString ""
+Prints the VRML scene to STDOUT. If I<mime> (bool) is given, this method
+prints the scene to STDOUT with the Content-type of the current scene. If
+I<pipe> is given, then first the stream is send to the pipe and after that to
+STDOUT. This is usefull to compress the VRML code with GNU-ZIP.
 
-übergibt den Inhalt des Szenenobjekts an STDOUT. Das bedeutet im Normalfall,
-daß die VRML-Quelle auf dem Bildschirm erscheint. Wird das Skript von einem
-WWW-Server über CGI gestartet, so benötigt der Client (Browser) einen
-MIME-Typ, um die korrekte Wiedergabeart zu ermitteln. Der MIME-Typ muß im
-Header vor der eigentlichen Szene gesendet werden. Über den Parameter I<mime>
-kann diese Option aktiviert werden.
+Example:
 
-Um die Übertragungs- bzw. Ladezeiten virtueller Welten zu verkürzen, besteht
-die Möglichkeit, VRML-Quellen zu komprimieren. Zu diesem Zweck wird ein
-Programm benötigt, welches das GNU-ZIP-Verfahren realisiert. Über den
-Parameter pipe müssen der Pfad, Name und die Programmparameter der
-ausführbaren Datei spezifiziert werden. Befindet sich die Datei im aktuellen
-Pfad, genügt nur der Name und die Parameter (meistens C<gzip -f>). Der
-Parameter I<pipe> ist jedoch nicht nur auf das Komprimieren der VRML-Skripte
-beschränkt. Prinzipiell kann hier jeder Filter angewendet werden.
+1.  I<$vrml-E<gt>print>
 
-Beispiel 1:
-
-    $vrml->print;
-
-
-Beispiel 2 (UNIX gzip):
-
-    $vrml->print(1,"/usr/local/bin/gzip -f");
-
-
-Beispiel 3 (MS-DOS gzip.exe):
-
-    $vrml->print(1,"c:\\Perl\\bin\\gzip.exe -f");
-
-
-oder für alle Plattformen, wenn sich das Programm C<gzip> im Suchpfad
-befindet:
-
-    $vrml->print(1,"gzip -f");
+2.  I<$vrml-E<gt>print(1, 'gzip -f9')>
 
 
 =item save
 
-F<save('filename', 'pipe')>
+C<save('filename', 'pipe')>
 
- filename SFString ""
- pipe     SFString ""
+Saves the VRML code to the specified name in I<filename>. If no filename is
+given, this method uses the name of the perl script and changes the extension
+against C<.wrl>. If I<pipe> is given, then first the stream is send to the pipe
+and after that to STDOUT. This is usefull to compress the VRML code with
+GNU-ZIP.
 
-speichert den Inhalt des Szenenobjekts in einer Datei. Wird kein Dateiname
-angegeben, so wird die Erweiterung des gerade abgearbeiteten Skripts (z. B.
-.pl) gegen die Erweiterung '.wrl' ausgetauscht. Um bei großen Welten
-Speicherplatz zu sparen, besteht auch hier die Möglichkeit, die VRML-Datei zu
-komprimieren. Zu diesem Zweck wird ein Programm benötigt, das ein beliebiges
-Pack-Verfahren realisiert. Besonders gut eignet sich dafür das
-GNU-ZIP-Verfahren, da es vom VRML-Browser selbst entpackt werden kann. Über
-den Parameter I<pipe> muß der Name und Pfad der ausführbaren Datei
-spezifiziert werden. Die Funktionsweise von I<pipe> ist analog der in der
-Methodenbeschreibung von C<print>.
+Example:
 
-Beispiel 1:
+1.  I<$vrml-E<gt>save>
 
-    $vrml->save;
+2.  I<$vrml-E<gt>save(undef, 'gzip -f9')>
 
-
-Beispiel 2:
-
-    $vrml->save("world.wrl");
-
-
-Beispiel 3:
-
-    $vrml->save(undef,"gzip");
+3.  I<$vrml-E<gt>save('myScene.wrl')>
 
 
 =item as_string
 
-F<as_string()>
+C<as_string>
 
-gibt die komplette VRML-Quelle als Zeichenkette zurück. Sie wird jedoch nur
-in seltenen Fällen benötigt und ist die einzige Methode, welche nicht eine
-Referenz auf das Szenenobjekt zurückliefert. Für die Ausgabe oder Speicherung
-einer VRML-Quelle sollten im allgemeinen die Methoden C<print> oder C<save>
-benutzt werden. Diese Methoden sind wesentlich effizienter und schonen die
-Ressourcen des Rechners.
-
-    $vrml
-    ->begin
-      ->box("1 2 1")
-    ->end;
-    $scene = $vrml->as_string;
-
-
+Returns the VRML scene as string. Possible it uses too much memory to
+build the string.
 
 =back
 
-Folgende Methoden sollten nicht verwendet werden. Sie sind normalerweise
-nicht notwendig. Besteht dennoch Bedarf, so sende mir bitte eine E-Mail und
-ich werde sie in den nächsten Versionen beschreiben.
+=head1 Internals
+
+You don't need the following 'native' methods.
+If yet, tell it me and I'll describe it in the next version.
 
 =over 4
 
 =item debug
 
+C<debug>
+
 =item _init
+
+C<_init('VRML')>
 
 =item _add
 
+C<_add>
+
 =item _trim
+
+C<_trim>
 
 =item _swap
 
+C<_swap>
+
 =item _put
+
+C<_put>
 
 =item _row
 
+C<_row>
+
 =item _pos
+
+C<_pos>
+
+=item _format
+
+C<_format>
 
 =back
 

@@ -1,6 +1,6 @@
     <HTML> 
 	<HEAD> 
-	    <TITLE>Color.pm - Farben und Konvertierungsfunktionen
+	    <TITLE>Color.pm - color functions and X11 color names
 
 </TITLE> 
 	</HEAD>
@@ -25,7 +25,7 @@
 <H1><A NAME="NAME">NAME
 
 </A></H1>
-Color.pm - Farben und Konvertierungsfunktionen
+Color.pm - color functions and X11 color names
 
 
 <P>
@@ -45,7 +45,7 @@ Color.pm - Farben und Konvertierungsfunktionen
 
 <P>
 
-<PRE>      ODER mit dem gleichen Ergebnis
+<PRE>      or with the same result
 </PRE>
 
 <P>
@@ -55,7 +55,7 @@ Color.pm - Farben und Konvertierungsfunktionen
 
 <P>
 
-<PRE>      ODER mit dem gleichen Ergebnis
+<PRE>      or with the same result
 </PRE>
 
 <P>
@@ -65,7 +65,7 @@ Color.pm - Farben und Konvertierungsfunktionen
 
 <P>
 
-<PRE>      Natürlich geht auch
+<PRE>      naturally works
 </PRE>
 
 <P>
@@ -80,7 +80,7 @@ Color.pm - Farben und Konvertierungsfunktionen
 <H1><A NAME="DESCRIPTION">DESCRIPTION
 
 </A></H1>
-<EM>X11 Farbnamen:</EM>
+<EM>X11 colornames are:</EM>
 
 
 
@@ -231,8 +231,7 @@ Color.pm - Farben und Konvertierungsfunktionen
 
 <P>
 
-Es können auch prozentuale Anteile einer Farbe angeben werden (Trennzeichen
-_ oder %).
+You can also use
 
 
 <P>
@@ -249,9 +248,8 @@ _ oder %).
 <H1><A NAME="BUGS">BUGS
 
 </A></H1>
-Grün wird in X11 durch den Wert 0x008000 dargestellt. Für VRML ist jedoch
-0x00FF00 besser geeignet. Deshalb wird in diesem Modul für 'green' der Wert
-'0 1 0' generiert anstatt '0 0.5 0'.
+X11-green is 0x008000. In VRML it should be 0x00FF00. This module will set
+'green' to '0 1 0' instead of '0 0.5 0'.
 
 
 <P>
@@ -261,9 +259,9 @@ Grün wird in X11 durch den Wert 0x008000 dargestellt. Für VRML ist jedoch
 <H1><A NAME="SEE_ALSO">SEE ALSO
 
 </A></H1>
-Siehe auch <A
+<A
 HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
-für eine detailierte Beschreibung der <EM>VRML-Module</EM> und wie man sie einsetzen kann.
+for a description of <EM>VRML-modules</EM> and how to obtain it.
 
 
 <P>

@@ -1,6 +1,6 @@
     <HTML> 
 	<HEAD> 
-	    <TITLE>VRML::Base.pm - Basis-Methoden für die VRML 1 und 2 Module
+	    <TITLE>VRML::Base.pm - common basic methods for VRML in/output
 
 </TITLE> 
 	</HEAD>
@@ -14,6 +14,7 @@
 	<LI><A HREF="#NAME">NAME</A>
 	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
 	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
+	<LI><A HREF="#Internals">Internals</A>
 	<LI><A HREF="#AUTHOR">AUTHOR</A>
 </UL>
 <!-- INDEX END -->
@@ -23,7 +24,7 @@
 <H1><A NAME="NAME">NAME
 
 </A></H1>
-VRML::Base.pm - Basis-Methoden für die VRML 1 und 2 Module
+VRML::Base.pm - common basic methods for VRML in/output
 
 
 <P>
@@ -43,7 +44,7 @@ VRML::Base.pm - Basis-Methoden für die VRML 1 und 2 Module
 <H1><A NAME="DESCRIPTION">DESCRIPTION
 
 </A></H1>
-Folgende Methoden stehen zur Verfügung.
+Following methods are implemented.
 
 
 <P>
@@ -52,122 +53,30 @@ Folgende Methoden stehen zur Verfügung.
 <DT><STRONG><A NAME="item_new">new
 
 </A></STRONG><DD>
-<EM>new</EM>
+<A HREF="#item_new">new</A>
 
 
 
 
 <P>
 
-erzeugt ein neues VRML-Szenen-Objekt. Diese Methode muß vor der Verwendung
-einer weiteren Methode aufgerufen werden.
+Creates a new VRML scene object.
 
-
-<P>
-
-<DT><STRONG><A NAME="item_browser">browser
-
-</A></STRONG><DD>
-<EM>browser("vrml", "html")</EM>
-
-
-
-
-<P>
-
-<PRE> vrml SFString &quot;&quot;
- html SFString &quot;&quot;
-</PRE>
-
-<P>
-
-Die Implementierung der VRML-Spezifikationen in den Browsern und Plug-ins
-ist je nach Entwicklungsstand und Hersteller unterschiedlich. Um einige
-allgemeine Besonderheiten berücksichtigen zu können und Anzeigefehler zu
-verhindern, sollte deshalb der <EM>browser</EM>-Methode der Name des VRML- und HTML-Browsers mitgegeben werden. <EM>Leere Parameter</EM> oder das Weglassen der Methode bewirken die Verwendung des <EM>kleinsten vertretbaren
-Implementationsstandes</EM> aller unterstützten VRML-Browser.
-
-
-<P>
-
-Beispiele für VRML-Browser:
-
-
-<P>
-
-<PRE>    Cosmo Player 1.0
-    Cosmo Player 2.0
-    Cosmo Player 2.1
-    libcosmoplayer.so
-    GLview
-    Live3D 1.0
-    Live3D 2.0
-    VRweb
-    WorldView 2.0 Plugin
-</PRE>
-
-<P>
-
-Gebräuchliche HTML-Browser:
-
-
-<P>
-
-<PRE>    Mozilla (Netscape)
-    Mosaic
-    MSIE (Microsoft Internet Explorer)
-</PRE>
-
-<P>
-
-Prinzipiell ist es auch möglich über das API eines VRML-2.0-Browsers, den
-Namen und die Version zu ermitteln. Dieses Verfahren besitzt jedoch einen
-entscheidenden Nachteil: Bevor über das API die Informationen abgefragt
-werden können, muß die Szenenquelle bereits erstellt und erfolgreich
-geladen worden sein. Dann ist es aber für syntaktische Änderungen bereits
-zu spät.
-
-
-<P>
-
-Ein Beispiel für das unterschiedliche Verhalten der VRML-Browser ist die
-Interpretation eines escapten doppelten Anführungszeichens innerhalb einer
-Zeichenkette. Während einige Browser es, wie in der Spezifikation
-beschrieben, darstellen können, beenden andere Browser die Zeichenkette
-vorzeitig und erzeugen somit weitere Syntaxfehler. Ein weiteres Problem ist
-die unterstützte Sprache im Script-Knoten. Hier muß bei einigen Browsern
-'vrmlscript' angegeben werden.
-
-
-<P>
-
-Beispiel:
-
-
-<P>
-
-<PRE>    $vrml-&gt;browser(&quot;Cosmo Player 2.0&quot;,&quot;Mozilla&quot;);
-</PRE>
 
 <P>
 
 <DT><STRONG><A NAME="item_comment">comment
 
 </A></STRONG><DD>
-<EM>comment('string')</EM>
+<A HREF="#item_comment">comment('string')</A>
 
 
 
 
 <P>
 
-<PRE> string MFString []
-</PRE>
-
-<P>
-
-fügt an der aktuellen Szenenposition einen Kommentar ein. Jeder
-Zeichenkette aus dem Parameter <EM>string</EM> wird ein Doppelkreuz vorangestellt und ein Zeilenvorschub angefügt.
+Inserts a single comment line at the current position. You don't need to
+write the # in front. If no string is given, the method inserts only a #.
 
 
 <P>
@@ -175,58 +84,14 @@ Zeichenkette aus dem Parameter <EM>string</EM> wird ein Doppelkreuz vorangestell
 <DT><STRONG><A NAME="item_insert">insert
 
 </A></STRONG><DD>
-<EM>insert('string')</EM>
+<A HREF="#item_insert">insert('string')</A>
 
 
 
 
 <P>
 
-<PRE> string SFString &quot;&quot;
-</PRE>
-
-<P>
-
-fügt vorhandenen VRML-Code in die Szene ein. Dieser kann als skalare
-Variable oder als konstante Zeichenkette dem Parameter <EM>string</EM> übergeben werden.
-
-
-<P>
-
-Beispiel:
-
-
-<P>
-
-<PRE>    $vrml
-    -&gt;begin
-      -&gt;insert(&quot;Shape { geometry Box {} }&quot;)
-    -&gt;end
-    -&gt;print;
-</PRE>
-
-<P>
-
-Befinden sich im vorhandenen VRML-Code doppelte Anführungszeichen, so
-sollte die Perl-Funktion qq verwendet werden, um den Code unverändert
-übernehmen zu können. Alternativ dazu besteht die Möglichkeit, die
-Anführungszeichen durch einen Backslash zu maskieren (\`` ).
-
-
-<P>
-
-<PRE>    $vrml
-    -&gt;begin
-      -&gt;insert(qq(WorldInfo { title &quot;Meine Welt&quot; } ))
-    -&gt;end
-    -&gt;print;
-</PRE>
-
-<P>
-
-Der Szenenaufbau kann schnell unübersichtlich werden, wenn der VRML-Code
-einige Zeilen überschreitet. Für das Einfügen größerer Programmteile ist
-die Methode <A HREF="#item_insert_DATA_">insert__DATA__</A> besser geeignet.
+Inserts the string at the current position in the VRML scene.
 
 
 <P>
@@ -234,52 +99,16 @@ die Methode <A HREF="#item_insert_DATA_">insert__DATA__</A> besser geeignet.
 <DT><STRONG><A NAME="item_insert_DATA_">insert__DATA__
 
 </A></STRONG><DD>
-<EM>insert__DATA__()</EM>
+<A HREF="#item_insert_DATA_">insert__DATA__()</A>
 
 
 
 
 <P>
 
-macht sich die Perl-Syntax zu nutze, in der alle folgenden Zeilen nach der
-Zeichenkette __DATA__ als Daten behandelt werden. Diese liest die Methode
-<EM>insert__DATA__</EM> ein und fügt sie an der betreffenden Stelle in die Szene ein. Beachte die
-führenden und abschließenden ZWEI Unterstriche.
-
-
-<P>
-
-Beispiel:
-
-
-<P>
-
-<PRE>    use VRML;
-    new VRML(2)
-    -&gt;begin
-      -&gt;insert__DATA__
-    -&gt;end
-    -&gt;print;
-</PRE>
-
-<P>
-
-<PRE>    __DATA__
-    Shape {
-      geometry Sphere {}
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-    }
-</PRE>
-
-<P>
-
-<STRONG>Hinweis:</STRONG> Der __DATA__-Abschnitt in Perl-Skripten wird derzeit nicht von
-<CODE>modperl</CODE> auf dem Apache-Server unterstützt. D.h. <EM>insert__DATA__</EM>
-funktioniert dort nicht wie erwartet.
+Inserts the text block after __DATA__ of the current perl script in the
+VRML scene. Remember there are two underscores in front and at the end of
+the word DATA.
 
 
 <P>
@@ -287,205 +116,122 @@ funktioniert dort nicht wie erwartet.
 <DT><STRONG><A NAME="item_include">include
 
 </A></STRONG><DD>
-<EM>include('files')</EM>
+<A HREF="#item_include">include('filename')</A>
 
 
 
 
 <P>
 
-<PRE> files MFString []
-</PRE>
+Inserts the VRML code of the specified file in the current scene.
 
-<P>
-
-fügt vorhandene VRML-Dateien in die aktuelle Szene ein. Der Parameter
-<EM>files</EM> kann eine Liste von Dateinamen enthalten, die der Reihenfolge nach
-eingebunden werden.
-
-
-<P>
-
-Beispiel:
-
-
-<P>
-
-<PRE>    $vrml-&gt;include(&quot;c:/vrml/cubes.wrl&quot;);
-</PRE>
 
 <P>
 
 <DT><STRONG><A NAME="item_print">print
 
 </A></STRONG><DD>
-<EM>print('mime', 'pipe')</EM>
+<A HREF="#item_print">print('mime', 'pipe')</A>
 
 
 
 
 <P>
 
-<PRE> mime SFBool   0
- pipe SFString &quot;&quot;
-</PRE>
-
-<P>
-
-übergibt den Inhalt des Szenenobjekts an STDOUT. Das bedeutet im
-Normalfall, daß die VRML-Quelle auf dem Bildschirm erscheint. Wird das
-Skript von einem WWW-Server über CGI gestartet, so benötigt der Client
-(Browser) einen MIME-Typ, um die korrekte Wiedergabeart zu ermitteln. Der
-MIME-Typ muß im Header vor der eigentlichen Szene gesendet werden. Über den
-Parameter <EM>mime</EM>
-kann diese Option aktiviert werden.
+Prints the VRML scene to STDOUT. If <EM>mime</EM> (bool) is given, this method prints the scene to STDOUT with the
+Content-type of the current scene. If
+<EM>pipe</EM> is given, then first the stream is send to the pipe and after that to
+STDOUT. This is usefull to compress the VRML code with GNU-ZIP.
 
 
 <P>
 
-Um die Übertragungs- bzw. Ladezeiten virtueller Welten zu verkürzen,
-besteht die Möglichkeit, VRML-Quellen zu komprimieren. Zu diesem Zweck wird
-ein Programm benötigt, welches das GNU-ZIP-Verfahren realisiert. Über den
-Parameter pipe müssen der Pfad, Name und die Programmparameter der
-ausführbaren Datei spezifiziert werden. Befindet sich die Datei im
-aktuellen Pfad, genügt nur der Name und die Parameter (meistens <CODE>gzip -f</CODE>). Der Parameter <EM>pipe</EM> ist jedoch nicht nur auf das Komprimieren der VRML-Skripte beschränkt.
-Prinzipiell kann hier jeder Filter angewendet werden.
+Example:
 
 
 <P>
 
-Beispiel 1:
+1.  <EM>$vrml-&gt;print</EM>
+
+
 
 
 <P>
 
-<PRE>    $vrml-&gt;print;
-</PRE>
-
-<P>
-
-Beispiel 2 (UNIX gzip):
+2.  <EM>$vrml-&gt;print(1, 'gzip -f9')</EM>
 
 
-<P>
 
-<PRE>    $vrml-&gt;print(1,&quot;/usr/local/bin/gzip -f&quot;);
-</PRE>
-
-<P>
-
-Beispiel 3 (MS-DOS gzip.exe):
-
-
-<P>
-
-<PRE>    $vrml-&gt;print(1,&quot;c:\\Perl\\bin\\gzip.exe -f&quot;);
-</PRE>
-
-<P>
-
-oder für alle Plattformen, wenn sich das Programm <CODE>gzip</CODE> im Suchpfad befindet:
-
-
-<P>
-
-<PRE>    $vrml-&gt;print(1,&quot;gzip -f&quot;);
-</PRE>
 
 <P>
 
 <DT><STRONG><A NAME="item_save">save
 
 </A></STRONG><DD>
-<EM>save('filename', 'pipe')</EM>
+<A HREF="#item_save">save('filename', 'pipe')</A>
 
 
 
 
 <P>
 
-<PRE> filename SFString &quot;&quot;
- pipe     SFString &quot;&quot;
-</PRE>
-
-<P>
-
-speichert den Inhalt des Szenenobjekts in einer Datei. Wird kein Dateiname
-angegeben, so wird die Erweiterung des gerade abgearbeiteten Skripts (z. B.
-.pl) gegen die Erweiterung '.wrl' ausgetauscht. Um bei großen Welten
-Speicherplatz zu sparen, besteht auch hier die Möglichkeit, die VRML-Datei
-zu komprimieren. Zu diesem Zweck wird ein Programm benötigt, das ein
-beliebiges Pack-Verfahren realisiert. Besonders gut eignet sich dafür das
-GNU-ZIP-Verfahren, da es vom VRML-Browser selbst entpackt werden kann. Über
-den Parameter <EM>pipe</EM> muß der Name und Pfad der ausführbaren Datei spezifiziert werden. Die
-Funktionsweise von <EM>pipe</EM> ist analog der in der Methodenbeschreibung von <A HREF="#item_print">print</A>.
+Saves the VRML code to the specified name in <EM>filename</EM>. If no filename is given, this method uses the name of the perl script and
+changes the extension against <CODE>.wrl</CODE>. If <EM>pipe</EM> is given, then first the stream is send to the pipe and after that to
+STDOUT. This is usefull to compress the VRML code with GNU-ZIP.
 
 
 <P>
 
-Beispiel 1:
+Example:
 
 
 <P>
 
-<PRE>    $vrml-&gt;save;
-</PRE>
+1.  <EM>$vrml-&gt;save</EM>
 
-<P>
 
-Beispiel 2:
 
 
 <P>
 
-<PRE>    $vrml-&gt;save(&quot;world.wrl&quot;);
-</PRE>
+2.  <EM>$vrml-&gt;save(undef, 'gzip -f9')</EM>
 
-<P>
 
-Beispiel 3:
 
 
 <P>
 
-<PRE>    $vrml-&gt;save(undef,&quot;gzip&quot;);
-</PRE>
+3.  <EM>$vrml-&gt;save('myScene.wrl')</EM>
+
+
+
 
 <P>
 
 <DT><STRONG><A NAME="item_as_string">as_string
 
 </A></STRONG><DD>
-<EM>as_string()</EM>
+<A HREF="#item_as_string">as_string</A>
 
 
 
 
 <P>
 
-gibt die komplette VRML-Quelle als Zeichenkette zurück. Sie wird jedoch nur
-in seltenen Fällen benötigt und ist die einzige Methode, welche nicht eine
-Referenz auf das Szenenobjekt zurückliefert. Für die Ausgabe oder
-Speicherung einer VRML-Quelle sollten im allgemeinen die Methoden <A HREF="#item_print">print</A> oder <A HREF="#item_save">save</A>
-benutzt werden. Diese Methoden sind wesentlich effizienter und schonen die
-Ressourcen des Rechners.
+Returns the VRML scene as string. Possible it uses too much memory to build
+the string.
 
-
-<P>
-
-<PRE>    $vrml
-    -&gt;begin
-      -&gt;box(&quot;1 2 1&quot;)
-    -&gt;end;
-    $scene = $vrml-&gt;as_string;
-</PRE>
 
 <P>
 
 </DL>
-Folgende Methoden sollten nicht verwendet werden. Sie sind normalerweise
-nicht notwendig. Besteht dennoch Bedarf, so sende mir bitte eine E-Mail und
-ich werde sie in den nächsten Versionen beschreiben.
+<P>
+<HR>
+<H1><A NAME="Internals">Internals
+
+</A></H1>
+You don't need the following 'native' methods. If yet, tell it me and I'll
+describe it in the next version.
 
 
 <P>
@@ -494,27 +240,93 @@ ich werde sie in den nächsten Versionen beschreiben.
 <DT><STRONG><A NAME="item_debug">debug
 
 </A></STRONG><DD>
+<A HREF="#item_debug">debug</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__init">_init
 
 </A></STRONG><DD>
+<A HREF="#item__init">_init('VRML')</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__add">_add
 
 </A></STRONG><DD>
+<A HREF="#item__add">_add</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__trim">_trim
 
 </A></STRONG><DD>
+<A HREF="#item__trim">_trim</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__swap">_swap
 
 </A></STRONG><DD>
+<A HREF="#item__swap">_swap</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__put">_put
 
 </A></STRONG><DD>
+<A HREF="#item__put">_put</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__row">_row
 
 </A></STRONG><DD>
+<A HREF="#item__row">_row</A>
+
+
+
+
+<P>
+
 <DT><STRONG><A NAME="item__pos">_pos
 
 </A></STRONG><DD>
+<A HREF="#item__pos">_pos</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item__format">_format
+
+</A></STRONG><DD>
+<A HREF="#item__format">_format</A>
+
+
+
+
+<P>
+
 </DL>
 <P>
 <HR>
