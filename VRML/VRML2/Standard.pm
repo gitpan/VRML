@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML2::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.91";
+# $VERSION = "0.92";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME
@@ -110,8 +110,12 @@ $center is a SFVec3f
 sub Transform {
     my $self = shift;
     my ($translation, $rotation, $scale, $scaleOrientation, $center, $bboxSize, $bboxCenter) = @_;
-    unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
-    $self->xyz(split(/\s+/,$translation)) if defined $translation;
+    unless ($self->{'XYZ'}[0]) {
+	$self->VRML_row("# To many end's !\n");
+    } else {
+        unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
+        $self->xyz(split(/\s+/,$translation)) if defined $translation;
+    }
     my $vrml = "";
     $vrml = $self->{'TAB'}."Transform {\n";
     $vrml .= $self->{'TAB'}."    translation	$translation\n" if $translation;
@@ -656,8 +660,6 @@ sub Sphere {
 
 C<Text($string, $fontStyle, $length, $maxExtent)>
 
-$length is a string ('LEFT','CENTER','RIGHT')
-
 =cut
 
 sub Text {
@@ -1110,7 +1112,7 @@ sub Viewpoint {
     my ($description, $position, $orientation, $fieldOfView, $jump) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB_VIEW'}."Viewpoint {\n";
-    $vrml .= $self->{'TAB_VIEW'}."	description	$description\n" if $description;
+    $vrml .= $self->{'TAB_VIEW'}."	description	\"$description\"\n" if $description;
     $vrml .= $self->{'TAB_VIEW'}."	position	$position\n" if $position;
     $vrml .= $self->{'TAB_VIEW'}."	orientation	$orientation\n" if $orientation;
     $vrml .= $self->{'TAB_VIEW'}."	fieldOfView	$fieldOfView\n" if $fieldOfView;

@@ -29,42 +29,53 @@ DESCRIPTION</A>
 Following methods are currently implemented. 
 <p>
 <UL>
-<LI><EM>begin()</EM>;
+<LI>at('type=value ; ...')
+<p>parameter see <CODE>transform</CODE>
+<p>
+<LI>back
+<p>
+<LI>begin('comment')
 <CODE>  . . . </CODE>
 <p>
-<LI><EM>end()</EM>;
+<LI>end('comment')
 <p>
-<LI>backgroundcolor('color');
+<LI>group_begin('comment')
 <p>
-<LI>backgroundimage('URL');
+<LI>group_end
 <p>
-<LI>title('string');
+<LI>anchor_begin('URL','description','parameter')
 <p>
-<LI>info('string');
+<LI>anchor_end
 <p>
-<LI>cameras_begin('whichCameraNumber');
+<LI>backgroundcolor('color')
 <p>
-<LI>camera_set('positionXYZ','orientationXYZ',heightAngle); // persp. cameras
+<LI>backgroundimage('URL')
 <p>
-<LI>camera('positionXYZ','orientationXYZ',heightAngle); // persp. camera
+<LI>title('string')
 <p>
-<LI>anchor_begin('URL','description','parameter');
+<LI>info('string')
 <p>
-<LI>box('width [height [depth]]','appearance');
+<LI>cameras_begin('whichCameraNumber')
 <p>
-<LI>cone('radius height','appearance');
+<LI>camera_set('positionXYZ','orientationXYZ',heightAngle) // persp. cameras
 <p>
-<LI>cube('width','appearance');
+<LI>camera('positionXYZ','orientationXYZ',heightAngle) // persp. camera
 <p>
-<LI>cylinder('radius [height]','appearance');
+<LI>box('width [height [depth]]','appearance')
 <p>
-<LI>line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]');
+<LI>cone('radius height','appearance')
 <p>
-<LI>sphere('radius_x [radius_y radius_z]','appearance');
+<LI>cube('width','appearance')
 <p>
-<LI>text('string','appearance','size style family');
+<LI>cylinder('radius [height]','appearance')
 <p>
-<LI>transform('type=value ; ...');
+<LI>line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
+<p>
+<LI>sphere('radius_x [radius_y radius_z]','appearance')
+<p>
+<LI>text('string','appearance','size style family')
+<p>
+<LI>transform('type=value ; ...')
 <p><EM>Where type can be:</EM>
 <p>
 <XMP>
@@ -76,7 +87,7 @@ Following methods are currently implemented.
 
 </XMP>
 <p>
-<LI>appearance('type=value1,value2 ; ...');
+<LI>appearance('type=value1,value2 ; ...')
 <p><EM>Where type can be:</EM>
 <p>
 <XMP>

@@ -34,9 +34,21 @@ sub browser {
 #--------------------------------------------------------------------
 #   VRML Grouping Methods
 #--------------------------------------------------------------------
-sub begin {
+sub at {
     my $self = shift;
     $self->transform(@_);
+    return $self;
+}
+
+sub back {
+    my $self = shift;
+    $self->End();
+    return $self;
+}
+
+sub begin {
+    my $self = shift;
+    $self->Group($_[0]);
     return $self;
 }
 
@@ -46,21 +58,47 @@ sub end {
     return $self;
 }
 
-sub at {
+sub group_begin {
     my $self = shift;
-    $self->transform(@_);
+    $self->Group(@_);
     return $self;
 }
 
-sub back {
+sub group_end {
     my $self = shift;
     $self->End($_[0]);
     return $self;
 }
 
-sub group {
+sub anchor_begin {
     my $self = shift;
-    $self->Group(@_);
+    return $self->VRML_put(qq{# CALL: ->anchor_begin("URL","description","parameter");\n}) unless @_;
+    my ($url, $description, $parameter) = @_;
+    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    $description =~ s/"/$quote/g if defined $description;
+    $parameter =~ s/"/$quote/g if defined $parameter;
+    undef $parameter if $self->{'browser'} !~ /$supported{'frames'}/i || $self->{'browser'} !~ /$supported{'target'}/i;
+    $self->WWWAnchor($url, $description, $parameter);
+    return $self;
+}
+
+sub anchor_end {
+    my $self = shift;
+    $self->End($_[0]);
+    return $self;
+}
+
+sub lod_begin {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->lod_begin("range"[,"center"]);\n}) unless @_;
+    my ($range, $center) = @_;
+    $self->LOD($range,$center);
+    return $self;
+}
+
+sub lod_end {
+    my $self = shift;
+    $self->End($_[0]);
     return $self;
 }
 
@@ -171,8 +209,7 @@ sub camera_set {
 
 sub camera {
     my $self = shift;
-    my ($name,
-	$position, $orientation, $heightAngle) = @_;
+    my ($name, $position, $orientation, $heightAngle) = @_;
     my ($x,$y,$z,$degree) = ref($orientation) ? @$orientation : split(/\s+/,$orientation);
     if (defined $degree) {
 	$degree *= $::pi/180 if (abs($degree) > 2*$::pi);
@@ -188,66 +225,13 @@ sub camera {
     return $self;
 }
 
-sub ocamera_set {
-    my $self = shift;
-    my ($center, $distance, $height) = @_;
-    $center = "" unless defined $center;
-    $distance = "" unless defined $distance;
-    my ($x, $y, $z) = split(/\s+/,$center);
-    my ($dx, $dy, $dz) = split(/\s+/,$distance);
-
-    $x = 1 unless defined $x;
-    $y = $x unless defined $y;
-    $z = $x unless defined $z;
-    $dx = 0 unless defined $dx;
-    $dy = 0 unless defined $dy;
-    $dz = 0 unless defined $dz;
-    $self->ocamera("Front",  "$dx $dy $z", "0 0 1 0",$height);
-    $self->ocamera("Right", "$x $dy $dz", "0 1 0 90",$height);
-    $self->ocamera("Back",  "$dx $dy -$z","0 1 0 180",$height);
-    $self->ocamera("Left",  "-$x $dy $dz","0 1 0 -90",$height);
-    $self->ocamera("Top",   "$dx $y $dz", "1 0 0 -90",$height);
-    $self->ocamera("Bottom","$dx -$y $dz","1 0 0 90",$height);
-    return $self;
-}
-sub ocamera {
-    my $self = shift;
-    my ($name,
-	$position, $orientation, $degree, $height) = @_;
-    my ($x,$y,$z,$degree) = ref($orientation) ? @$orientation : split(/\s+/,$orientation);
-    if (defined $degree) {
-	$degree *= $::pi/180 if (abs($degree) > 2*$::pi);
-	$orientation = "$x $y $z $degree";
-    }
-    $self->def($name)->OrthographicCamera($position, $orientation, $height)->VRML_trim;
-    return $self;
-}
+#--------------------------------------------------------------------
 
 sub light {
     my $self = shift;
     my ($direction, $intensity, $color, $ambientIntensity, $on) = @_;
     $intensity /= 100 if defined $intensity && $intensity > 1;
     $self->DirectionalLight($direction, $intensity, $color, $ambientIntensity, $on);
-    return $self;
-}
-
-#--------------------------------------------------------------------
-
-sub anchor_begin {
-    my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->anchor_begin("URL","description","parameter");\n}) unless @_;
-    my ($url, $description, $parameter) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
-    $description =~ s/"/$quote/g if defined $description;
-    $parameter =~ s/"/$quote/g if defined $parameter;
-    undef $parameter if $self->{'browser'} !~ /$supported{'frames'}/i || $self->{'browser'} !~ /$supported{'target'}/i;
-    $self->WWWAnchor($url, $description, $parameter);
-    return $self;
-}
-
-sub anchor_end {
-    my $self = shift;
-    $self->End($_[0]);
     return $self;
 }
 
@@ -378,7 +362,7 @@ sub text {
     $string =~ s/"/$quote/g if defined $string;
     $self->Group->appearance($appearance) if $appearance || $font;
     $self->FontStyle(split(/\s+/,$font)) if $font;
-    $self->AsciiText($string);
+    $self->AsciiText($string, undef, "CENTER");
     $self->End if $appearance || $font;
     return $self;
 }
@@ -470,21 +454,13 @@ sub transform {
     return $self;
 }
 
+sub transform_end {
+    my $self = shift;
+    $self->End();
+    return $self;
+}
+
 #--------------------------------------------------------------------
-
-sub lod_begin {
-    my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->lod_begin("range"[,"center"]);\n}) unless @_;
-    my ($range, $center) = @_;
-    $self->LOD($range,$center);
-    return $self;
-}
-
-sub lod_end {
-    my $self = shift;
-    $self->End($_[0]);
-    return $self;
-}
 
 sub sound {
     my $self = shift;
@@ -573,59 +549,76 @@ Following methods are currently implemented.
 =over 4
 
 =item *
-begin();
+at('type=value ; ...')
+
+parameter see C<transform>
+
+=item *
+back
+
+=item *
+begin('comment')
 C<  . . . >
 
 =item *
-end();
+end('comment')
 
 =item *
-backgroundcolor('color');
+group_begin('comment')
 
 =item *
-backgroundimage('URL');
+group_end
 
 =item *
-title('string');
+anchor_begin('URL','description','parameter')
 
 =item *
-info('string');
+anchor_end
 
 =item *
-cameras_begin('whichCameraNumber');
+backgroundcolor('color')
 
 =item *
-camera_set('positionXYZ','orientationXYZ',heightAngle); // persp. cameras
+backgroundimage('URL')
 
 =item *
-camera('positionXYZ','orientationXYZ',heightAngle); // persp. camera
+title('string')
 
 =item *
-anchor_begin('URL','description','parameter');
+info('string')
 
 =item *
-box('width [height [depth]]','appearance');
+cameras_begin('whichCameraNumber')
 
 =item *
-cone('radius height','appearance');
+camera_set('positionXYZ','orientationXYZ',heightAngle) // persp. cameras
 
 =item *
-cube('width','appearance');
+camera('positionXYZ','orientationXYZ',heightAngle) // persp. camera
 
 =item *
-cylinder('radius [height]','appearance');
+box('width [height [depth]]','appearance')
 
 =item *
-line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]');
+cone('radius height','appearance')
 
 =item *
-sphere('radius_x [radius_y radius_z]','appearance');
+cube('width','appearance')
 
 =item *
-text('string','appearance','size style family');
+cylinder('radius [height]','appearance')
 
 =item *
-transform('type=value ; ...');
+line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
+
+=item *
+sphere('radius_x [radius_y radius_z]','appearance')
+
+=item *
+text('string','appearance','size style family')
+
+=item *
+transform('type=value ; ...')
 
 I<Where type can be:>
 
@@ -636,7 +629,7 @@ I<Where type can be:>
 	f = scaleFactor
 
 =item *
-appearance('type=value1,value2 ; ...');
+appearance('type=value1,value2 ; ...')
 
 I<Where type can be:>
 

@@ -9,7 +9,7 @@ $vrml->browser('Live3d')
 ->camera_set
 ->light("0 0 -1",.3)
 ->def("HEAD")
-->begin
+->transform_begin
     ->touchsensor("HEAD-TOUCH")
     ->at("s=4 3 2")->sphere(1,"d=orange; e=orange%30")->back
     ->at("0 4 0")->cone([2, 3],"blue")->back
@@ -22,7 +22,7 @@ $vrml->browser('Live3d')
     ->at("1 1 1")->use("eye")->back
     ->at("r=1 0 0 90; 0 -0.3 2.5")->cone([.5, 2],"red")->back
     ->at("0 -.4 0.7; r=1 0 0 80")->cylinder("2 1","red")->back
-->end
+->transform_end
 ->at("0 -3 0")->cylinder("0.8 2","yellow")->back
 ->at("0 -6.5 0")->touchsensor("BODY-TOUCH")->cylinder("2.5 6",'darkgreen')->back
 ->def("ARM")->at("0 -5.5 0")

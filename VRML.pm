@@ -2,7 +2,7 @@ package VRML;
 
 require 5.000;
 
-$VERSION="0.91"; warn $VERSION if 0;
+$VERSION="0.92"; warn $VERSION if 0;
 
 sub new {
     my $class = shift;

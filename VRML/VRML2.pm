@@ -34,37 +34,74 @@ sub browser {
 #--------------------------------------------------------------------
 #   VRML Grouping Methods
 #--------------------------------------------------------------------
-sub begin {
-    my $self = shift;
-    $self->transform(@_);
-    return $self;
-}
-
-sub end {
-    my $self = shift;
-    $self->EndTransform($_[0],TRUE); #  close [ and {
-    return $self;
-}
-
 sub at {
     my $self = shift;
-    $self->transform(@_);
+    $self->transform_begin(@_);
     return $self;
 }
 
 sub back {
    my $self = shift;
-    $self->EndTransform($_[0],TRUE); #  close [ and {
+    $self->transform_end($_[0]); #  close [ and {
     return $self;
 }
 
-sub group {
+sub begin {
+    my $self = shift;
+    $self->Group($_[0]);
+    return $self;
+}
+
+sub end {
+    my $self = shift;
+    $self->End($_[0],TRUE); #  close [ and {
+    return $self;
+}
+
+sub group_begin {
     my $self = shift;
     $self->Group(@_);
     return $self;
 }
 
-sub transform {
+sub group_end {
+    my $self = shift;
+    $self->End($_[0],TRUE); #  close [ and {
+    return $self;
+}
+
+sub anchor_begin {
+    my $self = shift;
+    my ($url, $description, $parameter) = @_;
+    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    $description =~ s/"/$quote/g if defined $description;
+    $parameter =~ s/"/$quote/g if defined $parameter;
+    undef $parameter if $self->{'browser'} !~ /$supported{'frames'}/i || $self->{'browser'} !~ /$supported{'target'}/i;
+    $self->Anchor($url, $description, $parameter);
+    return $self;
+}
+
+sub anchor_end {
+    my $self = shift;
+    $self->End("Anchor",TRUE); #  close [ and {
+    return $self;
+}
+
+sub lod_begin {
+    my $self = shift;
+    my ($range, $center) = @_;
+    $self->LOD($range,$center);
+    return $self;
+}
+
+sub lod_end {
+    my $self = shift;
+    $self->End($_[0],TRUE); #  close [ and {
+    return $self;
+}
+#--------------------------------------------------------------------
+
+sub transform_begin {
     my $self = shift;
     my ($transform_list) = shift;
     return $self->Transform unless $transform_list;
@@ -101,6 +138,12 @@ sub transform {
 	}
     }
     $self->Transform($t,$r,$f,$o,$c);
+    return $self;
+}
+
+sub transform_end {
+   my $self = shift;
+    $self->EndTransform("Transform"); #  close [ and {
     return $self;
 }
 
@@ -235,25 +278,6 @@ sub light {
     my ($direction, $intensity, $color, $ambientIntensity, $on) = @_;
     $intensity /= 100 if defined $intensity && $intensity > 1;
     $self->DirectionalLight($direction, $intensity, $color, $ambientIntensity, $on);
-    return $self;
-}
-
-#--------------------------------------------------------------------
-
-sub anchor_begin {
-    my $self = shift;
-    my ($url, $description, $parameter) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
-    $description =~ s/"/$quote/g if defined $description;
-    $parameter =~ s/"/$quote/g if defined $parameter;
-    undef $parameter if $self->{'browser'} !~ /$supported{'frames'}/i || $self->{'browser'} !~ /$supported{'target'}/i;
-    $self->Anchor($url, $description, $parameter);
-    return $self;
-}
-
-sub anchor_end {
-    my $self = shift;
-    $self->End($_[0],TRUE); #  close [ and {
     return $self;
 }
 
@@ -482,21 +506,6 @@ sub appearance {
 
 #--------------------------------------------------------------------
 
-sub lod_begin {
-    my $self = shift;
-    my ($range, $center) = @_;
-    $self->LOD($range,$center);
-    return $self;
-}
-
-sub lod_end {
-    my $self = shift;
-    $self->End($_[0],TRUE); #  close [ and {
-    return $self;
-}
-
-#--------------------------------------------------------------------
-
 sub def {
     my $self = shift;
     return $self->VRML_put(qq{# CALL: ->def("name",sub{code});\n}) unless @_;
@@ -553,11 +562,24 @@ Following methods are currently implemented.
 =over 4
 
 =item *
-begin('transformation');
+begin(['comment']);
 C<  . . . >
 
 =item *
 end(['comment']);
+
+=item *
+group_begin(['comment']);
+C<  . . . >
+
+=item *
+group_end;
+
+=item *
+anchor_begin('Url','description','parameter');
+
+=item *
+anchor_end;
 
 =item *
 backgroundcolor('groundcolor','skycolor');
@@ -581,7 +603,7 @@ camera_set('positionXYZ','orientationXYZ',fieldOfView); // persp. cameras
 camera('positionXYZ','orientationXYZ',fieldOfView); // persp. camera
 
 =item *
-anchor_begin('Url','description','parameter');
+cameras_end(['comment']);
 
 =item *
 box('width [height [depth]]','appearance');
@@ -605,7 +627,7 @@ sphere('radius_x [radius_y radius_z]','appearance');
 text('string','appearance','size style family');
 
 =item *
-transform('type=value ; ...');
+transform_begin('type=value ; ...');
 
 I<Where type can be:>
 
@@ -632,6 +654,8 @@ I<and color values see>
 
 VRML::Color
 
+=item *
+transform_end;
 
 =back
 
