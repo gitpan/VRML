@@ -21,6 +21,7 @@ examples/camera1.pl
 examples/camera1.wrl
 examples/camera2.pl
 examples/camera2.wrl
+examples/circle.gif
 examples/color.txt
 examples/cube1.pl
 examples/cube1.wrl
@@ -30,10 +31,17 @@ examples/def.pl
 examples/def.wrl
 examples/elg.pl
 examples/elg.wrl
+examples/elgtex.pl
+examples/elgtex.wrl
+examples/elgtex1.pl
+examples/elgtex1.wrl
+examples/elgtex2.pl
+examples/elgtex2.wrl
 examples/hallo.wav
 examples/height.txt
 examples/hello.pl
 examples/hello.wrl
+examples/mount.jpg
 examples/mtexture.pl
 examples/mtexture.wrl
 examples/potatohead.pl

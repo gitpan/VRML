@@ -1672,7 +1672,7 @@ creaseAngle, colorPerVertex, solid)</EM>
 <P>
 
 <PRE> height          MFFloat  []
- color           MFColor  []
+ color           MFColor  []  # bzw. Material &amp; Farbe
  xDimension      SFInt32  0
  zDimension      SFInt32  0
  xSpacing        SFFloat  1.0
@@ -1687,8 +1687,10 @@ creaseAngle, colorPerVertex, solid)</EM>
 Die Methode <STRONG>elevationgrid</STRONG> spezifiziert ein Höhenmodell durch ein regelmäßiges Gitter. Der Parameter <EM>height</EM> gibt dabei eine Anzahl von Höhenwerten vor zu denen jeweils ein Farbwert
 (bei <EM>colorPerVertex</EM> gleich 1) gehört. Wird <EM>colorPerVertex</EM> auf 0 gesetzt, so werden die Flächen zwischen vier Punkten eingefärbt, d.h.
 es wird ein Farbwert pro Dimension (x,z) weniger benötigt. Der Parameter <EM>height</EM> kann als Referenz auf ein Array - welches eine x-Zeile enthält - angegeben
-werden. in diesem Fall wird die Anzahl der Elemente als <EM>xDimension</EM> und die Anzahl der Zeilen als
-<EM>zDimension</EM> interpretiert. Sie sollte dann nicht nochmals ermittelt werden.
+werden. In diesem Fall wird die Anzahl der Elemente als <EM>xDimension</EM> und die Anzahl der Zeilen als
+<EM>zDimension</EM> interpretiert. Sie sollte dann nicht nochmals ermittelt werden. Wird der
+Parameter <EM>color</EM> nicht als Referenz auf ein ARRAY übergeben, so wird angenommen, daß es sich
+um eine Farb- bzw. Texturangabe handelt.
 
 
 <P>

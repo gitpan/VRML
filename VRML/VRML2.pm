@@ -1,5 +1,24 @@
 package VRML::VRML2;
 
+############################## Copyright ##############################
+#								      #
+# This program is Copyright 1996,1998 by Hartmut Palm.		      #
+# This program is free software; you can redistribute it and/or	      #
+# modify it under the terms of the GNU General Public License	      #
+# as published by the Free Software Foundation; either version 2      #
+# of the License, or (at your option) any later version.	      #
+# 								      #
+# This program is distributed in the hope that it will be useful,     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
+# GNU General Public License for more details.			      #
+# 								      #
+# If you do not have a copy of the GNU General Public License write   #
+# to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
+# MA 02139, USA.						      #
+#								      #
+#######################################################################
+
 require 5.000;
 require VRML::VRML2::Standard;
 use strict;
@@ -7,7 +26,7 @@ use VRML::Color;
 use vars qw(@ISA $VERSION %supported);
 @ISA = qw(VRML::VRML2::Standard);
 
-$VERSION="1.03de";
+$VERSION="1.04de";
 %supported = ('quote' => "Live3D|WorldView|Cosmo Player|CosmoPlayer",
  'gzip'   => "Live3D|WorldView|Cosmo Player|CosmoPlayer|libcosmoplayer|VRweb|GLview",
  'target' => "Live3D|WorldView|Cosmo Player|CosmoPlayer|libcosmoplayer|MSVRML2OCX"
@@ -592,10 +611,32 @@ sub elevationgrid {
     $creaseAngle *= $::pi/180 if defined $creaseAngle && $self->{'CONVERT'};
     $colorPerVertex = $colorPerVertex ? "TRUE" : "FALSE" if defined $colorPerVertex;
     $solid = $solid ? "TRUE" : "FALSE" if defined $solid;
-    $self->Shape(
-	sub{$self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing,
-      $height, $creaseAngle, $color, $colorPerVertex, $solid)}
-    );
+    if (ref($color) eq "ARRAY") {
+	if (ref($$color[0]) eq "ARRAY" && !ref($$color[1])) {
+	    $self->Shape(
+		sub{$self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing,
+		    $height, $creaseAngle, $$color[0], $colorPerVertex, $solid)},
+		sub{$self->appearance($$color[1])}
+	    )
+	} elsif (ref($$color[1]) eq "ARRAY" && !ref($$color[0])) {
+	    $self->Shape(
+		sub{$self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing,
+		    $height, $creaseAngle, $$color[1], $colorPerVertex, $solid)},
+		sub{$self->appearance($$color[0])}
+	    )
+	} else {
+	    $self->Shape(
+		sub{$self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing,
+		    $height, $creaseAngle, $color, $colorPerVertex, $solid)}
+	    )
+	}
+    } else {
+	$self->Shape(
+	    sub{$self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing,
+	        $height, $creaseAngle, undef, $colorPerVertex, $solid)},
+	    sub{$self->appearance($color)}
+	)
+    }
     return $self;
 }
 

@@ -1,9 +1,28 @@
 package VRML;
 
+############################## Copyright ##############################
+#								      #
+# This program is Copyright 1996,1998 by Hartmut Palm.		      #
+# This program is free software; you can redistribute it and/or	      #
+# modify it under the terms of the GNU General Public License	      #
+# as published by the Free Software Foundation; either version 2      #
+# of the License, or (at your option) any later version.	      #
+# 								      #
+# This program is distributed in the hope that it will be useful,     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
+# GNU General Public License for more details.			      #
+# 								      #
+# If you do not have a copy of the GNU General Public License write   #
+# to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
+# MA 02139, USA.						      #
+#								      #
+#######################################################################
+
 require 5.000;
 use strict;
 use vars qw(@ISA $VERSION);
-$VERSION="1.03de";
+$VERSION="1.04de";
 
 sub new {
     my $class = shift;
@@ -1035,7 +1054,7 @@ F<elevationgrid(height, color, xDimension, zDimension, xSpacing, zSpacing,
 creaseAngle, colorPerVertex, solid)>
 
  height          MFFloat  []
- color           MFColor  []
+ color           MFColor  []  # bzw. Material & Farbe
  xDimension      SFInt32  0
  zDimension      SFInt32  0
  xSpacing        SFFloat  1.0
@@ -1050,9 +1069,11 @@ Höhenwerten vor zu denen jeweils ein Farbwert (bei I<colorPerVertex> gleich
 1) gehört. Wird I<colorPerVertex> auf 0 gesetzt, so werden die Flächen
 zwischen vier Punkten eingefärbt, d.h. es wird ein Farbwert pro Dimension
 (x,z) weniger benötigt. Der Parameter I<height> kann als Referenz auf ein
-Array - welches eine x-Zeile enthält - angegeben werden. in diesem Fall wird
+Array - welches eine x-Zeile enthält - angegeben werden. In diesem Fall wird
 die Anzahl der Elemente als I<xDimension> und die Anzahl der Zeilen als
 I<zDimension> interpretiert. Sie sollte dann nicht nochmals ermittelt werden.
+Wird der Parameter I<color> nicht als Referenz auf ein ARRAY übergeben, so
+wird angenommen, daß es sich um eine Farb- bzw. Texturangabe handelt.
 
 Beispiel:
 

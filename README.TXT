@@ -14,9 +14,7 @@ them into manual page format, type something like the following:
 
 To convert them into html format, type:
 
-	pod2html *.pm
-
-(pod2html automatically creates a file named *.pm.html)
+	pod2html VRML.pm > VRML.html
 
 For your convenience, html-ized documentation is already installed in
 the doc/ subdirectory.
@@ -32,4 +30,5 @@ found at:
 	http://www.gfz-potsdam.de/~palm/software/VRML/examples
 
 Hartmut Palm
-palm@gfz-potsdam.de
+mailto:palm@gfz-potsdam.de
+http://www.gfz-potsdam.de/~palm/

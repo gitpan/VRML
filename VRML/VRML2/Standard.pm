@@ -1,5 +1,24 @@
 package VRML::VRML2::Standard;
 
+############################## Copyright ##############################
+#								      #
+# This program is Copyright 1996,1998 by Hartmut Palm.		      #
+# This program is free software; you can redistribute it and/or	      #
+# modify it under the terms of the GNU General Public License	      #
+# as published by the Free Software Foundation; either version 2      #
+# of the License, or (at your option) any later version.	      #
+# 								      #
+# This program is distributed in the hope that it will be useful,     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
+# GNU General Public License for more details.			      #
+# 								      #
+# If you do not have a copy of the GNU General Public License write   #
+# to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
+# MA 02139, USA.						      #
+#								      #
+#######################################################################
+
 require 5.000;
 require VRML::Base;
 use strict;
@@ -9,7 +28,7 @@ $VERSION = "1.03";
 
 =head1 NAME
 
-VRML::VRML2::Standard.pm - implements VRML 2.0 Standard Nodes
+VRML::VRML2::Standard.pm - implements VRML 2.0/97 standard nodes
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,24 @@
 package VRML::VRML1;
 
+############################## Copyright ##############################
+#								      #
+# This program is Copyright 1996,1998 by Hartmut Palm.		      #
+# This program is free software; you can redistribute it and/or	      #
+# modify it under the terms of the GNU General Public License	      #
+# as published by the Free Software Foundation; either version 2      #
+# of the License, or (at your option) any later version.	      #
+# 								      #
+# This program is distributed in the hope that it will be useful,     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
+# GNU General Public License for more details.			      #
+# 								      #
+# If you do not have a copy of the GNU General Public License write   #
+# to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
+# MA 02139, USA.						      #
+#								      #
+#######################################################################
+
 require 5.000;
 require VRML::VRML1::Standard;
 use strict;
@@ -7,7 +26,7 @@ use VRML::Color;
 use vars qw(@ISA $AUTOLOAD $VERSION %supported);
 @ISA = qw(VRML::VRML1::Standard);
 
-$VERSION="1.03";
+$VERSION="1.03de";
 %supported = ('quote' => "Live3D|WorldView|Cosmo Player",
  'L3D_ext' => "Live3D|Cosmo Player",	# not WorldView
  'gzip'   => "Live3D|WorldView|Cosmo Player|libcosmoplayer|VRweb|GLview",

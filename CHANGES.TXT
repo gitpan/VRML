@@ -1,3 +1,6 @@
+1.04
+* add appearance to method "elevationgrid" in VRML::VRML2
+
 1.03
 * add method "elevationgrid" to VRML::VRML2
 * add 'defmat' and 'deftex' to method "appearance"

@@ -1,12 +1,31 @@
 package VRML::Color;
 
+############################## Copyright ##############################
+#								      #
+# This program is Copyright 1996,1998 by Hartmut Palm.		      #
+# This program is free software; you can redistribute it and/or	      #
+# modify it under the terms of the GNU General Public License	      #
+# as published by the Free Software Foundation; either version 2      #
+# of the License, or (at your option) any later version.	      #
+# 								      #
+# This program is distributed in the hope that it will be useful,     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
+# GNU General Public License for more details.			      #
+# 								      #
+# If you do not have a copy of the GNU General Public License write   #
+# to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
+# MA 02139, USA.						      #
+#								      #
+#######################################################################
+
 require 5.000;
 require Exporter;
 use strict;
 use vars qw(@ISA @EXPORT $VERSION %X11Color);
 @ISA = qw(Exporter);
 @EXPORT = qw(rgb_color);
-$VERSION="1.03";
+$VERSION="1.03de";
 
 sub rgb_color {
     my ($string,$colorspace) = @_;
@@ -19,7 +38,7 @@ sub rgb_color {
     } else {
 	$value = $X11Color{lc($key)};
     }
-    if ($value) { # ex. green
+    if ($value) { # ex. yellow
 	    $r = $$value[0]/255;
 	    $g = $$value[1]/255;
 	    $b = $$value[2]/255;
@@ -115,7 +134,7 @@ sub rgb_color {
 "gold" => [255,215,0],
 "goldenrod" => [218,165,32],
 "gray" => [128,128,128],
-"green" => [0,128,0],
+"green" => [0,255,0],		# [0,128,0]
 "greenyellow" => [173,255,47],
 "honeydew" => [240,255,240],
 "hotpink" => [255,105,180],
@@ -382,6 +401,12 @@ _ oder %).
 	red_40 = '0.4 0 0'
 	yellow%30 = '0.3 0.3 0'
 	gray%30 = '0.7 0.7 0.7' !!!
+
+=head1 BUGS
+
+Grün wird in X11 durch den Wert 0x008000 dargestellt. Für VRML ist jedoch
+0x00FF00 besser geeignet. Deshalb wird in diesem Modul für 'green' der
+Wert '0 1 0' generiert anstatt '0 0.5 0'.
 
 =head1 SEE ALSO
 
