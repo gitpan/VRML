@@ -11,7 +11,7 @@ Viewpoint {
 Shape {
 	appearance Appearance {
 		material Material {
-			diffuseColor	1 0 0	# red
+			diffuseColor	1 0 0
 		}
 	}
 	geometry IndexedFaceSet {
@@ -49,4 +49,4 @@ Shape {
 		]
 		colorPerVertex	FALSE
 	}
-} # Shape
+}

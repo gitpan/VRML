@@ -1,0 +1,4 @@
+Implematation of TextureCoordinate, TextureTransform, PixelTexture, Script,
+EXTERNPROTO.
+
+More and better documentation.

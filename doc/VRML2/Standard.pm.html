@@ -1,817 +1,939 @@
-<!-- $Id$ -->
-<HTML><HEAD>
-<CENTER><TITLE>Standard.pm</TITLE>
-</HEAD>
-<BODY></CENTER><p><hr>
+    <HTML> 
+	<HEAD> 
+	    <TITLE>VRML::VRML2::Standard.pm - implements VRML 2.0 Standard Nodes
 
-<H1> 
-<A NAME="Standard.pm_name_0">
-NAME</A>
-</H1>
+</TITLE> 
+	</HEAD>
+
+	<BODY>
+
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#NAME">NAME</A>
+	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
+	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
+	<UL>
+
+		<LI><A HREF="#Grouping_Nodes">Grouping Nodes</A>
+		<LI><A HREF="#Special_Groups">Special Groups</A>
+		<LI><A HREF="#Common_Nodes">Common Nodes</A>
+		<LI><A HREF="#Geometry">Geometry</A>
+		<LI><A HREF="#Geometric_Properties">Geometric Properties</A>
+		<LI><A HREF="#Appearance">Appearance</A>
+		<LI><A HREF="#Sensors">Sensors</A>
+		<LI><A HREF="#Interpolators">Interpolators</A>
+		<LI><A HREF="#Bindable_Nodes">Bindable Nodes</A>
+		<LI><A HREF="#other">other</A>
+	</UL>
+
+	<LI><A HREF="#SEE_ALSO">SEE ALSO</A>
+	<LI><A HREF="#AUTHOR">AUTHOR</A>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="NAME">NAME
+
+</A></H1>
 VRML::VRML2::Standard.pm - implements VRML 2.0 Standard Nodes
-<p><p><hr>
 
-<H1> 
-<A NAME="Standard.pm_synopsis_0">
-SYNOPSIS</A>
-</H1>
 
-<XMP>
-    use VRML::VRML2::Standard;
+<P>
 
-</XMP>
-<p><p><hr>
+<P>
+<HR>
+<H1><A NAME="SYNOPSIS">SYNOPSIS
 
-<H1> 
-<A NAME="Standard.pm_description_0">
-DESCRIPTION</A>
-</H1>
+</A></H1>
+<PRE>    use VRML::VRML2::Standard;
+</PRE>
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="DESCRIPTION">DESCRIPTION
+
+</A></H1>
 Following nodes are currently implemented.
-<p>[
-<A HREF="Standard.pm.html#Standard.pm_grouping_0">Grouping Nodes</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_special_0">Special Groups</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_common_0">Common Nodes</A>
-]
-<p>[
-<A HREF="Standard.pm.html#Standard.pm_geometry_0">Geometry</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_geometric_0">Geometric Properties</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_appearance_0">Appearance</A>
-]
-<p>[
-<A HREF="Standard.pm.html#Standard.pm_sensors_0">Sensors</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_interpolators_0">Interpolators</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_bindable_0">Bindable Nodes</A>
-]
-<p>
-<H2> 
-<A NAME="Standard.pm_grouping_0">
-Grouping Nodes</A>
-</H2>
-These nodes <STRONG>NEED</STRONG> 
-<A HREF="Standard.pm.html#Standard.pm_end_0">End</A>
- if the <STRONG>$children</STRONG> parameter is empty !
-<p>
-<DL COMPACT>
-<DT><STRONG>
 
-<A NAME="Standard.pm_anchor_0">
-Anchor</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_anchor_0">Anchor(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$parameter</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>, <STRONG>$children</STRONG>)</A>
+[<CODE>Grouping Nodes</CODE>] [<CODE>Special Groups</CODE>] [<CODE>Common Nodes</CODE>]
 
-<p>Currently only the first part of <EM><STRONG>$parameter</STRONG></EM> is supported.
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_billboard_0">
-Billboard</A>
+<P>
 
-</STRONG>
-<DD>
+[<CODE>Geometry</CODE>] [<CODE>Geometric Properties</CODE>] [<A HREF="#item_Appearance">Appearance</A>]
 
-<A HREF="Standard.pm.html#Standard.pm_billboard_0">Billboard(<STRONG>$axisOfRotation</STRONG>, <STRONG>$children</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_collision_0">
-Collision</A>
+[<CODE>Sensors</CODE>] [<CODE>Interpolators</CODE>] [<CODE>Bindable Nodes</CODE>]
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_collision_0">Collision(<STRONG>$collide</STRONG>, <STRONG>$proxy</STRONG>, <STRONG>$children</STRONG>)</A>
+<P>
 
-<p>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Grouping_Nodes">Grouping Nodes
 
-<A NAME="Standard.pm_group_0">
-Group</A>
+</A></H2>
+These nodes <STRONG>NEED</STRONG>  <STRONG>End</STRONG> if the <CODE>$children</CODE> parameter is empty !
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_group_0">Group(<STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
+<P>
 
-<p>
-<DT><STRONG>
+<DL>
+<DT><STRONG><A NAME="item_Anchor">Anchor
 
-<A NAME="Standard.pm_transform_0">
-Transform</A>
+</A></STRONG><DD>
+<A HREF="#item_Anchor">Anchor($url, $description, $parameter, $bboxSize, $bboxCenter, $children)</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_transform_0">Transform(<STRONG>$translation</STRONG>, <STRONG>$rotation</STRONG>, <STRONG>$scale</STRONG>, <STRONG>$scaleOrientation</STRONG>, <STRONG>$center</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
 
-<p><STRONG>$translation</STRONG> is a SFVec3f
-<p><STRONG>$rotation</STRONG> is a SFRotation
-<p><STRONG>$scale</STRONG> is a SFVec3f
-<p><STRONG>$scaleOrientation</STRONG> is a SFRotation
-<p><STRONG>$center</STRONG> is a SFVec3f
-<p>
+
+<P>
+
+Currently only the first part of <EM>$parameter</EM> is supported.
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Billboard">Billboard
+
+</A></STRONG><DD>
+<A HREF="#item_Billboard">Billboard($axisOfRotation, $children)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Collision">Collision
+
+</A></STRONG><DD>
+<A HREF="#item_Collision">Collision($collide, $proxy, $children)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Group">Group
+
+</A></STRONG><DD>
+<A HREF="#item_Group">Group($bboxSize, $bboxCenter)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Transform">Transform
+
+</A></STRONG><DD>
+<A HREF="#item_Transform">Transform($translation, $rotation, $scale, $scaleOrientation, $center, $bboxSize, $bboxCenter)</A>
+
+
+
+
+<P>
+
+<CODE>$translation</CODE> is a SFVec3f
+
+
+<P>
+
+<CODE>$rotation</CODE> is a SFRotation
+
+
+<P>
+
+<CODE>$scale</CODE> is a SFVec3f
+
+
+<P>
+
+<CODE>$scaleOrientation</CODE> is a SFRotation
+
+
+<P>
+
+<CODE>$center</CODE> is a SFVec3f
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_special_0">
-Special Groups</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Special_Groups">Special Groups
 
-<A NAME="Standard.pm_inline_0">
-Inline</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Inline">Inline
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Inline">Inline($url, $bboxSize, $bboxCenter)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_inline_0">Inline(<STRONG>$url</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_lod_0">
-LOD</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD(<STRONG>$range</STRONG>, <STRONG>$center</STRONG>)</A>
+<DT><STRONG><A NAME="item_LOD">LOD
 
-<p><STRONG>$range</STRONG> is a MFFloat
-<p><STRONG>$center</STRONG> is a SFVec3f
-<p>Example: 
-<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD([1, 2, 5], '0 0 0')</A>
+</A></STRONG><DD>
+<A HREF="#item_LOD">LOD($range, $center)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_switch_0">
-Switch</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChoice</STRONG>)</A>
+<P>
 
-<p>
+<CODE>$range</CODE> is a MFFloat
+
+
+<P>
+
+<CODE>$center</CODE> is a SFVec3f
+
+
+<P>
+
+Example: <A HREF="#item_LOD">LOD([1, 2, 5], '0 0 0')</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Switch">Switch
+
+</A></STRONG><DD>
+<A HREF="#item_Switch">Switch($whichChoice)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_common_0">
-Common Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Common_Nodes">Common Nodes
 
-<A NAME="Standard.pm_directionallight_0">
-DirectionalLight</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_DirectionalLight">DirectionalLight
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_DirectionalLight">DirectionalLight($direction, $intensity, $ambientIntensity, $color, $on)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_directionallight_0">DirectionalLight(<STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$ambientIntensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_pointlight_0">
-PointLight</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_pointlight_0">PointLight(<STRONG>$location</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+<DT><STRONG><A NAME="item_PointLight">PointLight
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_PointLight">PointLight($location, $intensity, $ambientIntensity, $color, $on)</A>
 
-<A NAME="Standard.pm_spotlight_0">
-SpotLight</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_spotlight_0">SpotLight(<STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_sound_0">
-Sound</A>
+<DT><STRONG><A NAME="item_SpotLight">SpotLight
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_SpotLight">SpotLight($location, $direction, $intensity, $color, $on)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_sound_0">Sound(<STRONG>$source</STRONG>, <STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$maxFront</STRONG>, <STRONG>$maxBack</STRONG>, <STRONG>$minFront</STRONG>, <STRONG>$minBack</STRONG>, <STRONG>$priority</STRONG>, <STRONG>$spatialize</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_audioclip_0">
-AudioClip</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_audioclip_0">AudioClip(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$loop</STRONG>, <STRONG>$pitch</STRONG>, <STRONG>$startTime</STRONG>, <STRONG>$stopTime</STRONG>)</A>
+<DT><STRONG><A NAME="item_Sound">Sound
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_Sound">Sound($source, $location, $direction, $intensity, $maxFront, $maxBack, $minFront, $minBack, $priority, $spatialize)</A>
 
-<A NAME="Standard.pm_worldinfo_0">
-WorldInfo</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_worldinfo_0">WorldInfo(<STRONG>$title</STRONG>, <STRONG>$info</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_shape_0">
-Shape</A>
+<DT><STRONG><A NAME="item_AudioClip">AudioClip
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_AudioClip">AudioClip($url, $description, $loop, $pitch, $startTime, $stopTime)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_shape_0">Shape(<STRONG>$geometry</STRONG>, <STRONG>$appearance</STRONG>)</A>
 
-<p>
+
+
+<P>
+
+<DT><STRONG><A NAME="item_WorldInfo">WorldInfo
+
+</A></STRONG><DD>
+<A HREF="#item_WorldInfo">WorldInfo($title, $info)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Shape">Shape
+
+</A></STRONG><DD>
+<A HREF="#item_Shape">Shape($geometry, $appearance)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_geometry_0">
-Geometry</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Geometry">Geometry
 
-<A NAME="Standard.pm_box_0">
-Box</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Box">Box
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Box">Box($size)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_box_0">Box(<STRONG>$size</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_cone_0">
-Cone</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_cone_0">Cone(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>$side</STRONG>, <STRONG>$bottom</STRONG>)</A>
+<DT><STRONG><A NAME="item_Cone">Cone
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_Cone">Cone($radius, $height, $side, $bottom)</A>
 
-<A NAME="Standard.pm_cylinder_0">
-Cylinder</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_cylinder_0">Cylinder(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>$top</STRONG>, <STRONG>$side</STRONG>, <STRONG>$bottom</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_elevationgrid_0">
-ElevationGrid</A>
+<DT><STRONG><A NAME="item_Cylinder">Cylinder
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Cylinder">Cylinder($radius, $height, $top, $side, $bottom)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_elevationgrid_0">ElevationGrid(<STRONG>$xDimension</STRONG>, <STRONG>$zDimension</STRONG>, <STRONG>$xSpacing</STRONG>, <STRONG>$zSpacing</STRONG>, <STRONG>$height_ref</STRONG>, <STRONG>$creaseAngle</STRONG>, <STRONG>$color</STRONG>, <STRONG>$colorPerVertex</STRONG>)</A>
 
-<p><STRONG>$height_ref</STRONG> should be a reference of a list of height values
-like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
-<p><STRONG>$color</STRONG> should be a reference to a subroutine or list of color values
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_indexedfaceset_0">
-IndexedFaceSet</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_indexedfaceset_0">IndexedFaceSet(<STRONG>$coord</STRONG>, <STRONG>$coordIndex</STRONG>, <STRONG>$color</STRONG>, <STRONG>$coordIndex</STRONG>, <STRONG>$colorPerVertex</STRONG>, <STRONG>$normal</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$texCoord</STRONG>, <STRONG>$texCoordIndex_ref</STRONG>)</A>
+<DT><STRONG><A NAME="item_ElevationGrid">ElevationGrid
 
-<p><STRONG>$coordIndex</STRONG> should be a list of point index strings or a reference
-like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
-<p><STRONG>$coordIndex</STRONG> should be a reference of a list of colors
-<p><STRONG>$normalIndex_ref</STRONG> should be a reference of a list of normals
-<p><STRONG>$texCoordIndex_ref</STRONG> should be a reference of a list of textures
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_ElevationGrid">ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing, $height, $creaseAngle, $color, $colorPerVertex, $solid)</A>
 
-<A NAME="Standard.pm_indexedlineset_0">
-IndexedLineSet</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_indexedlineset_0">IndexedLineSet(<STRONG>$coord</STRONG>, <STRONG>$coordIndex</STRONG>, <STRONG>$color</STRONG>, <STRONG>$colorIndex</STRONG>, <STRONG>$colorPerVertex</STRONG>)</A>
 
-<p><STRONG>$coord</STRONG> should be a reference to a 
-<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate</A>
- method or a string with a 
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate</A>
- node.
-<p><STRONG>$coordIndex</STRONG> should be a reference of a list of point index strings
-like <CODE>'0, 1, 3, 2', '2, 3, 5, 4', ...</CODE>
-<p><STRONG>$colorIndex</STRONG> should be a reference of a list of colors
-<p>
-<DT><STRONG>
+<CODE>$height</CODE> should be a reference of a list of height values like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
 
-<A NAME="Standard.pm_pointset_0">
-PointSet</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_pointset_0">PointSet(<STRONG>$coord</STRONG>, <STRONG>$color</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_sphere_0">
-Sphere</A>
+<CODE>$color</CODE> should be a reference to a subroutine or list of color
+values
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_sphere_0">Sphere(<STRONG>$radius</STRONG>)</A>
+<P>
 
-<p><STRONG>$radius</STRONG> have to be &gt; 0
-<p>
-<DT><STRONG>
+<DT><STRONG><A NAME="item_Extrusion">Extrusion
 
-<A NAME="Standard.pm_text_0">
-Text</A>
+</A></STRONG><DD>
+<A HREF="#item_Extrusion">Extrusion($crossSection, $spine, $scale, $orientation, $beginCap, $endCap, $creaseAngle, $solid, $convex, $ccw)</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_text_0">Text(<STRONG>$string</STRONG>, <STRONG>$fontStyle</STRONG>, <STRONG>$length</STRONG>, <STRONG>$maxExtent</STRONG>)</A>
 
-<p>
+
+<P>
+
+<CODE>$spine</CODE> should be a reference of a list of spine values like <CODE>['0 0 0', '0 1 0', ...]</CODE>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_IndexedFaceSet">IndexedFaceSet
+
+</A></STRONG><DD>
+<A HREF="#item_IndexedFaceSet">IndexedFaceSet($coord, $coordIndex, $color, $coordIndex, $colorPerVertex, $normal, $normalIndex_ref, $texCoord, $texCoordIndex_ref)</A>
+
+
+
+
+<P>
+
+<CODE>$coordIndex</CODE> should be a list of point index strings or a
+reference like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
+
+
+
+
+<P>
+
+<CODE>$coordIndex</CODE> should be a reference of a list of colors
+
+
+<P>
+
+<CODE>$normalIndex_ref</CODE> should be a reference of a list of normals
+
+
+<P>
+
+<CODE>$texCoordIndex_ref</CODE> should be a reference of a list of textures
+
+
+<P>
+
+<DT><STRONG><A NAME="item_IndexedLineSet">IndexedLineSet
+
+</A></STRONG><DD>
+<A HREF="#item_IndexedLineSet">IndexedLineSet($coord, $coordIndex, $color, $colorIndex, $colorPerVertex)</A>
+
+
+
+
+<P>
+
+<CODE>$coord</CODE> should be a reference to a <A HREF="#item_Coordinate">Coordinate</A> method or a string with a
+<A HREF="#item_Coordinate">Coordinate</A> node.
+
+
+<P>
+
+<CODE>$coordIndex</CODE> should be a reference of a list of point index
+strings like <CODE>'0, 1, 3, 2', '2, 3, 5, 4', ...</CODE>
+
+
+
+
+<P>
+
+<CODE>$colorIndex</CODE> should be a reference of a list of colors
+
+
+<P>
+
+<DT><STRONG><A NAME="item_PointSet">PointSet
+
+</A></STRONG><DD>
+<A HREF="#item_PointSet">PointSet($coord, $color)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Sphere">Sphere
+
+</A></STRONG><DD>
+<A HREF="#item_Sphere">Sphere($radius)</A>
+
+
+
+
+<P>
+
+<CODE>$radius</CODE> have to be &gt; 0
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Text">Text
+
+</A></STRONG><DD>
+<A HREF="#item_Text">Text($string, $fontStyle, $length, $maxExtent)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_geometric_0">
-Geometric Properties</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Geometric_Properties">Geometric Properties
 
-<A NAME="Standard.pm_coordinate_0">
-Coordinate</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Coordinate">Coordinate
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Coordinate">Coordinate(@point)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate(<STRONG>@point</STRONG>)</A>
 
-<p><STRONG>@point</STRONG> should be a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_color_0">
-Color</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_color_0">Color(<STRONG>@color</STRONG>)</A>
+<CODE>@point</CODE> should be a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
 
-<p><STRONG>@color</STRONG> should be a list of colors with strings like <CODE>'1.0 0.0 0.0', '.3 .2 .1'</CODE>
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_normal_0">
-Normal</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_normal_0">Normal(<STRONG>@vector</STRONG>)</A>
+<P>
 
-<p><STRONG>@vector</STRONG> should be a list of vectors with strings like <CODE>'1.0 0.0 0.0', '.4 .2 0'</CODE>
-<p>
+<DT><STRONG><A NAME="item_Color">Color
+
+</A></STRONG><DD>
+<A HREF="#item_Color">Color(@color)</A>
+
+
+
+
+<P>
+
+<CODE>@color</CODE> should be a list of colors with strings like <CODE>'1.0 0.0 0.0', '.3 .2 .1'</CODE>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Normal">Normal
+
+</A></STRONG><DD>
+<A HREF="#item_Normal">Normal(@vector)</A>
+
+
+
+
+<P>
+
+<CODE>@vector</CODE> should be a list of vectors with strings like <CODE>'1.0 0.0 0.0', '.4 .2 0'</CODE>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_appearance_0">
-Appearance</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Appearance">Appearance
 
-<A NAME="Standard.pm_appearance_0">
-Appearance</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Appearance">Appearance
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Appearance">Appearance</A>
 
-<A HREF="Standard.pm.html#Standard.pm_appearance_0">Appearance</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_fontstyle_0">
-Fontstyle</A>
 
-</STRONG>
-<DD>
-<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$family</STRONG>, <STRONG>$style</STRONG>, <STRONG>$justify</STRONG>)</CODE>
-defines the current font style for the current 
-<A HREF="Standard.pm.html#Standard.pm_text_0">Text</A>
- Nodes
-<p><STRONG>$style</STRONG> can be 'PLAIN','BOLD','ITALIC','BOLD ITALIC'
-<p><STRONG>$familiy</STRONG> can be 'SERIF','SANS','TYPEWRITER'
-<p><STRONG>$justify</STRONG> can be 'BEGIN', 'MIDDLE', 'END'
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_material_0">
-Material</A>
+<DT><STRONG><A NAME="item_Fontstyle">Fontstyle
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<CODE>FontStyle($size, $family, $style, $justify)</CODE>
+defines the current font style for the current <A HREF="#item_Text">Text</A> Nodes
 
-<A HREF="Standard.pm.html#Standard.pm_material_0">Material(<STRONG>%materials</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_imagetexture_0">
-ImageTexture</A>
+<CODE>$style</CODE> can be 'PLAIN','BOLD','ITALIC','BOLD ITALIC'
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_imagetexture_0">ImageTexture(<STRONG>$url</STRONG>)</A>
+<P>
 
-<p>
-<DT><STRONG>
+<CODE>$familiy</CODE> can be 'SERIF','SANS','TYPEWRITER'
 
-<A NAME="Standard.pm_movietexture_0">
-MovieTexture</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_movietexture_0">MovieTexture(<STRONG>$url</STRONG>)</A>
+<CODE>$justify</CODE> can be 'BEGIN', 'MIDDLE', 'END'
 
-<p>
+
+<P>
+
+<DT><STRONG><A NAME="item_Material">Material
+
+</A></STRONG><DD>
+<A HREF="#item_Material">Material(%materials)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_ImageTexture">ImageTexture
+
+</A></STRONG><DD>
+<A HREF="#item_ImageTexture">ImageTexture($url)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_MovieTexture">MovieTexture
+
+</A></STRONG><DD>
+<A HREF="#item_MovieTexture">MovieTexture($url)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_sensors_0">
-Sensors</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Sensors">Sensors
 
-<A NAME="Standard.pm_cylindersensor_0">
-CylinderSensor</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_CylinderSensor">CylinderSensor
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_CylinderSensor">CylinderSensor($maxAngle, $minAngle, $diskAngle, $offset, $autoOffset, $enabled)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_cylindersensor_0">CylinderSensor(<STRONG>$maxAngle</STRONG>, <STRONG>$minAngle</STRONG>, <STRONG>$diskAngle</STRONG>, <STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_planesensor_0">
-PlaneSensor</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_planesensor_0">PlaneSensor(<STRONG>$maxPosition</STRONG>, <STRONG>$minPosition</STRONG>, <STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>, <STRONG>$enabled</STRONG>)</A>
+<DT><STRONG><A NAME="item_PlaneSensor">PlaneSensor
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_PlaneSensor">PlaneSensor($maxPosition, $minPosition, $offset, $autoOffset, $enabled)</A>
 
-<A NAME="Standard.pm_proximitysensor_0">
-ProximitySensor</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_proximitysensor_0">ProximitySensor(<STRONG>$size</STRONG>, <STRONG>$center</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_spheresensor_0">
-SphereSensor</A>
+<DT><STRONG><A NAME="item_ProximitySensor">ProximitySensor
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_ProximitySensor">ProximitySensor($size, $center, $enabled)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_spheresensor_0">SphereSensor(<STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_timesensor_0">
-TimeSensor</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_timesensor_0">TimeSensor(<STRONG>$cycleInterval</STRONG>, <STRONG>$loop</STRONG>, <STRONG>$startTime</STRONG>, <STRONG>$stopTime</STRONG>, <STRONG>$enabled</STRONG>)</A>
+<DT><STRONG><A NAME="item_SphereSensor">SphereSensor
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_SphereSensor">SphereSensor($offset, $autoOffset, $enabled)</A>
 
-<A NAME="Standard.pm_touchsensor_0">
-TouchSensor</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_touchsensor_0">TouchSensor(<STRONG>$enabled</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_visibilitysensor_0">
-VisibilitySensor</A>
+<DT><STRONG><A NAME="item_TimeSensor">TimeSensor
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_TimeSensor">TimeSensor($cycleInterval, $loop, $startTime, $stopTime, $enabled)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_visibilitysensor_0">VisibilitySensor(<STRONG>$size</STRONG>, <STRONG>$center</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
-<p>
+
+
+<P>
+
+<DT><STRONG><A NAME="item_TouchSensor">TouchSensor
+
+</A></STRONG><DD>
+<A HREF="#item_TouchSensor">TouchSensor($enabled)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_VisibilitySensor">VisibilitySensor
+
+</A></STRONG><DD>
+<A HREF="#item_VisibilitySensor">VisibilitySensor($size, $center, $enabled)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_interpolators_0">
-Interpolators</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Interpolators">Interpolators
 
-<A NAME="Standard.pm_colorinterpolator_0">
-ColorInterpolator</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_ColorInterpolator">ColorInterpolator
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_ColorInterpolator">ColorInterpolator($key, $keyValue)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_colorinterpolator_0">ColorInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_coordinateinterpolator_0">
-CoordinateInterpolator</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_coordinateinterpolator_0">CoordinateInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+<DT><STRONG><A NAME="item_CoordinateInterpolator">CoordinateInterpolator
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_CoordinateInterpolator">CoordinateInterpolator($key, $keyValue)</A>
 
-<A NAME="Standard.pm_orientationinterpolator_0">
-OrientationInterpolator</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_orientationinterpolator_0">OrientationInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_normalinterpolator_0">
-NormalInterpolator</A>
+<DT><STRONG><A NAME="item_OrientationInterpolator">OrientationInterpolator
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_OrientationInterpolator">OrientationInterpolator($key, $keyValue)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_normalinterpolator_0">NormalInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_positioninterpolator_0">
-PositionInterpolator</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_positioninterpolator_0">PositionInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+<DT><STRONG><A NAME="item_NormalInterpolator">NormalInterpolator
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_NormalInterpolator">NormalInterpolator($key, $keyValue)</A>
 
-<A NAME="Standard.pm_scalarinterpolator_0">
-ScalarInterpolator</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_scalarinterpolator_0">ScalarInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
 
-<p><STRONG>$key</STRONG>	MFFloat
-<STRONG>$keyValue</STRONG>	MFFloat
-<p>
+<P>
+
+<DT><STRONG><A NAME="item_PositionInterpolator">PositionInterpolator
+
+</A></STRONG><DD>
+<A HREF="#item_PositionInterpolator">PositionInterpolator($key, $keyValue)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_ScalarInterpolator">ScalarInterpolator
+
+</A></STRONG><DD>
+<A HREF="#item_ScalarInterpolator">ScalarInterpolator($key, $keyValue)</A>
+
+
+
+
+<P>
+
+<CODE>$key</CODE> MFFloat <CODE>$keyValue</CODE> MFFloat
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_bindable_0">
-Bindable Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Bindable_Nodes">Bindable Nodes
 
-<A NAME="Standard.pm_background_0">
-Background</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Background">Background
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Background">Background($hash)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_background_0">Background(<STRONG>$hash</STRONG>)</A>
 
-<p>You only can use a hash. Parameter see VRML Spec
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_navigationinfo_0">
-NavigationInfo</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$type</STRONG>, <STRONG>$speed</STRONG>, <STRONG>$headlight</STRONG>, <STRONG>$visibilityLimit</STRONG>, <STRONG>$avatarSize</STRONG>)</A>
+You only can use a hash. Parameter see VRML Spec
 
-<p>You can use a hash reference or all parameter in the same order above
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_viewpoint_0">
-Viewpoint</A>
+<P>
 
-</STRONG>
-<DD>
+<DT><STRONG><A NAME="item_NavigationInfo">NavigationInfo
 
-<A HREF="Standard.pm.html#Standard.pm_viewpoint_0">Viewpoint(<STRONG>$description</STRONG>, <STRONG>$position</STRONG>, <STRONG>$orientation</STRONG>, <STRONG>$fieldOfView</STRONG>, <STRONG>$jump</STRONG>)</A>
+</A></STRONG><DD>
+<A HREF="#item_NavigationInfo">NavigationInfo($type, $speed, $headlight, $visibilityLimit, $avatarSize)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_proto_0">
-PROTO</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_proto_0">PROTO(<STRONG>$name</STRONG>, <STRONG>$declaration</STRONG>, <STRONG>$definition</STRONG>)</A>
+<P>
 
-<p>
+You can use a hash reference or all parameter in the same order above
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Viewpoint">Viewpoint
+
+</A></STRONG><DD>
+<A HREF="#item_Viewpoint">Viewpoint($description, $position, $orientation, $fieldOfView, $jump)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_PROTO">PROTO
+
+</A></STRONG><DD>
+<A HREF="#item_PROTO">PROTO($name, $declaration, $definition)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_other_0">
-other</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="other">other
 
-<A NAME="Standard.pm_use_0">
-USE</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_USE">USE
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_USE">USE($name)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_use_0">USE(<STRONG>$name</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_def_0">
-DEF</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_def_0">DEF(<STRONG>$name</STRONG>)</A>
+<DT><STRONG><A NAME="item_DEF">DEF
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_DEF">DEF($name)</A>
 
-<A NAME="Standard.pm_route_0">
-ROUTE</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_route_0">ROUTE(<STRONG>$from</STRONG>, <STRONG>$to</STRONG>)</A>
 
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_end_0">
-End</A>
+<DT><STRONG><A NAME="item_ROUTE">ROUTE
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_ROUTE">ROUTE($from, $to)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_end_0">End(<STRONG>$comment</STRONG>)</A>
 
-<p>Close an open node with }
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_endchildren_0">
-EndChildren</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_endchildren_0">EndChildren(<STRONG>$comment</STRONG>)</A>
+<DT><STRONG><A NAME="item_End">End
 
-<p>Close an open children part with ]
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_End">End($comment)</A>
 
-<A NAME="Standard.pm_endtransform_0">
-EndTransform</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_endtransform_0">EndTransform(<STRONG>$comment</STRONG>)</A>
 
-<p>Close an open children part with ] and the node with }
-<p>
+<P>
+
+Close an open node with }
+
+
+<P>
+
+<DT><STRONG><A NAME="item_EndChildren">EndChildren
+
+</A></STRONG><DD>
+<A HREF="#item_EndChildren">EndChildren($comment)</A>
+
+
+
+
+<P>
+
+Close an open children part with ]
+
+
+<P>
+
+<DT><STRONG><A NAME="item_EndTransform">EndTransform
+
+</A></STRONG><DD>
+<A HREF="#item_EndTransform">EndTransform($comment)</A>
+
+
+
+
+<P>
+
+Close an open children part with ] and the node with }
+
+
+<P>
+
 </DL>
-.
-<p><p><hr>
+<P>
+<HR>
+<H1><A NAME="SEE_ALSO">SEE ALSO
 
-<H1> 
-<A NAME="Standard.pm_see_0">
-SEE ALSO</A>
-</H1>
+</A></H1>
 VRML::VRML2::Standard
-<p>VRML::Base
-<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
-<p><p><hr>
 
-<H1> 
-<A NAME="Standard.pm_author_0">
-AUTHOR</A>
-</H1>
-Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
-<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
-<p>
-</BODY>
-</HTML>
+
+<P>
+
+VRML::Base
+
+
+<P>
+
+<A
+HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
+for a description of <EM>VRML-modules</EM> and how to obtain it.
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="AUTHOR">AUTHOR
+
+</A></H1>
+Hartmut Palm <EM>&lt;palm@gfz-potsdam.de&gt;</EM>
+
+
+
+
+<P>
+
+Homepage <A
+HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
+
+
+
+<P>
+
+</DL>
+    </BODY>
+
+    </HTML>

@@ -44,7 +44,7 @@ Group {
 		Shape {
 			appearance Appearance {
 				material Material {
-					diffuseColor	0 0 1	# blue
+					diffuseColor	0 0 1
 				}
 			}
 			geometry IndexedFaceSet {
@@ -82,7 +82,7 @@ Group {
 				]
 				colorPerVertex	FALSE
 			}
-		} # Shape
+		}
 	    ]
 	}
     ]

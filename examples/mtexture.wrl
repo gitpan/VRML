@@ -5,17 +5,17 @@ Group {
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	1 0 0	# red
+				name	MPG
+				diffuseColor	1 0 0
 			}
-			texture DEF MPG
-			MovieTexture {
+			texture MovieTexture {
 				url	"your.mpg"
 			}
 		}
 		geometry Box {
 			size	4 4 4
 		}
-	} # Shape
+	}
     ]
 }
 ROUTE VIDEO.touchTime TO MPG.startTime

@@ -4,7 +4,7 @@ require 5.000;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = "1.02";
+$VERSION = "1.03de";
 $::pi = 3.1415926;
 $::pi_2 = $::pi/2;
 $::pi_2 += 0; # prevent warnings
@@ -16,8 +16,9 @@ sub new {
     $self->{'TAB'} = defined $tabs ? "\t" x $tabs : "";
     $self->{'TAB_VIEW'} = "";
     $self->{'DEBUG'} = 0;
-    $self->{'VERSION'} = 0; # VRML Specification
+    $self->{'VERSION'} = 0; # VRML specification
     $self->{'CONVERT'} = 1; # convert degree to radiant
+    $self->{'BROWSER'} = "";# Which VRML + HTML browser
     $self->{'VRML'} = [];   # THE VRML array
     $self->{'DEF'}  = {};   # remember DEFs
     $self->{'PROTO'} = {};  # remember PROTOs
@@ -35,32 +36,18 @@ sub new {
     return bless $self, $class;
 }
 
-sub debug {
+sub browser {
     my $self = shift;
-    $self->{'DEBUG'} = shift;
-    $self->VRML_put("# Set Debug Level to: $self->{'DEBUG'}\n");
-    return $self;
-}
-
-sub display_vars {
-    my $self = shift;
-    my @keys = @_ ? @_ : sort keys %$self;
-    my $key;
-    foreach $key (@keys) {
-	unless (defined $self->{$key}) {
-	    print "# $key => undef\n";
-	    next;
-	}
-	print "# $key => $self->{$key}";
-	print " [".(join(', ',@{$self->{$key}}))."]" if defined ref($self->{$key}) && ref($self->{$key}) eq "ARRAY" && $key ne "VRML";
-	print " [".(join(', ',sort keys %{$self->{$key}}))."]" if defined ref($self->{$key}) && ref($self->{$key}) eq "HASH";
-	print "\n";
-    }
+    return unless $_[0]; # @_ wouldn't work on PC
+    ($self->{'BROWSER'}) = join("+",@_);
+    $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n")
+      if $self->{'DEBUG'};
     return $self;
 }
 
 #####################################################################
-#               Methods to modify the VRML array                    #
+#               Methods to modify the VRML array
+#
 #####################################################################
 
 sub VRML_init {
@@ -115,10 +102,30 @@ sub VRML_trim {
     return $self;
 }
 
-sub VRML_format {
+sub debug {
     my $self = shift;
-    my $name;
-    for (@{$self->{'VRML'}}) { }
+    $self->{'DEBUG'} = shift;
+    $self->VRML_put("# Set Debug Level to: $self->{'DEBUG'}\n");
+    return $self;
+}
+
+sub display_vars {
+    my $self = shift;
+    my @keys = @_ ? @_ : sort keys %$self;
+    my $key;
+    foreach $key (@keys) {
+	unless (defined $self->{$key}) {
+	    print "# $key => undef\n";
+	    next;
+	}
+	print "# $key => $self->{$key}";
+	print " [".(join(', ',@{$self->{$key}}))."]" if defined
+	  ref($self->{$key}) && ref($self->{$key}) eq "ARRAY" &&
+	  $key ne "VRML";
+	print " [".(join(', ',sort keys %{$self->{$key}}))."]"
+	  if defined ref($self->{$key}) && ref($self->{$key}) eq "HASH";
+	print "\n";
+    }
     return $self;
 }
 
@@ -146,8 +153,7 @@ sub insert {
 
 sub insert__DATA__ {
     my $self = shift;
-    push @{$self->{'VRML'}}, <main::DATA>;
-    close(main::DATA);
+    push @{$self->{'VRML'}}, <main::DATA>,"\n";
     return $self;
 }
 
@@ -166,13 +172,13 @@ sub print {
     my $mime = shift;
     my $pipe = shift;
     select STDOUT; $|=1;
-    print "Content-type: $self->{'Content-type'}\n\n" if $self->{'Content-type'} && $mime;
+    print "Content-type: $self->{'Content-type'}\n\n"
+      if $self->{'Content-type'} && $mime;
     if ($pipe) {
-	open(GZIP, "|$pipe") || die;
-	select GZIP; $|=1;
+	open(PIPE, "|$pipe") || die; select PIPE; $|=1;
 	for (@{$self->{'VRML'}}) { print; }
 	select STDOUT;
-	close(GZIP);
+	close(PIPE);
     } else {
 	for (@{$self->{'VRML'}}) { print; }
     }
@@ -187,7 +193,8 @@ sub save {
 	($filename) = $0 =~ m/(.*)\./;
 	$filename .= ".wrl";
     }
-    open(VRMLFILE, ">$filename") || die "Can't create file: \"$filename\" ($!)\n";
+    open(VRMLFILE, ">$filename") ||
+      die "Can't create file: \"$filename\" ($!)\n";
     if ($pipe) {
 	print VRMLFILE "Can't pipe to \"$pipe\"\n";
 	close(VRMLFILE);
@@ -240,13 +247,20 @@ sub xyz {
     ${$self->{'XYZ'}[0]}[0] += $self->{'DX'};
     ${$self->{'XYZ'}[0]}[1] += $self->{'DY'};
     ${$self->{'XYZ'}[0]}[2] += $self->{'DZ'};
-    print "XYZ = ".join(', ',@{$self->{'XYZ'}[0]})."\n" if $self->{'DEBUG'} == 2;
-    $self->{'Xmax'} = ${$self->{'XYZ'}[0]}[0] if $self->{'Xmax'} < ${$self->{'XYZ'}[0]}[0];
-    $self->{'Ymax'} = ${$self->{'XYZ'}[0]}[1] if $self->{'Ymax'} < ${$self->{'XYZ'}[0]}[1];
-    $self->{'Zmax'} = ${$self->{'XYZ'}[0]}[2] if $self->{'Zmax'} < ${$self->{'XYZ'}[0]}[2];
-    $self->{'Xmin'} = ${$self->{'XYZ'}[0]}[0] if $self->{'Xmin'} > ${$self->{'XYZ'}[0]}[0];
-    $self->{'Ymin'} = ${$self->{'XYZ'}[0]}[1] if $self->{'Ymin'} > ${$self->{'XYZ'}[0]}[1];
-    $self->{'Zmin'} = ${$self->{'XYZ'}[0]}[2] if $self->{'Zmin'} > ${$self->{'XYZ'}[0]}[2];
+    print "XYZ = ".join(', ',@{$self->{'XYZ'}[0]})."\n"
+      if $self->{'DEBUG'} == 2;
+    $self->{'Xmax'} = ${$self->{'XYZ'}[0]}[0]
+      if $self->{'Xmax'} < ${$self->{'XYZ'}[0]}[0];
+    $self->{'Ymax'} = ${$self->{'XYZ'}[0]}[1]
+      if $self->{'Ymax'} < ${$self->{'XYZ'}[0]}[1];
+    $self->{'Zmax'} = ${$self->{'XYZ'}[0]}[2]
+      if $self->{'Zmax'} < ${$self->{'XYZ'}[0]}[2];
+    $self->{'Xmin'} = ${$self->{'XYZ'}[0]}[0]
+      if $self->{'Xmin'} > ${$self->{'XYZ'}[0]}[0];
+    $self->{'Ymin'} = ${$self->{'XYZ'}[0]}[1]
+      if $self->{'Ymin'} > ${$self->{'XYZ'}[0]}[1];
+    $self->{'Zmin'} = ${$self->{'XYZ'}[0]}[2]
+      if $self->{'Zmin'} > ${$self->{'XYZ'}[0]}[2];
 }
 
 sub bboxCenter {
@@ -276,7 +290,7 @@ __END__
 
 =head1 NAME
 
-VRML::Base.pm - common basic methods
+VRML::Base.pm - Basis-Methoden für die VRML 1 und 2 Module
 
 =head1 SYNOPSIS
 
@@ -284,130 +298,278 @@ VRML::Base.pm - common basic methods
 
 =head1 DESCRIPTION
 
-Following methods you should know.
+Folgende Methoden stehen zur Verfügung.
 
 =over 4
 
 =item new
 
-C<new>
+F<new>
 
-Creates a new VRML scene object.
+erzeugt ein neues VRML-Szenen-Objekt. Diese Methode muß vor der Verwendung
+einer weiteren Methode aufgerufen werden.
+
+=item browser
+
+F<browser("vrml", "html")>
+
+ vrml SFString ""
+ html SFString ""
+
+
+Die Implementierung der VRML-Spezifikationen in den Browsern und Plug-ins ist
+je nach Entwicklungsstand und Hersteller unterschiedlich. Um einige
+allgemeine Besonderheiten berücksichtigen zu können und Anzeigefehler zu
+verhindern, sollte deshalb der F<browser>-Methode der Name des VRML- und
+HTML-Browsers mitgegeben werden. I<Leere Parameter> oder das Weglassen der
+Methode bewirken die Verwendung des I<kleinsten vertretbaren
+Implementationsstandes> aller unterstützten VRML-Browser.
+
+Beispiele für VRML-Browser:
+
+    Cosmo Player 1.0
+    Cosmo Player 2.0
+    Cosmo Player 2.1
+    libcosmoplayer.so
+    GLview
+    Live3D 1.0
+    Live3D 2.0
+    VRweb
+    WorldView 2.0 Plugin
+
+Gebräuchliche HTML-Browser:
+
+    Mozilla (Netscape)
+    Mosaic
+    MSIE (Microsoft Internet Explorer)
+
+Prinzipiell ist es auch möglich über das API eines VRML-2.0-Browsers, den
+Namen und die Version zu ermitteln. Dieses Verfahren besitzt jedoch einen
+entscheidenden Nachteil: Bevor über das API die Informationen abgefragt
+werden können, muß die Szenenquelle bereits erstellt und erfolgreich geladen
+worden sein. Dann ist es aber für syntaktische Änderungen bereits zu spät.
+
+Ein Beispiel für das unterschiedliche Verhalten der VRML-Browser ist die
+Interpretation eines escapten doppelten Anführungszeichens innerhalb einer
+Zeichenkette. Während einige Browser es, wie in der Spezifikation
+beschrieben, darstellen können, beenden andere Browser die Zeichenkette
+vorzeitig und erzeugen somit weitere Syntaxfehler. Ein weiteres Problem ist
+die unterstützte Sprache im Script-Knoten. Hier muß bei einigen Browsern
+'vrmlscript' angegeben werden.
+
+Beispiel:
+
+    $vrml->browser("Cosmo Player 2.0","Mozilla");
 
 =item comment
 
-C<comment('string')>
+F<comment('string')>
 
-Inserts a single comment line at the current position.
-You don't need to write the # in front. If no string is given, the method
-inserts only a #.
+ string MFString []
+
+fügt an der aktuellen Szenenposition einen Kommentar ein. Jeder Zeichenkette
+aus dem Parameter I<string> wird ein Doppelkreuz vorangestellt und ein
+Zeilenvorschub angefügt.
 
 =item insert
 
-C<insert('string')>
+F<insert('string')>
 
-Inserts the string at the current position in the VRML scene.
+ string SFString ""
+
+fügt vorhandenen VRML-Code in die Szene ein. Dieser kann als skalare Variable
+oder als konstante Zeichenkette dem Parameter I<string> übergeben werden.
+
+Beispiel:
+
+    $vrml
+    ->begin
+      ->insert("Shape { geometry Box {} }")
+    ->end
+    ->print;
+
+Befinden sich im vorhandenen VRML-Code doppelte Anführungszeichen, so sollte
+die Perl-Funktion qq verwendet werden, um den Code unverändert übernehmen zu
+können. Alternativ dazu besteht die Möglichkeit, die Anführungszeichen durch
+einen Backslash zu maskieren (\" ).
+
+    $vrml
+    ->begin
+      ->insert(qq(WorldInfo { title "Meine Welt" } ))
+    ->end
+    ->print;
+
+
+Der Szenenaufbau kann schnell unübersichtlich werden, wenn der VRML-Code
+einige Zeilen überschreitet. Für das Einfügen größerer Programmteile ist die
+Methode C<insert__DATA__> besser geeignet.
+
 
 =item insert__DATA__
 
-C<insert__DATA__()>
+F<insert__DATA__()>
 
-Inserts the text block after __DATA__ of the current perl script
-in the VRML scene. Remember there are two underscores in front and
-at the end of the word DATA.
+macht sich die Perl-Syntax zu nutze, in der alle folgenden Zeilen nach der
+Zeichenkette __DATA__ als Daten behandelt werden. Diese liest die Methode
+F<insert__DATA__> ein und fügt sie an der betreffenden Stelle in die Szene
+ein. Beachte die führenden und abschließenden ZWEI Unterstriche.
+
+Beispiel:
+
+    use VRML;
+    new VRML(2)
+    ->begin
+      ->insert__DATA__
+    ->end
+    ->print;
+
+    __DATA__
+    Shape {
+      geometry Sphere {}
+      appearance Appearance {
+	material Material {
+	  diffuseColor 0 0.5 0
+	}
+      }
+    }
+
+B<Hinweis:> Der __DATA__-Abschnitt in Perl-Skripten wird derzeit nicht von
+C<modperl> auf dem Apache-Server unterstützt. D.h. F<insert__DATA__>
+funktioniert dort nicht wie erwartet.
 
 =item include
 
-C<include('filename')>
+F<include('files')>
 
-Inserts the VRML code of the specified file in the current scene.
+ files MFString []
+
+fügt vorhandene VRML-Dateien in die aktuelle Szene ein. Der Parameter
+I<files> kann eine Liste von Dateinamen enthalten, die der Reihenfolge nach
+eingebunden werden.
+
+Beispiel:
+
+    $vrml->include("c:/vrml/cubes.wrl");
 
 =item print
 
-C<print('mime', 'pipe')>
+F<print('mime', 'pipe')>
 
-Prints the VRML scene to STDOUT. If I<mime> (bool) is given, this method prints
-the scene to STDOUT with the Content-type of the current scene. If I<pipe> is 
-given, then first the stream is send to the pipe and after that to STDOUT. 
-This is usefull to compress the VRML code with GNU-ZIP.
+ mime SFBool   0
+ pipe SFString ""
 
-Example:
+übergibt den Inhalt des Szenenobjekts an STDOUT. Das bedeutet im Normalfall,
+daß die VRML-Quelle auf dem Bildschirm erscheint. Wird das Skript von einem
+WWW-Server über CGI gestartet, so benötigt der Client (Browser) einen
+MIME-Typ, um die korrekte Wiedergabeart zu ermitteln. Der MIME-Typ muß im
+Header vor der eigentlichen Szene gesendet werden. Über den Parameter I<mime>
+kann diese Option aktiviert werden.
 
-1.  I<$vrml-E<gt>print>
+Um die Übertragungs- bzw. Ladezeiten virtueller Welten zu verkürzen, besteht
+die Möglichkeit, VRML-Quellen zu komprimieren. Zu diesem Zweck wird ein
+Programm benötigt, welches das GNU-ZIP-Verfahren realisiert. Über den
+Parameter pipe müssen der Pfad, Name und die Programmparameter der
+ausführbaren Datei spezifiziert werden. Befindet sich die Datei im aktuellen
+Pfad, genügt nur der Name und die Parameter (meistens C<gzip -f>). Der
+Parameter I<pipe> ist jedoch nicht nur auf das Komprimieren der VRML-Skripte
+beschränkt. Prinzipiell kann hier jeder Filter angewendet werden.
 
-2.  I<$vrml-E<gt>print(1, 'gzip -f9')>
+Beispiel 1:
+
+    $vrml->print;
+
+
+Beispiel 2 (UNIX gzip):
+
+    $vrml->print(1,"/usr/local/bin/gzip -f");
+
+
+Beispiel 3 (MS-DOS gzip.exe):
+
+    $vrml->print(1,"c:\\Perl\\bin\\gzip.exe -f");
+
+
+oder für alle Plattformen, wenn sich das Programm C<gzip> im Suchpfad
+befindet:
+
+    $vrml->print(1,"gzip -f");
 
 
 =item save
 
-C<save('filename', 'pipe')>
+F<save('filename', 'pipe')>
 
-Saves the VRML code to the specified name in I<filename>. If no filename is
-given, this method uses the name of the perl script and changes the extension 
-against C<.wrl>. If I<pipe> is given, then first the stream is send to the pipe
-and after that to STDOUT. This is usefull to compress the VRML code with 
-GNU-ZIP.
+ filename SFString ""
+ pipe     SFString ""
 
-Example:
+speichert den Inhalt des Szenenobjekts in einer Datei. Wird kein Dateiname
+angegeben, so wird die Erweiterung des gerade abgearbeiteten Skripts (z. B.
+.pl) gegen die Erweiterung '.wrl' ausgetauscht. Um bei großen Welten
+Speicherplatz zu sparen, besteht auch hier die Möglichkeit, die VRML-Datei zu
+komprimieren. Zu diesem Zweck wird ein Programm benötigt, das ein beliebiges
+Pack-Verfahren realisiert. Besonders gut eignet sich dafür das
+GNU-ZIP-Verfahren, da es vom VRML-Browser selbst entpackt werden kann. Über
+den Parameter I<pipe> muß der Name und Pfad der ausführbaren Datei
+spezifiziert werden. Die Funktionsweise von I<pipe> ist analog der in der
+Methodenbeschreibung von C<print>.
 
-1.  I<$vrml-E<gt>save>
+Beispiel 1:
 
-2.  I<$vrml-E<gt>save(undef, 'gzip -f9')>
+    $vrml->save;
 
-3.  I<$vrml-E<gt>save('myScene.wrl')>
+
+Beispiel 2:
+
+    $vrml->save("world.wrl");
+
+
+Beispiel 3:
+
+    $vrml->save(undef,"gzip");
 
 
 =item as_string
 
-C<as_string>
+F<as_string()>
 
-Returns the VRML scene as string. Possible it uses too much memory to
-build the string.
+gibt die komplette VRML-Quelle als Zeichenkette zurück. Sie wird jedoch nur
+in seltenen Fällen benötigt und ist die einzige Methode, welche nicht eine
+Referenz auf das Szenenobjekt zurückliefert. Für die Ausgabe oder Speicherung
+einer VRML-Quelle sollten im allgemeinen die Methoden C<print> oder C<save>
+benutzt werden. Diese Methoden sind wesentlich effizienter und schonen die
+Ressourcen des Rechners.
+
+    $vrml
+    ->begin
+      ->box("1 2 1")
+    ->end;
+    $scene = $vrml->as_string;
+
+
 
 =back
 
-=head1
-
-You don't need the following 'native' methods. 
-If yet, tell it me and I'll describe it in the next version.
+Folgende Methoden sollten nicht verwendet werden. Sie sind normalerweise
+nicht notwendig. Besteht dennoch Bedarf, so sende mir bitte eine E-Mail und
+ich werde sie in den nächsten Versionen beschreiben.
 
 =over 4
 
 =item debug
 
-C<debug>
+=item _init
 
-=item VRML_init
+=item _add
 
-C<VRML_init('VRML')>
+=item _trim
 
-=item VRML_add
+=item _swap
 
-C<VRML_add>
+=item _put
 
-=item VRML_trim
+=item _row
 
-C<VRML_trim>
-
-=item VRML_swap
-
-C<VRML_swap>
-
-=item VRML_put
-
-C<VRML_put>
-
-=item VRML_row
-
-C<VRML_row>
-
-=item VRML_pos
-
-C<VRML_pos>
-
-=item VRML_format
-
-C<VRML_format>
+=item _pos
 
 =back
 

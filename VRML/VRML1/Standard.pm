@@ -5,7 +5,7 @@ require VRML::Base;
 use strict;
 use vars qw(@ISA $VERSION);
 @ISA = qw(VRML::Base);
-$VERSION = "1.02";
+$VERSION = "1.03";
 
 =head1 NAME
 
@@ -926,7 +926,7 @@ sub End {
     my ($comment) = @_;
     return $self->VRML_put("# ERROR: TAB < 0 !\n") unless $self->{'TAB'};
     chop($self->{'TAB'});
-    $comment = $comment ? " # $comment" : "";
+    $comment = $comment &&  $self->{'DEBUG'} ? " # $comment" : "";
     my $vrml = $self->{'TAB'}."}$comment\n";
     push @{$self->{'VRML'}}, $vrml;
     shift @{$self->{'XYZ'}};

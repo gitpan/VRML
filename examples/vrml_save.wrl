@@ -4,7 +4,7 @@ DEF BackgroundColor Info {
 }
 Group {
 	Material {
-		diffuseColor	1 0.647058823529412 0	# orange
+		diffuseColor	1 0.647058823529412 0
 	}
 	Cube {
 		width	2

@@ -56,32 +56,32 @@ Transform {
 		Shape {
 			appearance Appearance {
 				material Material {
-					emissiveColor	0.3 0.194117647058824 0	# orange%30
-					diffuseColor	1 0.647058823529412 0	# orange
+					emissiveColor	0.3 0.194117647058824 0
+					diffuseColor	1 0.647058823529412 0
 				}
 			}
 			geometry Sphere {
 				radius	1
 			}
-		} # Shape
+		}
 	    ]
-	} # Transform
+	}
 	Transform {
 	    translation	0 4 0
 	    children [
 		Shape {
 			appearance Appearance {
 				material Material {
-					diffuseColor	0 0 1	# blue
+					diffuseColor	0 0 1
 				}
 			}
 			geometry Cone {
 				bottomRadius	2
 				height	3
 			}
-		} # Shape
+		}
 	    ]
-	} # Transform
+	}
 	Transform {
 	    translation	-1 1 1
 	    children [
@@ -91,38 +91,38 @@ Transform {
 			Shape {
 				appearance Appearance {
 					material Material {
-						diffuseColor	1 1 1	# white
+						diffuseColor	1 1 1
 					}
 				}
 				geometry Sphere {
 					radius	0.9
 				}
-			} # Shape
+			}
 			Transform {
 			    translation	0 .1 .8
 			    children [
 				Shape {
 					appearance Appearance {
 						material Material {
-							diffuseColor	0 0 0	# black
+							diffuseColor	0 0 0
 						}
 					}
 					geometry Sphere {
 						radius	0.2
 					}
-				} # Shape
+				}
 			    ]
-			} # Transform
+			}
 		    ]
 		}
 	    ]
-	} # Transform
+	}
 	Transform {
 	    translation	1 1 1
 	    children [
 		USE eye
 	    ]
-	} # Transform
+	}
 	Transform {
 	    translation	0 -0.3 2.5
 	    rotation	1 0 0 1.5707963
@@ -130,16 +130,16 @@ Transform {
 		Shape {
 			appearance Appearance {
 				material Material {
-					diffuseColor	1 0 0	# red
+					diffuseColor	1 0 0
 				}
 			}
 			geometry Cone {
 				bottomRadius	0.5
 				height	2
 			}
-		} # Shape
+		}
 	    ]
-	} # Transform
+	}
 	Transform {
 	    translation	0 -.4 0.7
 	    rotation	1 0 0 1.39626337777778
@@ -147,34 +147,34 @@ Transform {
 		Shape {
 			appearance Appearance {
 				material Material {
-					diffuseColor	1 0 0	# red
+					diffuseColor	1 0 0
 				}
 			}
 			geometry Cylinder {
 				radius	2
 				height	1
 			}
-		} # Shape
+		}
 	    ]
-	} # Transform
+	}
     ]
-} # Transform
+}
 Transform {
     translation	0 -3 0
     children [
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	1 1 0	# yellow
+				diffuseColor	1 1 0
 			}
 		}
 		geometry Cylinder {
 			radius	0.8
 			height	2
 		}
-	} # Shape
+	}
     ]
-} # Transform
+}
 Transform {
     translation	0 -6.5 0
     children [
@@ -182,16 +182,16 @@ Transform {
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	0 0.392156862745098 0	# darkgreen
+				diffuseColor	0 0.392156862745098 0
 			}
 		}
 		geometry Cylinder {
 			radius	2.5
 			height	6
 		}
-	} # Shape
+	}
     ]
-} # Transform
+}
 DEF ARM
 Transform {
     translation	0 -5.5 0
@@ -204,25 +204,25 @@ Transform {
 		Shape {
 			appearance Appearance {
 				material Material {
-					diffuseColor	0 0.501960784313725 0	# green
+					diffuseColor	0 0.501960784313725 0
 				}
 			}
 			geometry Cylinder {
 				radius	.5
 				height	6
 			}
-		} # Shape
+		}
 	    ]
-	} # Transform
+	}
     ]
-} # Transform
+}
 Transform {
     translation	4 -3.5 0
     rotation	0 0 1 -1.04719753333333
     children [
 	USE arm
     ]
-} # Transform
+}
 Transform {
     translation	1.2 -12 0
     children [
@@ -230,22 +230,22 @@ Transform {
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	0 0.501960784313725 0	# green
+				diffuseColor	0 0.501960784313725 0
 			}
 		}
 		geometry Cylinder {
 			radius	.5
 			height	5
 		}
-	} # Shape
+	}
     ]
-} # Transform
+}
 Transform {
     translation	-1.2 -12 0
     children [
 	USE leg
     ]
-} # Transform
+}
 Transform {
     translation	1.2 -14.5 0.3
     children [
@@ -253,21 +253,21 @@ Transform {
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	0 0 0	# black
+				diffuseColor	0 0 0
 			}
 		}
 		geometry Box {
 			size	1.4 .5 2
 		}
-	} # Shape
+	}
     ]
-} # Transform
+}
 Transform {
     translation	-1.2 -14.5 0.3
     children [
 	USE shoe
     ]
-} # Transform
+}
 Sound {
 	direction	0 0 -1
 	maxFront	100

@@ -1,42 +1,92 @@
-<!-- $Id$ -->
-<HTML><HEAD>
-<CENTER><TITLE>Color.pm</TITLE>
-</HEAD>
-<BODY></CENTER><p><hr>
+    <HTML> 
+	<HEAD> 
+	    <TITLE>Color.pm - Farben und Konvertierungsfunktionen
 
-<H1> 
-<A NAME="Color.pm_name_0">
-NAME</A>
-</H1>
-Color.pm - color functions and X11 color names
-<p><p><hr>
+</TITLE> 
+	</HEAD>
 
-<H1> 
-<A NAME="Color.pm_synopsis_0">
-SYNOPSIS</A>
-</H1>
+	<BODY>
 
-<XMP>
-    use VRML::Color;
-    my $color = rgb_color('red');
-      or with the same result
-    my $color = rgb_color('FF0000');
-      or with the same result
-    my $color = rgb_color('255 0 0');
-      naturally works
-    my $color = rgb_color('1 0 0');
+<!-- INDEX BEGIN -->
 
-</XMP>
-<p><p><hr>
+<UL>
 
-<H1> 
-<A NAME="Color.pm_description_0">
-DESCRIPTION</A>
-</H1>
-<p><EM>X11 colornames are:</EM>
-<p>
-<XMP>
-        aliceblue
+	<LI><A HREF="#NAME">NAME</A>
+	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
+	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
+	<LI><A HREF="#SEE_ALSO">SEE ALSO</A>
+	<LI><A HREF="#AUTHOR">AUTHOR</A>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="NAME">NAME
+
+</A></H1>
+Color.pm - Farben und Konvertierungsfunktionen
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="SYNOPSIS">SYNOPSIS
+
+</A></H1>
+<PRE>    use VRML::Color;
+</PRE>
+
+<P>
+
+<PRE>    my $color = rgb_color('red');
+</PRE>
+
+<P>
+
+<PRE>      ODER mit dem gleichen Ergebnis
+</PRE>
+
+<P>
+
+<PRE>    my $color = rgb_color('FF0000');
+</PRE>
+
+<P>
+
+<PRE>      ODER mit dem gleichen Ergebnis
+</PRE>
+
+<P>
+
+<PRE>    my $color = rgb_color('255 0 0');
+</PRE>
+
+<P>
+
+<PRE>      Natürlich geht auch
+</PRE>
+
+<P>
+
+<PRE>    my $color = rgb_color('1 0 0');
+</PRE>
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="DESCRIPTION">DESCRIPTION
+
+</A></H1>
+<EM>X11 Farbnamen:</EM>
+
+
+
+
+<P>
+
+<PRE>        aliceblue
         antiquewhite
         aqua
         aquamarine
@@ -176,31 +226,55 @@ DESCRIPTION</A>
         whitesmoke
         yellow
         yellowgreen
+</PRE>
 
-</XMP>
-<p>You can also use
-<p>
-<XMP>
-        red_40 = '0.4 0 0'
+<P>
+
+Es können auch prozentuale Anteile einer Farbe angeben werden (Trennzeichen
+_ oder %).
+
+
+<P>
+
+<PRE>        red_40 = '0.4 0 0'
         yellow%30 = '0.3 0.3 0'
         gray%30 = '0.7 0.7 0.7' !!!
+</PRE>
 
-</XMP>
-<p><p><hr>
+<P>
 
-<H1> 
-<A NAME="Color.pm_see_0">
-SEE ALSO</A>
-</H1>
-<A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
-<p><p><hr>
+<P>
+<HR>
+<H1><A NAME="SEE_ALSO">SEE ALSO
 
-<H1> 
-<A NAME="Color.pm_author_0">
-AUTHOR</A>
-</H1>
-Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
-<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
-<p>
-</BODY>
-</HTML>
+</A></H1>
+Siehe auch <A
+HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
+für eine detailierte Beschreibung der <EM>VRML-Module</EM> und wie man sie einsetzen kann.
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="AUTHOR">AUTHOR
+
+</A></H1>
+Hartmut Palm <EM>&lt;palm@gfz-potsdam.de&gt;</EM>
+
+
+
+
+<P>
+
+Homepage <A
+HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
+
+
+
+<P>
+
+</DL>
+    </BODY>
+
+    </HTML>

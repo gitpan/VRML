@@ -7,11 +7,10 @@ use VRML::Color;
 use vars qw(@ISA $VERSION %supported);
 @ISA = qw(VRML::VRML2::Standard);
 
-$VERSION="1.02";
-%supported = ('quote' => "Live3D|Cosmo Player",
-	      'gzip'   => "Live3D|WorldView|Cosmo Player|VRweb|GLview",
-	      'target' => "Live3D|WorldView|Cosmo Player",
-	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
+$VERSION="1.03de";
+%supported = ('quote' => "Live3D|WorldView|Cosmo Player|CosmoPlayer",
+ 'gzip'   => "Live3D|WorldView|Cosmo Player|CosmoPlayer|libcosmoplayer|VRweb|GLview",
+ 'target' => "Live3D|WorldView|Cosmo Player|CosmoPlayer|libcosmoplayer|MSVRML2OCX"
 );
 
 #--------------------------------------------------------------------
@@ -20,23 +19,14 @@ sub new {
     my $class = shift;
     my $version = shift;
     my $self = new VRML::VRML2::Standard($version);
-    $self->{'browser'} = "";
     $self->{'viewpoint'} = [];
     return bless $self, $class;
-}
-
-sub browser {
-    my $self = shift;
-    return unless $_[0]; # @_ wouldn't work on PC
-    ($self->{'browser'}) = join("+",@_);
-    $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n") if $self->{'DEBUG'};
-    return $self;
 }
 
 sub supported {
     my $self = shift;
     my $feature = shift;
-    return $self->{'browser'} =~ /$supported{$feature}/i;
+    return $self->{'BROWSER'} =~ /$supported{$feature}/i;
 }
 
 #--------------------------------------------------------------------
@@ -57,10 +47,10 @@ sub end {
 sub anchor_begin {
     my $self = shift;
     my ($url, $description, $parameter, $bboxSize, $bboxCenter) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $description =~ s/"/$quote/g if defined $description;
     $parameter =~ s/"/$quote/g if defined $parameter;
-    undef $parameter if $self->{'browser'} !~ /$supported{'target'}/i;
+    undef $parameter if $self->{'BROWSER'} !~ /$supported{'target'}/i;
     $self->Anchor($url, $description, $parameter, $bboxSize, $bboxCenter);
     return $self;
 }
@@ -168,13 +158,17 @@ sub transform_begin {
 	    $t = "$x $y $z";
 	}
 	MODE: {
-	    if ($key eq "t" || $key eq "translation") { $t = $value; last MODE; }
+	    if ($key eq "t" || $key eq "translation") { $t = $value; last MODE;
+	    }
 	    if ($key eq "r" || $key eq "rotation") { $r = $value; last MODE; }
 	    if ($key eq "c" || $key eq "center") { $c = $value; last MODE; }
 	    if ($key eq "s" || $key eq "scale") { $s = $value; last MODE; }
-	    if ($key eq "so" || $key eq "scaleOrientation") { $o = $value; last MODE; }
-	    if ($key eq "bbs" || $key eq "bboxSize") { $bbs = $value; last MODE; }
-	    if ($key eq "bbc" || $key eq "bboxCenter") { $bbc = $value; last MODE; }
+	    if ($key eq "so" || $key eq "scaleOrientation") { $o = $value; last
+	    MODE; }
+	    if ($key eq "bbs" || $key eq "bboxSize") { $bbs = $value; last MODE;
+	    }
+	    if ($key eq "bbc" || $key eq "bboxCenter") { $bbc = $value; last
+	    MODE; }
 	}
 	if ($key eq "r" || $key eq "rotation") {
 	    ($x,$y,$z,$angle) = split(/\s/,$value);
@@ -260,7 +254,8 @@ sub background {
 	    $hash{'groundColor'} = rgb_color($hash{'groundColor'});
 	}
     }
-    foreach $key (keys %hash) { $hash{$key} = "\"$hash{$key}\"" if $key =~ /Url$/; }
+    foreach $key (keys %hash) { $hash{$key} = "\"$hash{$key}\"" if $key =~
+    /Url$/; }
     $self->Background(%hash);
     return $self;
 }
@@ -294,7 +289,7 @@ sub title {
     my $self = shift;
     my $title = shift;
     return unless defined $title;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $title =~ s/"/$quote/g;
     $self->WorldInfo($title);
     return $self;
@@ -303,7 +298,7 @@ sub title {
 sub info {
     my $self = shift;
     my ($info) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     if (defined $info) {
 	$info =~ s/"/$quote/g;
         $self->WorldInfo(undef, $info);
@@ -314,7 +309,7 @@ sub info {
 sub worldinfo {
     my $self = shift;
     my ($title, $info) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $title =~ s/"/$quote/g if defined $title;
     $info =~ s/"/$quote/g if defined $info;
     $self->WorldInfo($title, $info);
@@ -325,7 +320,8 @@ sub navigationinfo {
     my $self = shift;
     my ($type, $speed, $headlight, $visibilityLimit, $avatarSize) = @_;
     $headlight = defined $headlight && !$headlight ? "FALSE" : "TRUE";
-    $self->NavigationInfo($type, $speed, $headlight, $visibilityLimit, $avatarSize);
+    $self->NavigationInfo($type, $speed, $headlight, $visibilityLimit,
+    $avatarSize);
     return $self;
 }
 #--------------------------------------------------------------------
@@ -335,13 +331,15 @@ sub viewpoint_begin {
     my ($whichChild) = @_;
     $whichChild = (defined $whichChild && $whichChild > 0) ? $whichChild-1 : 0;
     $self->{'TAB_VIEW'} = $self->{'TAB'};
-    $self->{'viewpoint_begin'} = $#{$self->{'VRML'}}+1 unless defined $self->{'viewpoint_begin'};
+    $self->{'viewpoint_begin'} = $#{$self->{'VRML'}}+1 unless defined
+    $self->{'viewpoint_begin'};
     return $self;
 }
 
 sub viewpoint_end {
     my $self = shift;
-    splice(@{$self->{'VRML'}}, $self->{'viewpoint_begin'}, 0, @{$self->{'viewpoint'}});
+    splice(@{$self->{'VRML'}}, $self->{'viewpoint_begin'}, 0,
+    @{$self->{'viewpoint'}});
     $self->{'viewpoint'} = [];
     return $self;
 }
@@ -374,7 +372,8 @@ sub viewpoint_auto_set {
 sub viewpoint_set {
     my $self = shift;
     my ($center, $distance, $fieldOfView) = @_;
-    $self->{'viewpoint_set'} = $#{$self->{'viewpoint'}}+1 unless defined $self->{'viewpoint_set'};
+    $self->{'viewpoint_set'} = $#{$self->{'viewpoint'}}+1 unless defined
+    $self->{'viewpoint_set'};
     my ($x, $y, $z) = split(/\s+/,$center) if defined $center;
     my ($dx, $dy, $dz) = defined $distance ? split(/\s+/,$distance) : (0,0,0);
     $x = 0 unless defined $x;
@@ -403,9 +402,10 @@ sub viewpoint {
 	    my $string = uc($orientation);
 	    undef $orientation;
 	    $orientation = $val{$string};
-            $orientation .= " # $string" if $orientation;
+            $orientation .= " # $string" if $orientation && $self->{'DEBUG'};
 	} else {
-	    my ($x,$y,$z,$angle) = ref($orientation) ? @$orientation : split(/\s+/,$orientation);
+	    my ($x,$y,$z,$angle) = ref($orientation) ? @$orientation :
+	    split(/\s+/,$orientation);
 	    if (defined $angle) {
 		$angle *= $::pi/180 if $self->{'CONVERT'};
 		$orientation = "$x $y $z $angle";
@@ -418,13 +418,15 @@ sub viewpoint {
     if ($description =~ /^#/) {
 	$description =~ s/^#//;
 	my ($name) = $description;
-	$name =~ s/[\x00-\x20\x7f\x22\x27\x23\x2c\x2e\x5b\x5d\x5c\x7b\x7d\x30-\x39\x2b\x2d]/_/g;
+	$name =~ s/[\x00-\x20\x22\x23\x27\x2b-\x2e\x30-\x39\x5b-\x5d\x7b\x7d\x7f]/_/g;
         push @{$self->{'viewpoint'}}, $self->{'TAB_VIEW'}."DEF $name\n";
     }
-    $self->Viewpoint($description, $position, $orientation, $fieldOfView, $jump);
+    $self->Viewpoint($description, $position, $orientation, $fieldOfView,
+    $jump);
     push @{$self->{'viewpoint'}}, pop @{$self->{'VRML'}};
     unless (defined $self->{'viewpoint_begin'}) {
-	splice(@{$self->{'VRML'}}, @{$self->{'VRML'}}, 0, @{$self->{'viewpoint'}});
+	splice(@{$self->{'VRML'}}, @{$self->{'VRML'}}, 0,
+	@{$self->{'viewpoint'}});
 	$self->{'viewpoint'} = [];
     }
     return $self;
@@ -437,7 +439,8 @@ sub directionallight {
     my ($direction, $intensity, $ambientIntensity, $color, $on) = @_;
     if (defined $on) { $on = $on ? "TRUE" : "FALSE"; }
     $color = rgb_color($color) if defined $color;
-    $self->DirectionalLight($direction, $intensity, $ambientIntensity, $color, $on);
+    $self->DirectionalLight($direction, $intensity, $ambientIntensity, $color,
+    $on);
     return $self;
 }
 
@@ -460,7 +463,7 @@ sub line {
     my $dy=$y1-$y2;
     my $dz=$z1-$z2;
     $order = "" unless defined $order;
-    $self->comment('line("'.join('", "',@_).'")');
+    $self->comment('line("'.join('", "',@_).'")') if $self->{'DEBUG'};
     $self->Group();
     if (defined $radius && $radius>0) {
 	if ($dx && $order =~ /x/) {
@@ -520,7 +523,8 @@ sub line {
 sub box {
     my $self = shift;
     my ($dimension, $appearance) = @_;
-    my ($width,$height,$depth) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
+    my ($width,$height,$depth) = ref($dimension) ? @$dimension :
+    split(/\s+/,$dimension);
     $self->Shape(
 	sub{$self->Box("$width $height $depth")},
 	sub{$self->appearance($appearance)}
@@ -531,7 +535,8 @@ sub box {
 sub cone {
     my $self = shift;
     my ($dimension, $appearance) = @_;
-    my ($radius, $height) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
+    my ($radius, $height) = ref($dimension) ? @$dimension :
+    split(/\s+/,$dimension);
     $self->Shape(
 	sub{$self->Cone($radius, $height)},
     	sub{$self->appearance($appearance)}
@@ -542,7 +547,8 @@ sub cone {
 sub cube {
     my $self = shift;
     my ($dimension, $appearance) = @_;
-    my ($width,$height,$depth) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
+    my ($width,$height,$depth) = ref($dimension) ? @$dimension :
+        split(/\s+/,$dimension);
     $height = $width unless defined $height;
     $depth = $width unless defined $depth;
     $self->Shape(
@@ -554,26 +560,42 @@ sub cube {
 
 sub cylinder {
     my $self = shift;
-    my ($dimension, $appearance, $top, $side, $bottom) = @_;
+    my ($dimension, $appearance, $top, $side, $bottom, $inside) = @_;
     my ($radius, $height) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
     $top = $top ? "TRUE" : "FALSE" if defined $top;
     $side = $side ? "TRUE" : "FALSE" if defined $side;
     $bottom = $bottom ? "TRUE" : "FALSE" if defined $bottom;
-    $self->Shape(
-	sub{$self->Cylinder($radius, $height, $top, $side, $bottom)},
-	sub{$self->appearance($appearance)}
-    );
+    if (defined $inside && $inside) {
+	my $crossSection = "1.00  0.00, 0.92  0.38, 0.71  0.71, 0.38  0.92, 0.00  1.00, -0.38  0.92, -0.71  0.71, -0.92  0.38, -1.00  0.0, -0.92 -0.38, -0.71 -0.71, -0.38 -0.92, 0.00 -1.00, 0.38 -0.92, 0.71 -0.71, 0.92 -0.38, 1.00  0.00";
+	$height /= 2;
+	$self->Shape(
+	    sub{$self->Extrusion([$crossSection], ["0 -$height 0", "0 $height 0"], ["$radius $radius", "$radius $radius"], undef, $top, $bottom, 0.5, "FALSE")},
+	    sub{$self->appearance($appearance)}
+	)
+    } else {
+	$self->Shape(
+	    sub{$self->Cylinder($radius, $height, $top, $side, $bottom)},
+	    sub{$self->appearance($appearance)}
+	)
+    }
     return $self;
 }
 
 sub elevationgrid {
     my $self = shift;
-    my ($height_ref, $color, $xDimension, $zDimension, $xSpacing, $zSpacing) = @_;
-    $xDimension = ($$height_ref[0] =~ s/\s+/ /g) + 1 unless defined $xDimension;
-    $zDimension = @$height_ref unless defined $zDimension;
+    my ($height, $color, $xDimension, $zDimension, $xSpacing, $zSpacing,
+        $creaseAngle, $colorPerVertex, $solid) = @_;
+    $xDimension = ($$height[0] =~ s/([+-]?\d+\.?\d*)/$1/g) unless defined $xDimension;
+    $zDimension = @$height unless defined $zDimension;
     $xSpacing = 1 unless defined $xSpacing;
     $zSpacing = $xSpacing unless defined $zSpacing;
-    $self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing, $height_ref, $color);
+    $creaseAngle *= $::pi/180 if defined $creaseAngle && $self->{'CONVERT'};
+    $colorPerVertex = $colorPerVertex ? "TRUE" : "FALSE" if defined $colorPerVertex;
+    $solid = $solid ? "TRUE" : "FALSE" if defined $solid;
+    $self->Shape(
+	sub{$self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing,
+      $height, $creaseAngle, $color, $colorPerVertex, $solid)}
+    );
     return $self;
 }
 
@@ -595,17 +617,20 @@ sub indexedfaceset {
 sub pyramid {
     my $self = shift;
     my ($dimension, $appearance) = @_;
-    my ($width,$height,$depth) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
-    my $x_2 = $width/2;
-    my $y_2 = $height/2;
+    my ($width,$height,$depth) = ref($dimension) ? @$dimension :
+      split(/\s+/,$dimension);
+    my $x_2 = $width ? $width/2 : 1;
+    my $y_2 = $height ? $height/2 : 1;
     my $z_2 = defined $depth ? $depth/2 : $x_2;
     my @color = split(",",$appearance) if $appearance;
     my @color_prop = ();
     @color_prop = (sub{$self->color(@color)},[0..4],"FALSE") if $#color > 0;
     $self->Shape(
 	sub{$self->IndexedFaceSet(
-	    sub{$self->Coordinate("-$x_2 -$y_2 $z_2","$x_2 -$y_2 $z_2","$x_2 -$y_2 -$z_2","-$x_2 -$y_2 -$z_2","0 $y_2 0")},
-	    ["0, 1, 4","1, 2, 4","2, 3, 4","3, 0, 4","0, 3, 2, 1"],@color_prop)
+	    sub{$self->Coordinate("-$x_2 -$y_2 $z_2", "$x_2 -$y_2 $z_2",
+	    "$x_2 -$y_2 -$z_2", "-$x_2 -$y_2 -$z_2", "0 $y_2 0")},
+	    ["0, 1, 4","1, 2, 4","2, 3, 4","3, 0, 4","0, 3, 2, 1"],
+	    @color_prop)
 	},sub{$self->appearance($appearance)}
     );
     return $self;
@@ -625,7 +650,7 @@ sub text {
     my $self = shift;
     my ($string, $appearance, $font, $align) = @_;
     my ($size, $family, $style);
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     if (defined $string) {
 	if (ref($string)) {
 	    map { s/"/$quote/g } @$string;
@@ -645,7 +670,8 @@ sub text {
 	    $align =~ s/CENTER/MIDDLE/i;
 	    $align =~ s/RIGHT/END/i;
 	}
-	$self->Text($string,sub{$self->FontStyle($size, $family, $style, $align)});
+	$self->Text($string,sub{$self->FontStyle($size, $family, $style,
+	$align)});
       } else {
 	$self->Text($string);
       }},sub{$self->appearance($appearance)}
@@ -656,7 +682,7 @@ sub text {
 sub billtext {
     my $self = shift;
     my @param = @_;
-    $self->Billboard("0 0 0",sub{$self->text(@param)}); # don't use @_ directly
+    $self->Billboard("0 0 0",sub{$self->text(@param)}); # don't use @_
 }
 #--------------------------------------------------------------------
 
@@ -677,7 +703,9 @@ sub appearance {
     my ($appearance_list) = @_;
     return $self->VRML_put("Appearance {}\n") unless $appearance_list;
     my $texture = "";
-    my ($item,$color,$multi_color,$key,$value,@values,$num_color,%material,$name,$def);
+    my
+    ($item, $color, $multi_color, $key, $value, @values, $num_color,
+    %material, $def, $defmat, $deftex);
     ITEM:
     foreach $item (split(/\s*;\s*/,$appearance_list)) {
 	($key,$value) = ref($item) ? @$item : split(/\s*=\s*/,$item,2);
@@ -695,18 +723,20 @@ sub appearance {
 	    if ($key eq "tr") { $key = "transparency";  last MODE; }
 	    if ($key eq "tex") { $texture = $value; next ITEM; }
 	    if ($key eq "def") { $def = $value; next ITEM; }
-	    if ($key eq "name") { $name = $value; next ITEM; }
+	    if ($key eq "deftex") { $deftex = $value; next ITEM; }
+	    if ($key eq "defmat") { $defmat = $value; next ITEM; }
 	    if ($key eq "use") {
 		$self->use($value);
 	        return $self;
 	    }
 	}
-	if ($key eq "diffuseColor" | $key eq "emissiveColor" | $key eq "specularColor") {
+	if ($key eq "diffuseColor" | $key eq "emissiveColor" | $key eq
+	"specularColor") {
 	    if ($value =~ /,/) {	# multi color field
 		foreach $color (split(/\s*,\s*/,$value)) {
 		    ($num_color,$color) = rgb_color($color);
 		    $value = $num_color;
-		    $value .= "	# $color" if $color;
+		    $value .= "	# $color" if $color && $self->{'DEBUG'};
 		    push @values, $value;
 		}
 		$material{$key} = $values[0]; # ignore foll. colors
@@ -714,7 +744,7 @@ sub appearance {
 	    } else {
 		($num_color,$color) = rgb_color($value);
 		$value = $num_color;
-		$value .= "	# $color" if $color;
+		$value .= "	# $color" if $color && $self->{'DEBUG'};
 		$material{$key} = $value;
 	    }
 	} else {
@@ -723,9 +753,12 @@ sub appearance {
     }
     $self->def($def) if $def;
     $self->Appearance(
-	%material ? sub{$self->Material(%material)} : undef,
-	$texture =~ /\.gif|\.jpg|\.png|\.bmp/i ? sub{$self->ImageTexture(split(/\s+/,$texture))} : undef ||
-	$texture =~ /\.avi|\.mpg|\.mov/i ? sub{$self->def($name)->MovieTexture(split(/\s+/,$texture))} : undef
+	%material ? sub{$self->def($defmat) if $defmat;
+	$self->Material(%material)} : undef, $texture =~
+	/\.gif|\.jpg|\.png|\.bmp/i ? sub{$self->def($deftex) if
+	$deftex;$self->ImageTexture(split(/\s+/,$texture))} : undef ||
+	$texture =~ /\.avi|\.mpg|\.mov/i ? sub{$self->def($deftex) if
+	$deftex;$self->MovieTexture(split(/\s+/,$texture))} : undef
     );
     return $self;
 }
@@ -734,11 +767,13 @@ sub appearance {
 
 sub sound {
     my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->sound("url", "description", ...)\n}) unless @_;
-    my ($url, $description, $location, $direction, $intensity, $loop, $pitch) = @_;
+    return $self->VRML_put(qq{# CALL: ->sound("url", "description", ...)\n})
+      unless @_;
+    my ($url, $description, $location, $direction, $intensity, $loop, $pitch) =
+    @_;
     $loop = defined $loop && $loop ? "TRUE" : "FALSE";
-    $self->Sound(sub{$self->DEF($description)->AudioClip($url, $description, $loop, $pitch)->VRML_trim},
-	$location, $direction, $intensity, 100 );
+    $self->Sound(sub{$self->DEF($description)->AudioClip($url, $description,
+    $loop, $pitch)->VRML_trim},	$location, $direction, $intensity, 100 );
     return $self;
 }
 
@@ -804,7 +839,8 @@ sub visibitysensor {
 
 sub interpolator {
     my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->interpolator("name","type", [keys],[keyValues])\n}) unless @_;
+    return $self->VRML_put(qq{# CALL: ->interpolator("name","type",
+    [keys],[keyValues])\n}) unless @_;
     my $name = shift;
     my $type = shift;
     $type .= "Interpolator";
@@ -853,297 +889,33 @@ __END__
 
 =head1 NAME
 
-VRML::VRML2.pm - VRML methods with the VRML 2.0 standard
+VRML::VRML2.pm - VRML Methoden für den VRML 2.0/VRML97 Standard
 
 =head1 SYNOPSIS
 
-    use VRML::VRML2;
+  use VRML::VRML2;
 
-    $vrml = new VRML::VRML2;
-    $vrml->browser('CosmoPlayer 1.0','Netscape');
-    $vrml->at('-15 0 20');
-    $vrml->box('5 3 1','yellow');
-    $vrml->back;
-    $vrml->print;
-    $vrml->save;
+  $vrml = new VRML::VRML2;
+  $vrml->browser('Cosmo Player 2.0','Netscape');
+  $vrml->at('-15 0 20');
+  $vrml->box('5 3 1','yellow');
+  $vrml->back;
+  $vrml->print;
+  $vrml->save;
 
-  OR with the same result
+  ODER mit dem gleichen Ergebnis
 
   use VRML::VRML2;
 
   VRML::VRML2->new
-  ->browser('CosmoPlayer 1.0','Netscape')
+  ->browser('Cosmo Player 2.0','Netscape')
   ->at('-15 0 20')->box('5 3 1','yellow')->back
   ->print->save;
 
 =head1 DESCRIPTION
 
-The methods of this module are easier to use than the VRML::*::Standard methods
-because the methods are on a higher level. For example you can use X11 color
-names and it's simple to apply textures to an object. All angles could be
-assigned in degrees.
-
-If a method does the same like its VRML pedant then it has the same name but in
-lowercase (e.g. box). The open part of a group method ends with a
-_begin (e.g. anchor_begin). The closing part ends with an _end (e.g.
-anchor_end). For a detailed description how the generated node works, take a 
-look at the VRML 2.0 specification on VAG.
-
-Following methods are currently implemented. (Values in '...' must be strings!)
-
-=over 4
-
-=item *
-begin('comment')
-
-Before you use an geometry or transform method please call this method.
-It's necessary to calculate something at the end.
-
-=item *
-end('comment')
-
-After C<end> there should no geometry or transformation. This method completes
-the calculations of viewpoints etc.
-
-=item *
-at('type=value','type=value', ...)
-
-is the short version of the method C<transform_begin>. It has the same 
-parameters as C<transform_begin>.
-
-=item *
-back
-
-is the short version of the method C<transform_end>.
-
-=item *
-anchor_begin('url','description','parameter')
-
-=item *
-anchor_end
-
-=item *
-billboard_begin('axisOfRotation')
-
-=item *
-billboard_end
-
-=item *
-collision_begin(collide,proxy)
-
-=item *
-collision_end
-
-=item *
-group_begin('comment')
-
-=item *
-group_end
-
-=item *
-lod_begin(range,'center')
-
-=item *
-lod_end
-
-=item *
-switch_begin(whichChoice)
-
-=item *
-switch_end
-
-=item *
-transform_begin('type=value','type=value', ...)
-
-I<Where type can be:>
-
-	t = translation
-	r = rotation
-	c = center
-	s = scale
-	so = scaleOrientation
-	bbs = bboxSize
-	bbc = bboxCenter
-
-=item *
-transform_end
-
-=item *
-inline('Url')
-
-=item *
-background(
-
-	skycolor => '...',
-	groundcolor => '...',
-	bottomUrl => '...',
-	topUrl => '...',
-	frontUrl => '...',
-	leftUrl => '...',
-	rightUrl => '...',
-	backUrl => '...'
-
-)
-
-This is a parameter hash. Only use the parts you need.
-
-=item *
-backgroundcolor('skyColor','groundColor')
-
-is the short version of C<background>. It specifies only colors.
-
-=item *
-backgroundimage('Url')
-
-is the short version of C<background>. It needs only one image. The
-given Url will assigned to all parts of the background cube.
-
-=item *
-title('string')
-
-=item *
-info('string')
-
-=item *
-viewpoint_begin
-
-starts the hidden calculation of viewpoint center and distance for the
-method C<viewpoint_auto_set()>. It collects also the viepoints to place
-they in the first part of the VRML source.
-
-=item *
-viewpoint('description','position','orientation',fieldOfView,jump)
-
-=item *
-viewpoint_set('center','distance',fieldOfView)
-
-places six viewpoints around the center.
-
-=item *
-viewpoint_auto_set
-
-sets all parameters of C<viewpoint_set> automatically.
-
-=item *
-viewpoint_end
-
-=item *
-directionallight('direction',intensity,ambientIntensity,'color',on)
-
-=item *
-box('width height depth','appearance')
-
-=item *
-cone('radius height','appearance')
-
-=item *
-cube(length,'appearance')
-
-does the same as method C<box>, but needs only one parameter.
-
-=item *
-cylinder('radius [height]','appearance')
-
-=item *
-line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
-
-draws a line (cylinder) between two points with a given radius. If radius
-is '0' only a hairline will be printed. The last parameter specifies the
-devolution along the axes. An empty stands for direct connection.
-
-=item *
-sphere(radius_x,'appearance')
-
-=item *
-text('string','appearance','size family style','align')
-
-=item *
-billtext('string','appearance','size family style','align')
-
-does the same like method C<text>, but the text better readable.
-
-=item *
-appearance('type=value1,value2 ; type=...')
-
-The appearance method specifies the visual properties of geometry by defining
-the material and texture. If more than one type is needed separate the types
-by semicolon. The types can choosen from the following list.
- 
-Note: one character mnemonic are colors
-      two characters mnemonic are values in range of [0..1]
-      more characters are strings like file names or labels
-
-	d = diffuseColor
-	e = emissiveColor
-	s = specularColor
-	ai = ambientIntensity
-	sh = shininess
-	tr = transparency
-	tex = texture filename,wrapS,wrapT
-	name = names the MovieTexture node (for a later route)
-
-The color values can be strings (X11 color names) or RGB-triples. It is 
-possible to reduce the intensity of colors (names) by appending a two digit
-value (percent). This value must be separated by an underscore (_) or
-a percent symbol (%). Note: Do not use a percent symbol in URL's. It would
-be decoded in an ascii character.
-
-Sample (valid color values):
-	'1 1 0' # VRML standard
-	'FFFF00' or 'ffff00', '255 255 0', 'yellow'
-
-or reduced to 50%
-	'.5 .5 .5' # VRML standard
-	'808080', '128 128 0', 'yellow%50' or 'yellow_50'
-
-
-For a list of I<X11 color names> take a look at VRML::Color
-
-=item *
-def('name',[code])
-
-
-=item *
-use('name')
-
-=item *
-route('from','to')
-
-=item *
-interpolator('name','type',[keys],[keyValues])
-
-I<Where type can be:>
-
-	Color
-	Coordinate
-	Orientation
-	Normal
-	Position
-	Scalar
-	
-
-=item *
-cylindersensor('name',maxAngle,minAngle,diskAngle,offset,autoOffset,enabled)
-
-=item *
-planesensor('name',maxPosition,minPosition,offset,autoOffset,enabled)
-
-=item *
-proximitysensor('name',size,center,enabled)
-
-=item *
-spheresensor('name',offset,autoOffset,enabled)
-
-=item *
-timesensor('name',cycleInterval,loop,startTime,stopTime,enabled)
-
-=item *
-touchsensor('name',enabled)
-
-=item *
-visibitysensor('name',size,center,enabled)
-
-=back
+Die Beschreibung der implementierten VRML-Methoden befindet sich in dem Modul
+VRML, die der Basis-Methoden im Modul VRML::Base.
 
 =head1 SEE ALSO
 
@@ -1153,7 +925,12 @@ VRML::VRML2::Standard
 
 VRML::Base
 
-http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of F<VRML-modules> and how to obtain it.
+Siehe auch http://www.gfz-potsdam.de/~palm/vrmlperl/ für weitere
+Informationen zu den F<VRML-Modulen> und wie man sie einsetzen kann.
+
+=head1 BUGS
+
+Nicht alle Methoden wurden ausgiebig getestet.
 
 =head1 AUTHOR
 

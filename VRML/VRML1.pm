@@ -7,12 +7,11 @@ use VRML::Color;
 use vars qw(@ISA $AUTOLOAD $VERSION %supported);
 @ISA = qw(VRML::VRML1::Standard);
 
-$VERSION="1.02";
+$VERSION="1.03";
 %supported = ('quote' => "Live3D|WorldView|Cosmo Player",
-	      'L3D_ext' => "Live3D|Cosmo Player",	# not WorldView & Cosmo Player
-	      'gzip'   => "Live3D|WorldView|Cosmo Player|VRweb|GLview",
-	      'target' => "Live3D|WorldView|Cosmo Player",
-	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
+ 'L3D_ext' => "Live3D|Cosmo Player",	# not WorldView
+ 'gzip'   => "Live3D|WorldView|Cosmo Player|libcosmoplayer|VRweb|GLview",
+ 'target' => "Live3D|WorldView|Cosmo Player|libcosmoplayer|MSVRML2OCX"
 );
 
 #--------------------------------------------------------------------
@@ -21,23 +20,14 @@ sub new {
     my $class = shift;
     my $version = shift;
     my $self = new VRML::VRML1::Standard($version);
-    $self->{'browser'} = "";
     $self->{'viewpoint'} = [];
     return bless $self, $class;
-}
-
-sub browser {
-    my $self = shift;
-    return unless $_[0]; # @_ wouldn't work on PC
-    ($self->{'browser'}) = join("+",@_);
-    $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n") if $self->{'DEBUG'};
-    return $self;
 }
 
 sub supported {
     my $self = shift;
     my $feature = shift;
-    return $self->{'browser'} =~ /$supported{$feature}/i;
+    return $self->{'BROWSER'} =~ /$supported{$feature}/i;
 }
 
 #--------------------------------------------------------------------
@@ -72,9 +62,9 @@ sub anchor_begin {
     return $self->VRML_put(qq{# CALL: ->anchor_begin("Url","description","target=parameter");\n}) unless @_;
     my ($url, $description, $parameter) = @_;
     my $target = undef;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $description =~ s/"/$quote/g if defined $description;
-    if (defined $parameter && $self->{'browser'} =~ /$supported{'target'}/i) {
+    if (defined $parameter && $self->{'BROWSER'} =~ /$supported{'target'}/i) {
 	($target = $1) =~ s/"/$quote/g if ($parameter =~ /target\s*=(.+)/i);
     }
     $self->WWWAnchor($url, $description, $target);
@@ -89,7 +79,7 @@ sub anchor_end {
 
 sub collision_begin {
     my $self = shift;
-    $self->VRML_row("CollideStyle { collide TRUE }\n") if $self->{'browser'} =~ /$supported{'L3D_ext'}/i;
+    $self->VRML_row("CollideStyle { collide TRUE }\n") if $self->{'BROWSER'} =~ /$supported{'L3D_ext'}/i;
     $self->VRML_row("DEF CollisionDetection Info { string \"TRUE\" }\n");
     return $self;
 }
@@ -188,7 +178,7 @@ sub info {
     my $self = shift;
     my $string = shift;
     return $self->VRML_put(qq{# CALL: ->info("string");\n}) unless @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     if (defined $string) {
 	$string = join(',',@$string) if ref($string) eq "ARRAY";
 	$string =~ s/"/$quote/g;
@@ -201,7 +191,7 @@ sub worldinfo {
     my $self = shift;
     my $title = shift;
     my $string = shift;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $self->VRML_row("DEF Title Info { string \"$title\" }\n") if defined $title;
     if (defined $string) {
 	$string = join(',',@$string) if ref($string) eq "ARRAY";
@@ -301,7 +291,7 @@ sub viewpoint {
 	    my $string = uc($orientation);
 	    undef $orientation;
 	    $orientation = $val{$string};
-            $orientation .= " # $string" if $orientation;
+            $orientation .= " # $string" if $orientation && $self->{'DEBUG'};
 	} else {
 	    my ($x,$y,$z,$angle) = ref($orientation) ? @$orientation : split(/\s+/,$orientation);
 	    if (defined $angle) {
@@ -313,7 +303,7 @@ sub viewpoint {
     $heightAngle *= $::pi/180 if defined $heightAngle && $self->{'CONVERT'};
     $self->{'TAB_VIEW'} = $self->{'TAB'} unless $self->{'TAB_VIEW'};
     $name =~ s/^#//;
-    $name =~ s/[\x00-\x20\x7f\x22\x27\x23\x2c\x2e\x5b\x5d\x5c\x7b\x7d\x30-\x39\x2b\x2d]/_/g;
+    $name =~ s/[\x00-\x20\x22\x23\x27\x2b-\x2e\x30-\x39\x5b-\x5d\x7b\x7d\x7f]/_/g;
     push @{$self->{'viewpoint'}}, $self->{'TAB_VIEW'}."DEF $name\n";
     $self->PerspectiveCamera($position, $orientation, $heightAngle);
     push @{$self->{'viewpoint'}}, pop @{$self->{'VRML'}};
@@ -356,10 +346,10 @@ sub line {
     my $dz=$z1-$z2;
     unless ($radius =~ /^(-?)([0-9]*)(\.?)([0-9]+)$/) { die "'$radius' is not a number\n" };
     $order = "" unless defined $order;
-    $self->comment('line("'.join('", "',@_).'")');
+    $self->comment('line("'.join('", "',@_).'")') if $self->{'DEBUG'};
     $self->Separator;
     if ($appearance) {
-	if (defined $radius && $radius==0 && ($self->{'browser'} =~ /Cosmo Player/)) {
+	if (defined $radius && $radius==0 && ($self->{'BROWSER'} =~ /Cosmo Player/)) {
 	     $self->appearance("$appearance, 0 0 0");
 	} else {
 	     $self->appearance($appearance);
@@ -501,7 +491,7 @@ sub sphere {
 sub text {
     my $self = shift;
     my ($string, $appearance, $font, $align) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    my $quote = $self->{'BROWSER'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $string =~ s/"/$quote/g if defined $string;
     $self->Group->appearance($appearance) if $appearance || $font;
     if (defined $string) {
@@ -529,7 +519,7 @@ sub text {
 sub billtext {
     my $self = shift;
     $self->Separator;
-    $self->VRML_row("AxisAlignment { fields [SFBitMask alignment] alignment ALIGNAXISXYZ }\n") if $self->{'browser'} =~ /$supported{'L3D_ext'}/i;
+    $self->VRML_row("AxisAlignment { fields [SFBitMask alignment] alignment ALIGNAXISXYZ }\n") if $self->{'BROWSER'} =~ /$supported{'L3D_ext'}/i;
     $self->text(@_);
     $self->End;
 }
@@ -539,7 +529,8 @@ sub appearance {
     my $self = shift;
     my ($appearance_list) = @_;
     return $self unless $appearance_list;
-    my ($item,$color,$multi_color,$key,$value,@values,$num_color,$texture,%material,$def);
+    my ($item, $color, $multi_color, $key, $value, @values, $num_color,
+        $texture, %material, $def, $defmat, $deftex);
     ITEM:
     foreach $item (split(/\s*;\s*/,$appearance_list)) {
 	($key,$value) = split(/\s*=\s*/,$item,2);
@@ -556,13 +547,15 @@ sub appearance {
 	    if ($key eq "tr") { $key = "transparency";  last MODE; }
 	    if ($key eq "tex") { $texture = $value; next ITEM; }
 	    if ($key eq "def") { $def = $value; next ITEM; }
+	    if ($key eq "defmat") { $defmat = $value; next ITEM; }
+	    if ($key eq "deftex") { $deftex = $value; next ITEM; }
 	}
 	if ($key eq "diffuseColor" | $key eq "emissiveColor" | $key eq "specularColor" | $key eq "ambientColor") {
 	    if ($value =~ /,/) {	# multi color field
 		foreach $color (split(/\s*,\s*/,$value)) {
 		    ($num_color,$color) = rgb_color($color);
-		    $value = "$num_color,";
-		    $value .= "	# $color" if $color;
+		    $value = $num_color;
+		    $value .= "	# $color" if $color && $self->{'DEBUG'};
 		    push @values, $value;
 		}
 		$material{$key} = [@values];
@@ -570,17 +563,20 @@ sub appearance {
 	    } else {
 		($num_color,$color) = rgb_color($value);
 		$value = $num_color;
-		$value .= "	# $color" if $color;
+		$value .= "	# $color" if $color && $self->{'DEBUG'};
 		$material{$key} = $value;
 	    }
 	} else {
 		$material{$key} = $value;
 	}
     }
-    $self->def($def) if $def;
+    $self->def($def)->group_begin if $def;
+    $self->def($defmat) if $defmat;
     $self->Material(%material);
 #    $self->MaterialBinding("PER_FACE_INDEXED") if $multi_color;
+    $self->def($deftex) if $deftex;
     $self->Texture2(split(/\s+/,$texture)) if defined $texture;
+    $self->group_end if $def;
     return $self;
 }
 
@@ -693,170 +689,33 @@ __END__
 
 =head1 NAME
 
-VRML::VRML1.pm - VRML methods with the VRML 1.0 standard
+VRML::VRML1.pm - VRML Methoden für den VRML 1.0 Standard
 
 =head1 SYNOPSIS
 
-    use VRML::VRML1;
+  use VRML::VRML1;
+
+  $vrml = new VRML::VRML1;
+  $vrml->browser('Cosmo Player 2.0','Netscape');
+  $vrml->at('-15 0 20');
+  $vrml->box('5 3 1','yellow');
+  $vrml->back;
+  $vrml->print;
+  $vrml->save;
+
+  ODER mit dem gleichen Ergebnis
+
+  use VRML::VRML1;
+
+  VRML::VRML1->new
+  ->browser('Cosmo Player 2.0','Netscape')
+  ->at('-15 0 20')->box('5 3 1','yellow')->back
+  ->print->save;
 
 =head1 DESCRIPTION
 
-Following methods are currently implemented. (Values in '...' must be strings!)
-
-=over 4
-
-=item *
-begin()
-
-C<  . . . >
-
-=item *
-end('comment')
-
-=item *
-at('type=value', 'type=value', ...)
-
-For a description of all parameters see C<transform_begin>
-
-=item *
-back
-
-see C<transform_end>
-
-=item *
-anchor_begin('Url','description','target=parameter')
-
-=item *
-anchor_end('comment')
-
-=item *
-collision_begin
-
-=item *
-collision_end('comment')
-
-=item *
-group_begin()
-
-=item *
-group_end('comment')
-
-=item *
-lod_begin('range','center')
-
-=item *
-lod_end('comment')
-
-=item *
-switch_begin(whichChild)
-
-=item *
-switch_end('comment')
-
-=item *
-transform_begin('type=value', 'type=value', ...)
-
-I<Where type can be:>
-
-	t = translation
-	r = rotation
-	c = center
-	s = scaleFactor
-	so = scaleOrientation
-
-=item *
-transform_end
-
-=item *
-background(skyColor => 'color', backUrl => 'Url')
-
-=item *
-backgroundcolor('skyColor')
-
-is the short version of C<background>. It specifies only the background color.
-
-=item *
-backgroundimage('Url')
-
-is the short version of C<background>, use only one image. It assigns the
-given Url to the background plane.
-
-=item *
-title('string')
-
-=item *
-info('string')
-
-=item *
-viewpoint_begin('whichCamera')
-
-=item *
-viewpoint('name','positionXYZ','orientationXYZ',heightAngle)
-
-=item *
-viewpoint_set('center','distance',heightAngle)
-
-=item *
-viewpoint_auto_set
-
-sets all parameters of C<viewpoint_set> automatically
-
-=item *
-viewpoint_end
-
-=item *
-directionallight('direction',intensity,ambientIntensity,'color',on)
-
-The parameter I<ambientIntensity> will be ignored in VRML 1.0.
-
-=item *
-box('width [height [depth]]','appearance')
-
-=item *
-cone('radius height','appearance')
-
-=item *
-cube('length','appearance')
-
-=item *
-cylinder('radius [height]','appearance',top,side,bottom)
-
-=item *
-line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
-
-=item *
-sphere(radius,'appearance')
-
-=item *
-text('string','appearance','size family style','align')
-
-=item *
-billtext('string','appearance','size family style','align')
-
-=item *
-appearance('type=value1,value2 ; ...')
-
-I<Where type can be:>
-
-	a = ambientColor (not available in VRML2)
-	d = diffuseColor
-	e = emissiveColor
-	s = specularColor
-	sh = shininess
-	tr = transparency
-	tex = texture filename,wrapS,wrapT
-
-I<and color values see>
-
-VRML::Color
-
-=item *
-def('name',[code])
-
-=item *
-use('name')
-
-=back
+Die Beschreibung der implementierten VRML-Methoden befindet sich in dem Modul
+VRML, die der Basis-Methoden im Modul VRML::Base.
 
 =head1 SEE ALSO
 
@@ -866,7 +725,12 @@ VRML::VRML1::Standard
 
 VRML::Base
 
-http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of F<VRML-modules> and how to obtain it.
+Siehe auch http://www.gfz-potsdam.de/~palm/vrmlperl/ für weitere
+Informationen zu den F<VRML-Modulen> und wie man sie einsetzen kann.
+
+=head1 BUGS
+
+Nicht alle Methoden wurden ausgiebig getestet.
 
 =head1 AUTHOR
 

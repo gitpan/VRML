@@ -8,7 +8,7 @@ Transform {
 		Shape {
 			appearance Appearance {
 				material Material {
-					diffuseColor	1 1 0	# yellow
+					diffuseColor	1 1 0
 				}
 			}
 			geometry Text {
@@ -17,8 +17,8 @@ Transform {
 					justify "MIDDLE"
 				}
 			}
-		} # Shape
+		}
 	    ]
 	}
     ]
-} # Transform
+}

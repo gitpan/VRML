@@ -5,7 +5,7 @@ require VRML::Base;
 use strict;
 use vars qw(@ISA $VERSION $AUTOLOAD);
 @ISA = qw(VRML::Base);
-$VERSION = "1.02";
+$VERSION = "1.03";
 
 =head1 NAME
 
@@ -349,7 +349,7 @@ sub DirectionalLight {
 
 =item PointLight
 
-C<PointLight($location, $intensity, $color, $on)>
+C<PointLight($location, $intensity, $ambientIntensity, $color, $on)>
 
 =cut
 
@@ -513,7 +513,9 @@ sub Shape {
 	    $vrml .= $self->{'TAB'}."	geometry $geometry\n";
 	}
     }
-    $vrml .= $self->{'TAB'}."} # Shape\n";
+    $vrml .= $self->{'TAB'}."}";
+    $vrml .= "# Shape" if $self->{'DEBUG'};
+    $vrml .= "\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self;
 }
@@ -590,9 +592,9 @@ sub Cylinder {
 
 =item ElevationGrid
 
-C<ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing, $height_ref, $creaseAngle, $color, $colorPerVertex)>
+C<ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing, $height, $creaseAngle, $color, $colorPerVertex, $solid)>
 
-$height_ref should be a reference of a list of height values
+$height should be a reference of a list of height values
 like C<['0 1 3 2', '2 3 5 4', ...]>
 
 $color should be a reference to a subroutine or list of color values
@@ -601,34 +603,80 @@ $color should be a reference to a subroutine or list of color values
 
 sub ElevationGrid {
     my $self = shift;
-    my ($xDimension, $zDimension, $xSpacing, $zSpacing, $height_ref, $creaseAngle, $color, $colorPerVertex) = @_;
+    my ($xDimension, $zDimension, $xSpacing, $zSpacing, $height, $creaseAngle, $color, $colorPerVertex, $solid) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."ElevationGrid {\n";
     $vrml .= $self->{'TAB'}."	xDimension	$xDimension\n";
     $vrml .= $self->{'TAB'}."	zDimension	$zDimension\n";
-    $vrml .= $self->{'TAB'}."	xSpacing	$xSpacing\n";
-    $vrml .= $self->{'TAB'}."	zSpacing	$zSpacing\n";
+    $vrml .= $self->{'TAB'}."	xSpacing	$xSpacing\n" if defined $xSpacing;
+    $vrml .= $self->{'TAB'}."	zSpacing	$zSpacing\n" if defined $zSpacing;
+    $vrml .= $self->{'TAB'}."	solid	$solid\n" if defined $solid;
     $vrml .= $self->{'TAB'}."	creaseAngle	$creaseAngle\n" if defined $creaseAngle;
-    if ($height_ref) {
+    if (ref($height) eq "ARRAY") {
 	$vrml .= $self->{'TAB'}."	height [\n";
 	$vrml .= $self->{'TAB'}."\t\t";
-	$vrml .= join("\n$self->{'TAB'}\t\t",@$height_ref);
-	$vrml .= "\n".$self->{'TAB'}."	]\n";
+	$vrml .= join("$self->{'TAB'}\t\t",@$height);
+	$vrml .= $self->{'TAB'}."	]\n";
     }
     if (defined $color) {
-	if (ref($color) eq "CODE") {
-	    $vrml .= $self->{'TAB'}."	color ";
-	    push @{$self->{'VRML'}}, $vrml;
-	    $self->{'TAB'} .= "\t";
-	    my $pos = $#{$self->{'VRML'}}+1;
-	    &$color;
-	    $self->VRML_trim($pos);
-	    chop($self->{'TAB'});
-	    $vrml = "";
+	if (ref($color) eq "ARRAY") {
+	    $vrml .= $self->{'TAB'}."	color Color { color [\n";
+	    $vrml .= $self->{'TAB'}."\t\t";
+	    $vrml .= join("$self->{'TAB'}\t\t",@$color);
+	    $vrml .= $self->{'TAB'}."	] }\n";
 	} else {
 	    $vrml .= $self->{'TAB'}."	color $color\n";
 	}
 	$vrml .= $self->{'TAB'}."	colorPerVertex	$colorPerVertex\n" if $colorPerVertex;
+    }
+    $vrml .= $self->{'TAB'}."}\n";
+    push @{$self->{'VRML'}}, $vrml;
+    return $self;
+}
+
+=item Extrusion
+
+C<Extrusion($crossSection, $spine, $scale, $orientation, $beginCap, $endCap, $creaseAngle, $solid, $convex, $ccw)>
+
+$spine should be a reference of a list of spine values
+like C<['0 0 0', '0 1 0', ...]>
+
+=cut
+
+sub Extrusion {
+    my $self = shift;
+    my ($crossSection, $spine, $scale, $orientation, $beginCap, $endCap, $creaseAngle, $solid, $convex, $ccw) = @_;
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."Extrusion {\n";
+    $vrml .= $self->{'TAB'}."	beginCap	$beginCap\n" if defined $beginCap;
+    $vrml .= $self->{'TAB'}."	endCap	$endCap\n" if defined $endCap;
+    $vrml .= $self->{'TAB'}."	creaseAngle	$creaseAngle\n" if defined $creaseAngle;
+    $vrml .= $self->{'TAB'}."	solid	$solid\n" if defined $solid;
+    $vrml .= $self->{'TAB'}."	convex	$convex\n" if defined $convex;
+    $vrml .= $self->{'TAB'}."	ccw	$ccw\n" if defined $ccw;
+    if ($crossSection) {
+	$vrml .= $self->{'TAB'}."	crossSection [\n";
+	$vrml .= $self->{'TAB'}."\t\t";
+	$vrml .= join("\n$self->{'TAB'}\t\t",@$crossSection);
+	$vrml .= "\n".$self->{'TAB'}."	]\n";
+    }
+    if ($spine) {
+	$vrml .= $self->{'TAB'}."	spine [\n";
+	$vrml .= $self->{'TAB'}."\t\t";
+	$vrml .= join("\n$self->{'TAB'}\t\t",@$spine);
+	$vrml .= "\n".$self->{'TAB'}."	]\n";
+    }
+    if ($scale) {
+	$vrml .= $self->{'TAB'}."	scale [\n";
+	$vrml .= $self->{'TAB'}."\t\t";
+	$vrml .= join("\n$self->{'TAB'}\t\t",@$scale);
+	$vrml .= "\n".$self->{'TAB'}."	]\n";
+    }
+    if ($orientation) {
+	$vrml .= $self->{'TAB'}."	orientation [\n";
+	$vrml .= $self->{'TAB'}."\t\t";
+	$vrml .= join("\n$self->{'TAB'}\t\t",@$orientation);
+	$vrml .= "\n".$self->{'TAB'}."	]\n";
     }
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
@@ -734,7 +782,7 @@ sub IndexedFaceSet {
 
 C<IndexedLineSet($coord, $coordIndex, $color, $colorIndex, $colorPerVertex)>
 
-$coord should be a reference to a C<Coordinate> method or a string with a 
+$coord should be a reference to a C<Coordinate> method or a string with a
 C<Coordinate> node.
 
 $coordIndex should be a reference of a list of point index strings
@@ -883,7 +931,7 @@ sub Text {
     my $vrml = $self->{'TAB'}."Text {\n";
     $vrml .= $self->{'TAB'}."	string ".$self->utf8($string)."\n";
     if (defined $fontStyle) {
-	if (ref($fontStyle) eq "CODE") {
+	if (ref($fontStyle) eq "CODE") { # FontStyle Node
 	    $vrml .= $self->{'TAB'}."	fontStyle ";
 	    push @{$self->{'VRML'}}, $vrml;
 	    $self->{'TAB'} .= "\t";
@@ -1011,7 +1059,7 @@ sub Appearance {
 	    $vrml = "";
 	    $self->{'TAB'} .= "\t";
 	    my $pos = $#{$self->{'VRML'}}+1;
-	    if (ref($material) eq "CODE") {
+	    if (ref($material) eq "CODE") { # Material Node
 		&$material;
 	    } elsif (ref($material) eq "ARRAY") {
 		$self->Material(@$material);
@@ -1654,7 +1702,7 @@ sub End {
     my $self = shift;
     my ($comment) = @_;
     my $vrml = "";
-    $comment = $comment ? " # $comment" : "";
+    $comment = $comment &&  $self->{'DEBUG'} ? " # $comment" : "";
     $vrml .= $self->{'TAB'}."}$comment\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self;
@@ -1674,7 +1722,7 @@ sub EndChildren {
     my $vrml = "";
     return $self->VRML_put("# ERROR: Too many Ends !\n") unless $self->{'TAB'};
     chop($self->{'TAB'});
-    $comment = $comment ? " # $comment" : "";
+    $comment = $comment &&  $self->{'DEBUG'} ? " # $comment" : "";
     $vrml .= $self->{'TAB'}."    ]$comment\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self;
@@ -1693,12 +1741,12 @@ sub EndTransform {
     my ($comment) = @_;
     return $self->VRML_put("# ERROR: Too many Ends !\n") unless $self->{'TAB'};
     chop($self->{'TAB'});
-    $comment = $comment ? " # $comment" : "";
+    $comment = $comment &&  $self->{'DEBUG'} ? " # $comment" : "";
     my $vrml = $self->{'TAB'}."    ]\n";
     $vrml .= $self->{'TAB'}."}$comment\n";
     push @{$self->{'VRML'}}, $vrml;
     shift @{$self->{'XYZ'}};
-    $self->VRML_put("# EndTransform ".join(', ',@{$self->{'XYZ'}[0]})."\n") if $self->{'DEBUG'} == 1;
+    $self->VRML_put("# EndTransform ".join(', ',@{$self->{'XYZ'}[0]})."\n") if $self->{'DEBUG'};
     return $self;
 }
 

@@ -1,162 +1,142 @@
-<!-- $Id$ -->
-<HTML><HEAD>
-<CENTER><TITLE>VRML1.pm</TITLE>
-</HEAD>
-<BODY></CENTER><p><hr>
+    <HTML> 
+	<HEAD> 
+	    <TITLE>VRML::VRML1.pm - VRML Methoden für den VRML 1.0 Standard
 
-<H1> 
-<A NAME="VRML1.pm_name_0">
-NAME</A>
-</H1>
-VRML::VRML1.pm - VRML methods with the VRML 1.0 standard
-<p><p><hr>
+</TITLE> 
+	</HEAD>
 
-<H1> 
-<A NAME="VRML1.pm_synopsis_0">
-SYNOPSIS</A>
-</H1>
+	<BODY>
 
-<XMP>
-    use VRML::VRML1;
+<!-- INDEX BEGIN -->
 
-</XMP>
-<p><p><hr>
-
-<H1> 
-<A NAME="VRML1.pm_description_0">
-DESCRIPTION</A>
-</H1>
-Following methods are currently implemented. (Values in '...' must be strings!)
-<p>
 <UL>
-<LI><EM>begin()</EM>
-<p><CODE>  . . . </CODE>
-<p>
-<LI>end('comment')
-<p>
-<LI>at('type=value', 'type=value', ...)
-<p>For a description of all parameters see <CODE>transform_begin</CODE>
-<p>
-<LI>back
-<p>see <CODE>transform_end</CODE>
-<p>
-<LI>anchor_begin('Url','description','target=parameter')
-<p>
-<LI>anchor_end('comment')
-<p>
-<LI>collision_begin
-<p>
-<LI>collision_end('comment')
-<p>
-<LI><EM>group_begin()</EM>
-<p>
-<LI>group_end('comment')
-<p>
-<LI>lod_begin('range','center')
-<p>
-<LI>lod_end('comment')
-<p>
-<LI>switch_begin(whichChild)
-<p>
-<LI>switch_end('comment')
-<p>
-<LI>transform_begin('type=value', 'type=value', ...)
-<p><EM>Where type can be:</EM>
-<p>
-<XMP>
-        t = translation
-        r = rotation
-        c = center
-        s = scaleFactor
-        so = scaleOrientation
 
-</XMP>
-<p>
-<LI>transform_end
-<p>
-<LI>background(skyColor =&gt; 'color', backUrl =&gt; 'Url')
-<p>
-<LI>backgroundcolor('skyColor')
-<p>is the short version of <CODE>background</CODE>. It specifies only the background color.
-<p>
-<LI>backgroundimage('Url')
-<p>is the short version of <CODE>background</CODE>, use only one image. It assigns the
-given Url to the background plane.
-<p>
-<LI>title('string')
-<p>
-<LI>info('string')
-<p>
-<LI>viewpoint_begin('whichCamera')
-<p>
-<LI>viewpoint('name','positionXYZ','orientationXYZ',heightAngle)
-<p>
-<LI>viewpoint_set('center','distance',heightAngle)
-<p>
-<LI>viewpoint_auto_set
-<p>sets all parameters of <CODE>viewpoint_set</CODE> automatically
-<p>
-<LI>viewpoint_end
-<p>
-<LI>directionallight('direction',intensity,ambientIntensity,'color',on)
-<p>The parameter <EM>ambientIntensity</EM> will be ignored in VRML 1.0.
-<p>
-<LI>box('width [height [depth]]','appearance')
-<p>
-<LI>cone('radius height','appearance')
-<p>
-<LI>cube('length','appearance')
-<p>
-<LI>cylinder('radius [height]','appearance',top,side,bottom)
-<p>
-<LI>line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
-<p>
-<LI>sphere(radius,'appearance')
-<p>
-<LI>text('string','appearance','size family style','align')
-<p>
-<LI>billtext('string','appearance','size family style','align')
-<p>
-<LI>appearance('type=value1,value2 ; ...')
-<p><EM>Where type can be:</EM>
-<p>
-<XMP>
-        a = ambientColor (not available in VRML2)
-        d = diffuseColor
-        e = emissiveColor
-        s = specularColor
-        sh = shininess
-        tr = transparency
-        tex = texture filename,wrapS,wrapT
-
-</XMP>
-<p><EM>and color values see</EM>
-<p>VRML::Color
-<p>
-<LI>def('name',[code])
-<p>
-<LI>use('name')
-<p>
+	<LI><A HREF="#NAME">NAME</A>
+	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
+	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
+	<LI><A HREF="#SEE_ALSO">SEE ALSO</A>
+	<LI><A HREF="#BUGS">BUGS</A>
+	<LI><A HREF="#AUTHOR">AUTHOR</A>
 </UL>
-.
-<p><p><hr>
+<!-- INDEX END -->
 
-<H1> 
-<A NAME="VRML1.pm_see_0">
-SEE ALSO</A>
-</H1>
+<HR>
+<P>
+<H1><A NAME="NAME">NAME
+
+</A></H1>
+VRML::VRML1.pm - VRML Methoden für den VRML 1.0 Standard
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="SYNOPSIS">SYNOPSIS
+
+</A></H1>
+<PRE>  use VRML::VRML1;
+</PRE>
+
+<P>
+
+<PRE>  $vrml = new VRML::VRML1;
+  $vrml-&gt;browser('Cosmo Player 2.0','Netscape');
+  $vrml-&gt;at('-15 0 20');
+  $vrml-&gt;box('5 3 1','yellow');
+  $vrml-&gt;back;
+  $vrml-&gt;print;
+  $vrml-&gt;save;
+</PRE>
+
+<P>
+
+<PRE>  ODER mit dem gleichen Ergebnis
+</PRE>
+
+<P>
+
+<PRE>  use VRML::VRML1;
+</PRE>
+
+<P>
+
+<PRE>  VRML::VRML1-&gt;new
+  -&gt;browser('Cosmo Player 2.0','Netscape')
+  -&gt;at('-15 0 20')-&gt;box('5 3 1','yellow')-&gt;back
+  -&gt;print-&gt;save;
+</PRE>
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="DESCRIPTION">DESCRIPTION
+
+</A></H1>
+Die Beschreibung der implementierten VRML-Methoden befindet sich in dem
+Modul VRML, die der Basis-Methoden im Modul VRML::Base.
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="SEE_ALSO">SEE ALSO
+
+</A></H1>
 VRML
-<p>VRML::VRML1::Standard
-<p>VRML::Base
-<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
-<p><p><hr>
 
-<H1> 
-<A NAME="VRML1.pm_author_0">
-AUTHOR</A>
-</H1>
-Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
-<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
-<p>
-</BODY>
-</HTML>
+
+<P>
+
+VRML::VRML1::Standard
+
+
+<P>
+
+VRML::Base
+
+
+<P>
+
+Siehe auch <A
+HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
+für weitere Informationen zu den <EM>VRML-Modulen</EM> und wie man sie einsetzen kann.
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="BUGS">BUGS
+
+</A></H1>
+Nicht alle Methoden wurden ausgiebig getestet.
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="AUTHOR">AUTHOR
+
+</A></H1>
+Hartmut Palm <EM>&lt;palm@gfz-potsdam.de&gt;</EM>
+
+
+
+
+<P>
+
+Homepage <A
+HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
+
+
+
+<P>
+
+</DL>
+    </BODY>
+
+    </HTML>

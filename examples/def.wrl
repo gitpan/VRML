@@ -36,7 +36,7 @@ Group {
 	DEF blue_cube
 	Group {
 		Material {
-			diffuseColor	0 0 1	# blue
+			diffuseColor	0 0 1
 		}
 		Cube {
 			width	1
@@ -74,7 +74,7 @@ Group {
 					DEF red_cube
 					Group {
 						Material {
-							diffuseColor	1 0 0	# red
+							diffuseColor	1 0 0
 						}
 						Cube {
 							width	0.5

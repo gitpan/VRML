@@ -6,7 +6,7 @@ Separator {
 	}
 	Group {
 		Material {
-			diffuseColor	0 0.501960784313725 0	# green
+			diffuseColor	0 0.501960784313725 0
 		}
 		Cube {
 			width	4

@@ -1,581 +1,730 @@
-<!-- $Id$ -->
-<HTML><HEAD>
-<CENTER><TITLE>Standard.pm</TITLE>
-</HEAD>
-<BODY></CENTER><p><hr>
-
-<H1> 
-<A NAME="Standard.pm_name_0">
-NAME</A>
-</H1>
-VRML::VRML1::Standard.pm - implements nodes the VRML 1.x standard
-<p><p><hr>
-
-<H1> 
-<A NAME="Standard.pm_synopsis_0">
-SYNOPSIS</A>
-</H1>
-
-<XMP>
-    use VRML::VRML1::Standard;
-
-</XMP>
-<p><p><hr>
-
-<H1> 
-<A NAME="Standard.pm_description_0">
-DESCRIPTION</A>
-</H1>
-Following nodes are currently implemented.
-<p>[
-<A HREF="Standard.pm.html#Standard.pm_group_0">Group Nodes</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_geometry_0">Geometry Nodes</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_property_0">Property Nodes</A>
-]
-<p>[
-<A HREF="Standard.pm.html#Standard.pm_appearance_0">Appearance Nodes</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_transform_0">Transform Nodes</A>
-]
-[
-<A HREF="Standard.pm.html#Standard.pm_common_0">Common Nodes</A>
-]
-<p>
-<H2> 
-<A NAME="Standard.pm_group_0">
-Group Nodes</A>
-</H2>
-<EM>These nodes NEED</EM> <CODE>End</CODE> !
-<p>
-<DL COMPACT>
-<DT><STRONG>
-
-<A NAME="Standard.pm_group_1">
-Group</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_group_1">
-<A HREF="Standard.pm.html#Standard.pm_group_1">Group()</A>
-</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_separator_0">
-Separator</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_separator_0">
-<A HREF="Standard.pm.html#Standard.pm_separator_0">Separator()</A>
-</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_switch_0">
-Switch</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChild</STRONG>)</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_wwwanchor_0">
-WWWAnchor</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_wwwanchor_0">WWWAnchor(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$target</STRONG>)</A>
-
-<p><STRONG>$target</STRONG> works only with <EM>some</EM> browsers
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_lod_0">
-LOD</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD(<STRONG>$range</STRONG>, <STRONG>$center</STRONG>)</A>
-
-<p><STRONG>$range</STRONG>  = MFFloat
-<p><STRONG>$center</STRONG> = SFVec3f
-<p>example: 
-<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD([1, 2, 5], '0 0 0')</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_spingroup_0">
-SpinGroup</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_spingroup_0">SpinGroup(<STRONG>$rotation</STRONG>, <STRONG>$local</STRONG>)</A>
- is supported only by <EM>some</EM> browsers
-<p>
-</DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_geometry_0">
-Geometry Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
-
-<A NAME="Standard.pm_asciitext_0">
-AsciiText</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_asciitext_0">AsciiText(<STRONG>$string</STRONG>, <STRONG>$width</STRONG>, <STRONG>$justification</STRONG>, <STRONG>$spacing</STRONG>)</A>
-
-<p><STRONG>$justification</STRONG> is a string ('LEFT','CENTER','RIGHT')
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_cone_0">
-Cone</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_cone_0">Cone(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>@parts</STRONG>)</A>
-
-<p><STRONG>@parts</STRONG> is an array of strings ('SIDES', 'BOTTOM', 'ALL')
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_cube_0">
-Cube</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_cube_0">Cube(<STRONG>$width</STRONG>, <STRONG>$height</STRONG>, <STRONG>$depth</STRONG>)</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_cylinder_0">
-Cylinder</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_cylinder_0">Cylinder(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>@parts</STRONG>)</A>
-
-<p><STRONG>@parts</STRONG> is a list of strings ('SIDES', 'TOP', 'BOTTOM', 'ALL')
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_indexedfaceset_0">
-IndexedFaceSet</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_indexedfaceset_0">IndexedFaceSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$materialIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$textureCoordIndex_ref</STRONG>)</A>
-
-<p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
-like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
-<p><STRONG>$materialIndex_ref</STRONG> is a reference of a list of materials
-<p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
-<p><STRONG>$textureCoordIndex_ref</STRONG> is a reference of a list of textures
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_indexedlineset_0">
-IndexedLineSet</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_indexedlineset_0">IndexedLineSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$materialIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$textureCoordIndex_ref</STRONG>)</A>
-
-<p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
-like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
-<p><STRONG>$materialIndex_ref</STRONG> is a reference of a list of materials
-<p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
-<p><STRONG>$textureCoordIndex_ref</STRONG> is a reference of a list of textures
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_pointset_0">
-PointSet</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_pointset_0">PointSet(<STRONG>$numPoints</STRONG>, <STRONG>$startIndex</STRONG>)</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_sphere_0">
-Sphere</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_sphere_0">Sphere(<STRONG>$radius</STRONG>)</A>
-
-<p><STRONG>$radius</STRONG> have to be &gt; 0
-<p>
-</DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_property_0">
-Property Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
-
-<A NAME="Standard.pm_coordinate_0">
-Coordinate3</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate3(<STRONG>@points</STRONG>)</A>
-
-<p><STRONG>@points</STRONG> is a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_fontstyle_0">
-Fontstyle</A>
-
-</STRONG>
-<DD>
-<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$family</STRONG>, <STRONG>$style</STRONG>)</CODE>
-defines the current font style for all subsequent 
-<A HREF="Standard.pm.html#Standard.pm_asciitext_0">AsciiText</A>
- Nodes
-<p><STRONG>$familiy</STRONG> can be 'SERIF','SANS','TYPEWRITER'
-<p><STRONG>$style</STRONG> can be 'NONE','BOLD','ITALIC'
-<p>
-</DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_appearance_0">
-Appearance Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
-
-<A NAME="Standard.pm_material_0">
-Material</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_material_0">Material(<STRONG>%materials</STRONG>)</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_materialbinding_0">
-MaterialBinding</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_materialbinding_0">MaterialBinding(<STRONG>$value</STRONG>)</A>
-
-<p><STRONG>$value</STRONG> can be
-<p><UL><LI>    DEFAULT	Use default bindng</LI>
-<LI>    OVERALL	Whole object has same material</LI>
-<LI>    PER_PART	One material for each part of object</LI>
-<LI>    PER_PART_INDEXED	One material for each part, indexed</LI>
-<LI>    PER_FACE	One material for each face of object</LI>
-<LI>    PER_FACE_INDEXED	One material for each face, indexed</LI>
-<LI>    PER_VERTEX	One material for each vertex of object</LI>
-<LI>    PER_VERTEX_INDEXED	One material for each vertex, indexed</LI>
+    <HTML> 
+	<HEAD> 
+	    <TITLE>VRML::VRML1::Standard.pm - implements nodes the VRML 1.x standard
+
+</TITLE> 
+	</HEAD>
+
+	<BODY>
+
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#NAME">NAME</A>
+	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
+	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
+	<UL>
+
+		<LI><A HREF="#Group_Nodes">Group Nodes</A>
+		<LI><A HREF="#Geometry_Nodes">Geometry Nodes</A>
+		<LI><A HREF="#Property_Nodes">Property Nodes</A>
+		<LI><A HREF="#Appearance_Nodes">Appearance Nodes</A>
+		<LI><A HREF="#Transform_Nodes">Transform Nodes</A>
+		<LI><A HREF="#Common_Nodes">Common Nodes</A>
+		<LI><A HREF="#other">other</A>
+	</UL>
+
+	<LI><A HREF="#SEE_ALSO">SEE ALSO</A>
+	<LI><A HREF="#AUTHOR">AUTHOR</A>
 </UL>
-<p>
-<DT><STRONG>
+<!-- INDEX END -->
 
-<A NAME="Standard.pm_normal_0">
-Normal</A>
+<HR>
+<P>
+<H1><A NAME="NAME">NAME
 
-</STRONG>
-<DD>
+</A></H1>
+VRML::VRML1::Standard.pm - implements nodes the VRML 1.x standard
 
-<A HREF="Standard.pm.html#Standard.pm_normal_0">Normal(<STRONG>@vector</STRONG>)</A>
 
-<p><STRONG>@vector</STRONG> is a list of vectors with strings like <CODE>'1.0 0.0 0.0', '.5 .2 0'</CODE>
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_normalbinding_0">
-NormalBinding</A>
+<P>
+<HR>
+<H1><A NAME="SYNOPSIS">SYNOPSIS
 
-</STRONG>
-<DD>
+</A></H1>
+<PRE>    use VRML::VRML1::Standard;
+</PRE>
 
-<A HREF="Standard.pm.html#Standard.pm_normalbinding_0">NormalBinding(<STRONG>$value</STRONG>)</A>
+<P>
 
-<p><STRONG>$value</STRONG> is the same as 
-<A HREF="Standard.pm.html#Standard.pm_materialbinding_0">MaterialBinding</A>
+<P>
+<HR>
+<H1><A NAME="DESCRIPTION">DESCRIPTION
 
-<p>
-<DT><STRONG>
+</A></H1>
+Following nodes are currently implemented.
 
-<A NAME="Standard.pm_texture_0">
-Texture2</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_texture_0">Texture2(<STRONG>$value</STRONG>)</A>
+[<CODE>Group Nodes</CODE>] [<CODE>Geometry Nodes</CODE>] [<CODE>Property Nodes</CODE>]
 
-<p>
+
+<P>
+
+[<CODE>Appearance Nodes</CODE>] [<CODE>Transform Nodes</CODE>] [<CODE>Common Nodes</CODE>]
+
+
+<P>
+
+<P>
+<HR>
+<H2><A NAME="Group_Nodes">Group Nodes
+
+</A></H2>
+<EM>These nodes NEED</EM>  <CODE>End</CODE> !
+
+
+<P>
+
+<DL>
+<DT><STRONG><A NAME="item_Group">Group
+
+</A></STRONG><DD>
+<A HREF="#item_Group">Group()</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Separator">Separator
+
+</A></STRONG><DD>
+<A HREF="#item_Separator">Separator()</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Switch">Switch
+
+</A></STRONG><DD>
+<A HREF="#item_Switch">Switch($whichChild)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_WWWAnchor">WWWAnchor
+
+</A></STRONG><DD>
+<A HREF="#item_WWWAnchor">WWWAnchor($url, $description, $target)</A>
+
+
+
+
+<P>
+
+<CODE>$target</CODE> works only with <EM>some</EM> browsers
+
+
+<P>
+
+<DT><STRONG><A NAME="item_LOD">LOD
+
+</A></STRONG><DD>
+<A HREF="#item_LOD">LOD($range, $center)</A>
+
+
+
+
+<P>
+
+<CODE>$range</CODE> = MFFloat
+
+
+<P>
+
+<CODE>$center</CODE> = SFVec3f
+
+
+<P>
+
+example: <A HREF="#item_LOD">LOD([1, 2, 5], '0 0 0')</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_SpinGroup">SpinGroup
+
+</A></STRONG><DD>
+<A HREF="#item_SpinGroup">SpinGroup($rotation, $local)</A> is supported only by <EM>some</EM> browsers
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_transform_0">
-Transform Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Geometry_Nodes">Geometry Nodes
 
-<A NAME="Standard.pm_transform_1">
-Transform</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_AsciiText">AsciiText
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_AsciiText">AsciiText($string, $width, $justification, $spacing)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform(<STRONG>$translation</STRONG>, <STRONG>$rotation</STRONG>, <STRONG>$scaleFactor</STRONG>, <STRONG>$scaleOrientation</STRONG>, <STRONG>$center</STRONG>)</A>
 
-<p><STRONG>$translation</STRONG> is a string like ``0 1 -2''
-<p><STRONG>$rotation</STRONG> is a string like ``0 0 1 1.57''
-<p><STRONG>$scaleFactor</STRONG> is a string like ``1 1 1''
-<p><STRONG>$scaleOrientation</STRONG> is a string like ``0 0 1 0''
-<p><STRONG>$center</STRONG> is a string like ``0 0 0''
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_rotation_0">
-Rotation</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_rotation_0">Rotation(<STRONG>$rotation</STRONG>)</A>
+<CODE>$justification</CODE> is a string ('LEFT','CENTER','RIGHT')
 
-<p><STRONG>$rotation</STRONG> is a string like ``0 0 1 1.57''
-<p><CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_scale_0">
-Scale</A>
+<P>
 
-</STRONG>
-<DD>
+<DT><STRONG><A NAME="item_Cone">Cone
 
-<A HREF="Standard.pm.html#Standard.pm_scale_0">Scale(<STRONG>$scaleFactor</STRONG>)</A>
+</A></STRONG><DD>
+<A HREF="#item_Cone">Cone($radius, $height, @parts)</A>
 
-<p><STRONG>$scaleFactor</STRONG> is a string like ``1 1 1''
-<p><CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_translation_0">
-Translation</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_translation_0">Translation(<STRONG>$translation</STRONG>)</A>
+<P>
 
-<p><STRONG>$translation</STRONG> is a string like ``0 1 -2''
-<p><CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
-<p>
+<CODE>@parts</CODE> is an array of strings ('SIDES', 'BOTTOM', 'ALL')
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Cube">Cube
+
+</A></STRONG><DD>
+<A HREF="#item_Cube">Cube($width, $height, $depth)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Cylinder">Cylinder
+
+</A></STRONG><DD>
+<A HREF="#item_Cylinder">Cylinder($radius, $height, @parts)</A>
+
+
+
+
+<P>
+
+<CODE>@parts</CODE> is a list of strings ('SIDES', 'TOP', 'BOTTOM', 'ALL')
+
+
+<P>
+
+<DT><STRONG><A NAME="item_IndexedFaceSet">IndexedFaceSet
+
+</A></STRONG><DD>
+<A HREF="#item_IndexedFaceSet">IndexedFaceSet($coordIndex_ref, $materialIndex_ref, $normalIndex_ref, $textureCoordIndex_ref)</A>
+
+
+
+
+<P>
+
+<CODE>$coordIndex_ref</CODE> is a reference of a list of point index
+strings like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
+
+
+
+
+<P>
+
+<CODE>$materialIndex_ref</CODE> is a reference of a list of materials
+
+
+<P>
+
+<CODE>$normalIndex_ref</CODE> is a reference of a list of normals
+
+
+<P>
+
+<CODE>$textureCoordIndex_ref</CODE> is a reference of a list of textures
+
+
+<P>
+
+<DT><STRONG><A NAME="item_IndexedLineSet">IndexedLineSet
+
+</A></STRONG><DD>
+<A HREF="#item_IndexedLineSet">IndexedLineSet($coordIndex_ref, $materialIndex_ref, $normalIndex_ref, $textureCoordIndex_ref)</A>
+
+
+
+
+<P>
+
+<CODE>$coordIndex_ref</CODE> is a reference of a list of point index
+strings like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
+
+
+
+
+<P>
+
+<CODE>$materialIndex_ref</CODE> is a reference of a list of materials
+
+
+<P>
+
+<CODE>$normalIndex_ref</CODE> is a reference of a list of normals
+
+
+<P>
+
+<CODE>$textureCoordIndex_ref</CODE> is a reference of a list of textures
+
+
+<P>
+
+<DT><STRONG><A NAME="item_PointSet">PointSet
+
+</A></STRONG><DD>
+<A HREF="#item_PointSet">PointSet($numPoints, $startIndex)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Sphere">Sphere
+
+</A></STRONG><DD>
+<A HREF="#item_Sphere">Sphere($radius)</A>
+
+
+
+
+<P>
+
+<CODE>$radius</CODE> have to be &gt; 0
+
+
+<P>
+
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_common_0">
-Common Nodes</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Property_Nodes">Property Nodes
 
-<A NAME="Standard.pm_perspectivecamera_0">
-PerspectiveCamera</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Coordinate3">Coordinate3
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Coordinate3">Coordinate3(@points)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_perspectivecamera_0">PerspectiveCamera(<STRONG>$position</STRONG>, <STRONG>$orientation</STRONG>, <STRONG>$heightAngle</STRONG>, <STRONG>$focalDistance</STRONG>, <STRONG>$nearDistance</STRONG>, <STRONG>$farDistance</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_orthographiccamera_0">
-OrthographicCamera</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_orthographiccamera_0">OrthographicCamera(<STRONG>$position</STRONG>, <STRONG>$orientation</STRONG>, <STRONG>$height</STRONG>, <STRONG>$focalDistance</STRONG>, <STRONG>$nearDistance</STRONG>, <STRONG>$farDistance</STRONG>)</A>
+<CODE>@points</CODE> is a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_directionallight_0">
-DirectionalLight</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_directionallight_0">DirectionalLight(<STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+<P>
 
-<p>
-<DT><STRONG>
+<DT><STRONG><A NAME="item_Fontstyle">Fontstyle
 
-<A NAME="Standard.pm_pointlight_0">
-PointLight</A>
+</A></STRONG><DD>
+<CODE>FontStyle($size, $family, $style)</CODE>
+defines the current font style for all subsequent <A HREF="#item_AsciiText">AsciiText</A> Nodes
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_pointlight_0">PointLight(<STRONG>$location</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+<P>
 
-<p>
-<DT><STRONG>
+<CODE>$familiy</CODE> can be 'SERIF','SANS','TYPEWRITER'
 
-<A NAME="Standard.pm_spotlight_0">
-SpotLight</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_spotlight_0">SpotLight(<STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+<CODE>$style</CODE> can be 'NONE','BOLD','ITALIC'
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_directedsound_0">
-DirectedSound</A>
+<P>
 
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_directedsound_0">DirectedSound(<STRONG>$name</STRONG>, <STRONG>$description</STRONG>, <STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$maxFrontRange</STRONG>, <STRONG>$maxBackRange</STRONG>, <STRONG>$minFrontRange</STRONG>, <STRONG>$minBackRange</STRONG>, <STRONG>$loop</STRONG>, <STRONG>$pause</STRONG>)</A>
-
-<p>
 </DL>
-.
-<p>
-<H2> 
-<A NAME="Standard.pm_other_0">
-other</A>
-</H2>
-<p>
-<DL COMPACT>
-<DT><STRONG>
+<P>
+<HR>
+<H2><A NAME="Appearance_Nodes">Appearance Nodes
 
-<A NAME="Standard.pm_wwwinline_0">
-WWWInline</A>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Material">Material
 
-</STRONG>
-<DD>
+</A></STRONG><DD>
+<A HREF="#item_Material">Material(%materials)</A>
 
-<A HREF="Standard.pm.html#Standard.pm_wwwinline_0">WWWInline(<STRONG>$name</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
 
-<p>
-<DT><STRONG>
 
-<A NAME="Standard.pm_info_0">
-Info</A>
 
-</STRONG>
-<DD>
+<P>
 
-<A HREF="Standard.pm.html#Standard.pm_info_0">Info(<STRONG>$string</STRONG>)</A>
+<DT><STRONG><A NAME="item_MaterialBinding">MaterialBinding
 
-<p>
-<DT><STRONG>
+</A></STRONG><DD>
+<A HREF="#item_MaterialBinding">MaterialBinding($value)</A>
 
-<A NAME="Standard.pm_navigationinfo_0">
-NavigationInfo</A>
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$type</STRONG>, <STRONG>$speed</STRONG>, <STRONG>$headlight</STRONG>)</A>
 
-<p>Works only with Live3D and WebFX
-<p>
-<DT><STRONG>
+<P>
 
-<A NAME="Standard.pm_use_0">
-USE</A>
+<CODE>$value</CODE> can be
 
-</STRONG>
-<DD>
 
-<A HREF="Standard.pm.html#Standard.pm_use_0">USE(<STRONG>$name</STRONG>)</A>
+<P>
 
-<p>
-<DT><STRONG>
+<PRE>    DEFAULT     Use default bindng
+    OVERALL     Whole object has same material
+    PER_PART    One material for each part of object
+    PER_PART_INDEXED    One material for each part, indexed
+    PER_FACE    One material for each face of object
+    PER_FACE_INDEXED    One material for each face, indexed
+    PER_VERTEX  One material for each vertex of object
+    PER_VERTEX_INDEXED  One material for each vertex, indexed
+</PRE>
 
-<A NAME="Standard.pm_def_0">
-DEF</A>
+<P>
 
-</STRONG>
-<DD>
+<DT><STRONG><A NAME="item_Normal">Normal
 
-<A HREF="Standard.pm.html#Standard.pm_def_0">DEF(<STRONG>$name</STRONG>)</A>
+</A></STRONG><DD>
+<A HREF="#item_Normal">Normal(@vector)</A>
 
-<p>
+
+
+
+<P>
+
+<CODE>@vector</CODE> is a list of vectors with strings like <CODE>'1.0 0.0 0.0', '.5 .2 0'</CODE>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_NormalBinding">NormalBinding
+
+</A></STRONG><DD>
+<A HREF="#item_NormalBinding">NormalBinding($value)</A>
+
+
+
+
+<P>
+
+<CODE>$value</CODE> is the same as <A HREF="#item_MaterialBinding">MaterialBinding</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Texture2">Texture2
+
+</A></STRONG><DD>
+<A HREF="#item_Texture2">Texture2($value)</A>
+
+
+
+
+<P>
+
 </DL>
-.
-<p><p><hr>
+<P>
+<HR>
+<H2><A NAME="Transform_Nodes">Transform Nodes
 
-<H1> 
-<A NAME="Standard.pm_see_0">
-SEE ALSO</A>
-</H1>
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_Transform">Transform
+
+</A></STRONG><DD>
+<A HREF="#item_Transform">Transform($translation, $rotation, $scaleFactor, $scaleOrientation, $center)</A>
+
+
+
+
+<P>
+
+<CODE>$translation</CODE> is a string like ``0 1 -2''
+
+
+<P>
+
+<CODE>$rotation</CODE> is a string like ``0 0 1 1.57''
+
+
+<P>
+
+<CODE>$scaleFactor</CODE> is a string like ``1 1 1''
+
+
+<P>
+
+<CODE>$scaleOrientation</CODE> is a string like ``0 0 1 0''
+
+
+<P>
+
+<CODE>$center</CODE> is a string like ``0 0 0''
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Rotation">Rotation
+
+</A></STRONG><DD>
+<A HREF="#item_Rotation">Rotation($rotation)</A>
+
+
+
+
+<P>
+
+<CODE>$rotation</CODE> is a string like ``0 0 1 1.57''
+
+
+<P>
+
+<CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Scale">Scale
+
+</A></STRONG><DD>
+<A HREF="#item_Scale">Scale($scaleFactor)</A>
+
+
+
+
+<P>
+
+<CODE>$scaleFactor</CODE> is a string like ``1 1 1''
+
+
+<P>
+
+<CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Translation">Translation
+
+</A></STRONG><DD>
+<A HREF="#item_Translation">Translation($translation)</A>
+
+
+
+
+<P>
+
+<CODE>$translation</CODE> is a string like ``0 1 -2''
+
+
+<P>
+
+<CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
+
+
+
+
+<P>
+
+</DL>
+<P>
+<HR>
+<H2><A NAME="Common_Nodes">Common Nodes
+
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_PerspectiveCamera">PerspectiveCamera
+
+</A></STRONG><DD>
+<A HREF="#item_PerspectiveCamera">PerspectiveCamera($position, $orientation, $heightAngle, $focalDistance, $nearDistance, $farDistance)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_OrthographicCamera">OrthographicCamera
+
+</A></STRONG><DD>
+<A HREF="#item_OrthographicCamera">OrthographicCamera($position, $orientation, $height, $focalDistance, $nearDistance, $farDistance)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_DirectionalLight">DirectionalLight
+
+</A></STRONG><DD>
+<A HREF="#item_DirectionalLight">DirectionalLight($direction, $intensity, $color, $on)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_PointLight">PointLight
+
+</A></STRONG><DD>
+<A HREF="#item_PointLight">PointLight($location, $intensity, $color, $on)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_SpotLight">SpotLight
+
+</A></STRONG><DD>
+<A HREF="#item_SpotLight">SpotLight($location, $direction, $intensity, $color, $on)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_DirectedSound">DirectedSound
+
+</A></STRONG><DD>
+<A HREF="#item_DirectedSound">DirectedSound($name, $description, $location, $direction, $intensity, $maxFrontRange, $maxBackRange, $minFrontRange, $minBackRange, $loop, $pause)</A>
+
+
+
+
+<P>
+
+</DL>
+<P>
+<HR>
+<H2><A NAME="other">other
+
+</A></H2>
+<DL>
+<DT><STRONG><A NAME="item_WWWInline">WWWInline
+
+</A></STRONG><DD>
+<A HREF="#item_WWWInline">WWWInline($name, $bboxSize, $bboxCenter)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_Info">Info
+
+</A></STRONG><DD>
+<A HREF="#item_Info">Info($string)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_NavigationInfo">NavigationInfo
+
+</A></STRONG><DD>
+<A HREF="#item_NavigationInfo">NavigationInfo($type, $speed, $headlight)</A>
+
+
+
+
+<P>
+
+Works only with Live3D and WebFX
+
+
+<P>
+
+<DT><STRONG><A NAME="item_USE">USE
+
+</A></STRONG><DD>
+<A HREF="#item_USE">USE($name)</A>
+
+
+
+
+<P>
+
+<DT><STRONG><A NAME="item_DEF">DEF
+
+</A></STRONG><DD>
+<A HREF="#item_DEF">DEF($name)</A>
+
+
+
+
+<P>
+
+</DL>
+<P>
+<HR>
+<H1><A NAME="SEE_ALSO">SEE ALSO
+
+</A></H1>
 VRML::VRML1::Standard
-<p>VRML::Base
-<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
-<p><p><hr>
 
-<H1> 
-<A NAME="Standard.pm_author_0">
-AUTHOR</A>
-</H1>
-Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
-<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
-<p>
-</BODY>
-</HTML>
+
+<P>
+
+VRML::Base
+
+
+<P>
+
+<A
+HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
+for a description of <EM>VRML-modules</EM> and how to obtain it.
+
+
+<P>
+
+<P>
+<HR>
+<H1><A NAME="AUTHOR">AUTHOR
+
+</A></H1>
+Hartmut Palm <EM>&lt;palm@gfz-potsdam.de&gt;</EM>
+
+
+
+
+<P>
+
+Homepage <A
+HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
+
+
+
+<P>
+
+</DL>
+    </BODY>
+
+    </HTML>

@@ -6,12 +6,12 @@ Transform {
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	0 0.501960784313725 0	# green
+				diffuseColor	0 0.501960784313725 0
 			}
 		}
 		geometry Box {
 			size	4 4 4
 		}
-	} # Shape
+	}
     ]
-} # Transform
+}

@@ -1,7 +1,7 @@
 use VRML;
 
 $vrml = new VRML (1);
-$vrml->browser("Cosmo Player 1.0","Netscape")
+$vrml->browser("Cosmo Player 2.0","Netscape")
 ->begin
 ->viewpoint_begin(1)
   ->viewpoint_set(undef,5)

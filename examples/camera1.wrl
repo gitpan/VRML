@@ -47,11 +47,11 @@ Group {
 		Group {
 			Material {
 				diffuseColor [
-					0 0 1,	# blue,
-					0 0.501960784313725 0,	# green,
-					1 0 0,	# red,
-					1 1 0,	# yellow,
-					1 1 1,	# white
+					0 0 1,
+					0 0.501960784313725 0,
+					1 0 0,
+					1 1 0,
+					1 1 1
 				]
 			}
 			Coordinate3 {
@@ -79,6 +79,6 @@ Group {
 					4
 				]
 			}
-		} # pyramid
+		}
 	}
 }
