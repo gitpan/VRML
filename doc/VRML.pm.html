@@ -22,7 +22,7 @@ SYNOPSIS</A>
   $vrml->browser('Netscape+Live3D');
   $vrml->at('5 3 1');
   $vrml->cube('-50 -10 0','yellow');
-  $vrml->end;
+  $vrml->back;
   $vrml->print;
   
   OR with the same result
@@ -30,7 +30,7 @@ SYNOPSIS</A>
   use VRML;
   VRML
   ->browser('Netscape+Live3D')
-  ->at('5 3 1')->cube('-50 -10 0','yellow')->end
+  ->at('5 3 1')->cube('-50 -10 0','yellow')->back
   ->print;
 
 </XMP>

@@ -6,7 +6,7 @@ use VRML::Color;
 require VRML::VRML2::Standard;
 @ISA = qw(VRML::VRML2::Standard);
 
-# $VERSION="0.90";
+# $VERSION="0.91";
 $supported{'quote'} = "Live3D|WebFx";
 $supported{'target'} = "Live3D|WebFx";
 $supported{'frames'} = "Netscape|Mozilla|Internet Explorer|MSIE";
@@ -46,14 +46,23 @@ sub end {
     return $self;
 }
 
+sub at {
+    my $self = shift;
+    $self->transform(@_);
+    return $self;
+}
+
+sub back {
+   my $self = shift;
+    $self->EndTransform($_[0],TRUE); #  close [ and {
+    return $self;
+}
+
 sub group {
     my $self = shift;
     $self->Group(@_);
     return $self;
 }
-
-*at = *begin; 
-warn &at if 0;
 
 sub transform {
     my $self = shift;

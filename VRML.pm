@@ -2,7 +2,7 @@ package VRML;
 
 require 5.000;
 
-$VERSION="0.90"; warn $VERSION if 0;
+$VERSION="0.91"; warn $VERSION if 0;
 
 sub new {
     my $class = shift;
@@ -43,7 +43,7 @@ VRML - implements VRML Nodes independent of specification (1.x or 2.0)
   $vrml->browser('Netscape+Live3D');
   $vrml->at('5 3 1');
   $vrml->cube('-50 -10 0','yellow');
-  $vrml->end;
+  $vrml->back;
   $vrml->print;
   
   OR with the same result
@@ -52,7 +52,7 @@ VRML - implements VRML Nodes independent of specification (1.x or 2.0)
 
   VRML
   ->browser('Netscape+Live3D')
-  ->at('5 3 1')->cube('-50 -10 0','yellow')->end
+  ->at('5 3 1')->cube('-50 -10 0','yellow')->back
   ->print;
 
 =head1 DESCRIPTION

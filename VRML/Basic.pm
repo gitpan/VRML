@@ -3,7 +3,7 @@ package VRML::Basic;
 require 5.000;
 use strict;
 
-# $VERSION = "0.90";
+# $VERSION = "0.91";
 $::debug = 0 unless defined $::debug;
 $::pi = 3.1415926;
 $::pi_2 = $::pi/2;

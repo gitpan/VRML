@@ -21,12 +21,9 @@ doc/XColor.txt
 doc/demo.gif
 examples/camera.pl
 examples/cube.pl
-examples/cube.pl.wrl
 examples/def.pl
-examples/def.pl.wrl
 examples/hallo.wav
 examples/potatohead.pl
-examples/potatohead.pl.wrl
 examples/starbak.gif
 examples/std1coo3.pl
 examples/std1cube.pl

@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML1::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.90";
+# $VERSION = "0.91";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME

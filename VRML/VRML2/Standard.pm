@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML2::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.90";
+# $VERSION = "0.91";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME
@@ -374,7 +374,6 @@ C<Shape($comment)>
 sub Shape {
     my $self = shift;
     my ($geometry, $appearance) = @_;
-print "($geometry, $appearance)\n";
     my $vrml = "";
     $vrml = $self->{'TAB'}."Shape {\n";
     if (defined $appearance) {
