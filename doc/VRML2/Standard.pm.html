@@ -8,7 +8,7 @@
 <A NAME="Standard.pm_name_0">
 NAME</A>
 </H1>
-VRML::VRML2::Standard.pm - implements nodes the VRML 2.0 standard
+VRML::VRML2::Standard.pm - implements VRML 2.0 Standard Nodes
 <p><p><hr>
 
 <H1> 
@@ -29,36 +29,39 @@ DESCRIPTION</A>
 Following nodes are currently implemented.
 <p>[
 <A HREF="Standard.pm.html#Standard.pm_grouping_0">Grouping Nodes</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_special_0">Special Groups</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_common_0">Common Nodes</A>
 ]
 <p>[
 <A HREF="Standard.pm.html#Standard.pm_geometry_0">Geometry</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_geometric_0">Geometric Properties</A>
 ]
 [
 <A HREF="Standard.pm.html#Standard.pm_appearance_0">Appearance</A>
-] 
+]
 <p>[
 <A HREF="Standard.pm.html#Standard.pm_sensors_0">Sensors</A>
 ]
 [
+<A HREF="Standard.pm.html#Standard.pm_interpolators_0">Interpolators</A>
+]
+[
 <A HREF="Standard.pm.html#Standard.pm_bindable_0">Bindable Nodes</A>
-] 
+]
 <p>
 <H2> 
 <A NAME="Standard.pm_grouping_0">
 Grouping Nodes</A>
 </H2>
-<EM>These nodes NEED</EM> 
+These nodes <STRONG>NEED</STRONG> 
 <A HREF="Standard.pm.html#Standard.pm_end_0">End</A>
- !
+ if the <STRONG>$children</STRONG> parameter is empty !
 <p>
 <DL COMPACT>
 <DT><STRONG>
@@ -69,9 +72,9 @@ Anchor</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_anchor_0">Anchor(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$parameter</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_anchor_0">Anchor(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$parameter</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>, <STRONG>$children</STRONG>)</A>
 
-<p>Currently only the first <STRONG><STRONG>$parameter</STRONG></STRONG> is supported.
+<p>Currently only the first part of <EM><STRONG>$parameter</STRONG></EM> is supported.
 <p>
 <DT><STRONG>
 
@@ -81,7 +84,7 @@ Billboard</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_billboard_0">Billboard(<STRONG>$axisOfRotation</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_billboard_0">Billboard(<STRONG>$axisOfRotation</STRONG>, <STRONG>$children</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -92,7 +95,7 @@ Collision</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_collision_0">Collision(<STRONG>$collide</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_collision_0">Collision(<STRONG>$collide</STRONG>, <STRONG>$proxy</STRONG>, <STRONG>$children</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -103,7 +106,7 @@ Group</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_group_0">Group(<STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_group_0">Group(<STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -114,7 +117,7 @@ Transform</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_transform_0">Transform(<STRONG>$translation</STRONG>, <STRONG>$rotation</STRONG>, <STRONG>$scale</STRONG>, <STRONG>$scaleOrientation</STRONG>, <STRONG>$center</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_transform_0">Transform(<STRONG>$translation</STRONG>, <STRONG>$rotation</STRONG>, <STRONG>$scale</STRONG>, <STRONG>$scaleOrientation</STRONG>, <STRONG>$center</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
 
 <p><STRONG>$translation</STRONG> is a SFVec3f
 <p><STRONG>$rotation</STRONG> is a SFRotation
@@ -152,10 +155,10 @@ LOD</A>
 
 <A HREF="Standard.pm.html#Standard.pm_lod_0">LOD(<STRONG>$range</STRONG>, <STRONG>$center</STRONG>)</A>
 
-<p><STRONG>$range</STRONG> is a string with comma separated values
-<p><STRONG>$center</STRONG> = SFVec3f
-<p>example: 
-<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD('1, 2, 5', '0 0 0')</A>
+<p><STRONG>$range</STRONG> is a MFFloat
+<p><STRONG>$center</STRONG> is a SFVec3f
+<p>Example: 
+<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD([1, 2, 5], '0 0 0')</A>
 
 <p>
 <DT><STRONG>
@@ -166,7 +169,7 @@ Switch</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChoice</STRONG>, <STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChoice</STRONG>)</A>
 
 <p>
 </DL>
@@ -252,7 +255,7 @@ Shape</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_shape_0">Shape(<STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_shape_0">Shape(<STRONG>$geometry</STRONG>, <STRONG>$appearance</STRONG>)</A>
 
 <p>
 </DL>
@@ -272,7 +275,7 @@ Box</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_box_0">Box(<STRONG>$width</STRONG>, <STRONG>$height</STRONG>, <STRONG>$depth</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_box_0">Box(<STRONG>$size</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -299,19 +302,33 @@ Cylinder</A>
 <p>
 <DT><STRONG>
 
+<A NAME="Standard.pm_elevationgrid_0">
+ElevationGrid</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_elevationgrid_0">ElevationGrid(<STRONG>$xDimension</STRONG>, <STRONG>$zDimension</STRONG>, <STRONG>$xSpacing</STRONG>, <STRONG>$zSpacing</STRONG>, <STRONG>$height_ref</STRONG>, <STRONG>$creaseAngle</STRONG>, <STRONG>$color</STRONG>, <STRONG>$colorPerVertex</STRONG>)</A>
+
+<p><STRONG>$height_ref</STRONG> should be a reference of a list of height values
+like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
+<p><STRONG>$color</STRONG> should be a reference to a subroutine or list of color values
+<p>
+<DT><STRONG>
+
 <A NAME="Standard.pm_indexedfaceset_0">
 IndexedFaceSet</A>
 
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_indexedfaceset_0">IndexedFaceSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$colorIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$texCoordIndex_ref</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_indexedfaceset_0">IndexedFaceSet(<STRONG>$coord</STRONG>, <STRONG>$coordIndex</STRONG>, <STRONG>$color</STRONG>, <STRONG>$coordIndex</STRONG>, <STRONG>$colorPerVertex</STRONG>, <STRONG>$normal</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$texCoord</STRONG>, <STRONG>$texCoordIndex_ref</STRONG>)</A>
 
-<p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
+<p><STRONG>$coordIndex</STRONG> should be a list of point index strings or a reference
 like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
-<p><STRONG>$colorIndex_ref</STRONG> is a reference of a list of materials
-<p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
-<p><STRONG>$texCoordIndex_ref</STRONG> is a reference of a list of textures
+<p><STRONG>$coordIndex</STRONG> should be a reference of a list of colors
+<p><STRONG>$normalIndex_ref</STRONG> should be a reference of a list of normals
+<p><STRONG>$texCoordIndex_ref</STRONG> should be a reference of a list of textures
 <p>
 <DT><STRONG>
 
@@ -321,13 +338,17 @@ IndexedLineSet</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_indexedlineset_0">IndexedLineSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$colorIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$texCoordIndex_ref</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_indexedlineset_0">IndexedLineSet(<STRONG>$coord</STRONG>, <STRONG>$coordIndex</STRONG>, <STRONG>$color</STRONG>, <STRONG>$colorIndex</STRONG>, <STRONG>$colorPerVertex</STRONG>)</A>
 
-<p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
-like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
-<p><STRONG>$colorIndex_ref</STRONG> is a reference of a list of materials
-<p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
-<p><STRONG>$texCoordIndex_ref</STRONG> is a reference of a list of textures
+<p><STRONG>$coord</STRONG> should be a reference to a 
+<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate</A>
+ method or a string with a 
+
+<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate</A>
+ node.
+<p><STRONG>$coordIndex</STRONG> should be a reference of a list of point index strings
+like <CODE>'0, 1, 3, 2', '2, 3, 5, 4', ...</CODE>
+<p><STRONG>$colorIndex</STRONG> should be a reference of a list of colors
 <p>
 <DT><STRONG>
 
@@ -337,7 +358,7 @@ PointSet</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_pointset_0">PointSet(<STRONG>$numPoints</STRONG>, <STRONG>$startIndex</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_pointset_0">PointSet(<STRONG>$coord</STRONG>, <STRONG>$color</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -382,7 +403,7 @@ Coordinate</A>
 
 <A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate(<STRONG>@point</STRONG>)</A>
 
-<p><STRONG>@point</STRONG> is a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
+<p><STRONG>@point</STRONG> should be a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
 <p>
 <DT><STRONG>
 
@@ -394,7 +415,7 @@ Color</A>
 
 <A HREF="Standard.pm.html#Standard.pm_color_0">Color(<STRONG>@color</STRONG>)</A>
 
-<p><STRONG>@color</STRONG> is a list of colors with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
+<p><STRONG>@color</STRONG> should be a list of colors with strings like <CODE>'1.0 0.0 0.0', '.3 .2 .1'</CODE>
 <p>
 <DT><STRONG>
 
@@ -406,7 +427,7 @@ Normal</A>
 
 <A HREF="Standard.pm.html#Standard.pm_normal_0">Normal(<STRONG>@vector</STRONG>)</A>
 
-<p><STRONG>@vector</STRONG> is a list of vectors with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
+<p><STRONG>@vector</STRONG> should be a list of vectors with strings like <CODE>'1.0 0.0 0.0', '.4 .2 0'</CODE>
 <p>
 </DL>
 .
@@ -435,11 +456,11 @@ Fontstyle</A>
 
 </STRONG>
 <DD>
-<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$style</STRONG>, <STRONG>$family</STRONG>, <STRONG>$justify</STRONG>)</CODE>
-defines the current font style for all subsequent 
+<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$family</STRONG>, <STRONG>$style</STRONG>, <STRONG>$justify</STRONG>)</CODE>
+defines the current font style for the current 
 <A HREF="Standard.pm.html#Standard.pm_text_0">Text</A>
  Nodes
-<p><STRONG>$style</STRONG> can be 'NONE','BOLD','ITALIC'
+<p><STRONG>$style</STRONG> can be 'PLAIN','BOLD','ITALIC','BOLD ITALIC'
 <p><STRONG>$familiy</STRONG> can be 'SERIF','SANS','TYPEWRITER'
 <p><STRONG>$justify</STRONG> can be 'BEGIN', 'MIDDLE', 'END'
 <p>
@@ -493,7 +514,7 @@ CylinderSensor</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_cylindersensor_0">CylinderSensor(<STRONG>$enabled</STRONG>, <STRONG>$maxAngle</STRONG>, <STRONG>$minAngle</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_cylindersensor_0">CylinderSensor(<STRONG>$maxAngle</STRONG>, <STRONG>$minAngle</STRONG>, <STRONG>$diskAngle</STRONG>, <STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -504,7 +525,18 @@ PlaneSensor</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_planesensor_0">PlaneSensor(<STRONG>$enabled</STRONG>, <STRONG>$maxPosition</STRONG>, <STRONG>$minPosition</STRONG>, <STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_planesensor_0">PlaneSensor(<STRONG>$maxPosition</STRONG>, <STRONG>$minPosition</STRONG>, <STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>, <STRONG>$enabled</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_proximitysensor_0">
+ProximitySensor</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_proximitysensor_0">ProximitySensor(<STRONG>$size</STRONG>, <STRONG>$center</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -515,7 +547,7 @@ SphereSensor</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_spheresensor_0">SphereSensor(<STRONG>$enabled</STRONG>, <STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_spheresensor_0">SphereSensor(<STRONG>$offset</STRONG>, <STRONG>$autoOffset</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -526,7 +558,7 @@ TimeSensor</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_timesensor_0">TimeSensor(<STRONG>$cycleInterval</STRONG>, <STRONG>$loop</STRONG>, <STRONG>$enabled</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_timesensor_0">TimeSensor(<STRONG>$cycleInterval</STRONG>, <STRONG>$loop</STRONG>, <STRONG>$startTime</STRONG>, <STRONG>$stopTime</STRONG>, <STRONG>$enabled</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -537,8 +569,96 @@ TouchSensor</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_touchsensor_0">TouchSensor(<STRONG>$eneabled</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_touchsensor_0">TouchSensor(<STRONG>$enabled</STRONG>)</A>
 
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_visibilitysensor_0">
+VisibilitySensor</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_visibilitysensor_0">VisibilitySensor(<STRONG>$size</STRONG>, <STRONG>$center</STRONG>, <STRONG>$enabled</STRONG>)</A>
+
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_interpolators_0">
+Interpolators</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_colorinterpolator_0">
+ColorInterpolator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_colorinterpolator_0">ColorInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_coordinateinterpolator_0">
+CoordinateInterpolator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_coordinateinterpolator_0">CoordinateInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_orientationinterpolator_0">
+OrientationInterpolator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_orientationinterpolator_0">OrientationInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_normalinterpolator_0">
+NormalInterpolator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_normalinterpolator_0">NormalInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_positioninterpolator_0">
+PositionInterpolator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_positioninterpolator_0">PositionInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_scalarinterpolator_0">
+ScalarInterpolator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_scalarinterpolator_0">ScalarInterpolator(<STRONG>$key</STRONG>, <STRONG>$keyValue</STRONG>)</A>
+
+<p><STRONG>$key</STRONG>	MFFloat
+<STRONG>$keyValue</STRONG>	MFFloat
 <p>
 </DL>
 .
@@ -557,8 +677,9 @@ Background</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_background_0">Background(<STRONG>$backUrl</STRONG>, <STRONG>$bottomUrl</STRONG>, <STRONG>$topUrl</STRONG>, <STRONG>$leftUrl</STRONG>, <STRONG>$rightUrl</STRONG>, <STRONG>$frontUrl</STRONG>, <STRONG>$groundColor</STRONG>, <STRONG>$skyColor</STRONG>, <STRONG>$groundAngle</STRONG>, <STRONG>$skyAngle</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_background_0">Background(<STRONG>$hash</STRONG>)</A>
 
+<p>You only can use a hash. Parameter see VRML Spec
 <p>
 <DT><STRONG>
 
@@ -568,8 +689,9 @@ NavigationInfo</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$headlight</STRONG>, <STRONG>$type</STRONG>, <STRONG>$speed</STRONG>, <STRONG>$visibilityLimit</STRONG>, <STRONG>$avatarSize</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$type</STRONG>, <STRONG>$speed</STRONG>, <STRONG>$headlight</STRONG>, <STRONG>$visibilityLimit</STRONG>, <STRONG>$avatarSize</STRONG>)</A>
 
+<p>You can use a hash reference or all parameter in the same order above
 <p>
 <DT><STRONG>
 
@@ -580,6 +702,17 @@ Viewpoint</A>
 <DD>
 
 <A HREF="Standard.pm.html#Standard.pm_viewpoint_0">Viewpoint(<STRONG>$description</STRONG>, <STRONG>$position</STRONG>, <STRONG>$orientation</STRONG>, <STRONG>$fieldOfView</STRONG>, <STRONG>$jump</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_proto_0">
+PROTO</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_proto_0">PROTO(<STRONG>$name</STRONG>, <STRONG>$declaration</STRONG>, <STRONG>$definition</STRONG>)</A>
 
 <p>
 </DL>
@@ -634,10 +767,43 @@ End</A>
 
 <A HREF="Standard.pm.html#Standard.pm_end_0">End(<STRONG>$comment</STRONG>)</A>
 
-<p><STRONG>$comment</STRONG> is optional
+<p>Close an open node with }
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_endchildren_0">
+EndChildren</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_endchildren_0">EndChildren(<STRONG>$comment</STRONG>)</A>
+
+<p>Close an open children part with ]
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_endtransform_0">
+EndTransform</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_endtransform_0">EndTransform(<STRONG>$comment</STRONG>)</A>
+
+<p>Close an open children part with ] and the node with }
 <p>
 </DL>
 .
+<p><p><hr>
+
+<H1> 
+<A NAME="Standard.pm_see_0">
+SEE ALSO</A>
+</H1>
+VRML::VRML2::Standard
+<p>VRML::Base
+<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
 <p><p><hr>
 
 <H1> 
@@ -645,6 +811,7 @@ End</A>
 AUTHOR</A>
 </H1>
 Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
 <p>
 </BODY>
 </HTML>

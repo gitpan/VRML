@@ -8,7 +8,7 @@
 <A NAME="VRML2.pm_name_0">
 NAME</A>
 </H1>
-VRML::VRML2.pm - implements VRML methods with the VRML 2.0 standard
+VRML::VRML2.pm - VRML methods with the VRML 2.0 standard
 <p><p><hr>
 
 <H1> 
@@ -18,6 +18,19 @@ SYNOPSIS</A>
 
 <XMP>
     use VRML::VRML2;
+    $vrml = new VRML::VRML2;
+    $vrml->browser('CosmoPlayer 1.0','Netscape');
+    $vrml->at('-15 0 20');
+    $vrml->box('5 3 1','yellow');
+    $vrml->back;
+    $vrml->print;
+    $vrml->save;
+  OR with the same result
+  use VRML::VRML2;
+  VRML::VRML2->new
+  ->browser('CosmoPlayer 1.0','Netscape')
+  ->at('-15 0 20')->box('5 3 1','yellow')->back
+  ->print->save;
 
 </XMP>
 <p><p><hr>
@@ -26,84 +39,172 @@ SYNOPSIS</A>
 <A NAME="VRML2.pm_description_0">
 DESCRIPTION</A>
 </H1>
-Following methods are currently implemented. (Values in '...' must be strings!)
+The methods of this module are easier to use than the VRML::*::Standard methods
+because the methods are on a higher level. For example you can use X11 color
+names and it's simple to apply textures to an object. All angles could be
+assigned in degrees.
+<p>If a method does the same like its VRML pedant then it has the same name but in
+lowercase (e.g. box). The open part of a group method ends with a
+_begin (e.g. anchor_begin). The closing part ends with an _end (e.g.
+anchor_end). For a detailed description how the generated node works, take a 
+look at the VRML 2.0 specification on VAG.
+<p>Following methods are currently implemented. (Values in '...' must be strings!)
 <p>
 <UL>
-<LI>begin(['comment'])
-<p><CODE>  . . . </CODE>
+<LI>begin('comment')
+<p>Before you use an geometry or transform method please call this method.
+It's necessary to calculate something at the end.
 <p>
-<LI>end(['comment'])
+<LI>end('comment')
+<p>After <CODE>end</CODE> there should no geometry or transformation. This method completes
+the calculations of viewpoints etc.
 <p>
-<LI>group_begin(['comment'])
-<p><CODE>  . . . </CODE>
+<LI>at('type=value','type=value', ...)
+<p>is the short version of the method <CODE>transform_begin</CODE>. It has the same 
+parameters as <CODE>transform_begin</CODE>.
+<p>
+<LI>back
+<p>is the short version of the method <CODE>transform_end</CODE>.
+<p>
+<LI>anchor_begin('url','description','parameter')
+<p>
+<LI>anchor_end
+<p>
+<LI>billboard_begin('axisOfRotation')
+<p>
+<LI>billboard_end
+<p>
+<LI>collision_begin(collide,proxy)
+<p>
+<LI>collision_end
+<p>
+<LI>group_begin('comment')
 <p>
 <LI>group_end
 <p>
-<LI>at('type=value ; ...')
-<p>parameter see <CODE>transform_begin</CODE>
+<LI>lod_begin(range,'center')
 <p>
-<LI>back
+<LI>lod_end
 <p>
-<LI>transform_begin('type=value ; ...')
+<LI>switch_begin(whichChoice)
+<p>
+<LI>switch_end
+<p>
+<LI>transform_begin('type=value','type=value', ...)
 <p><EM>Where type can be:</EM>
 <p>
 <XMP>
         t = translation
         r = rotation
         c = center
-        o = scaleOrientation
-        f = scaleFactor
+        s = scale
+        so = scaleOrientation
+        bbs = bboxSize
+        bbc = bboxCenter
 
 </XMP>
 <p>
 <LI>transform_end
 <p>
-<LI>anchor_begin('Url','description','parameter')
+<LI>inline('Url')
 <p>
-<LI>anchor_end
+<LI>background(
 <p>
-<LI>collision_begin
+<XMP>
+        skycolor => '...',
+        groundcolor => '...',
+        bottomUrl => '...',
+        topUrl => '...',
+        frontUrl => '...',
+        leftUrl => '...',
+        rightUrl => '...',
+        backUrl => '...'
+
+</XMP>
+<p>)
+<p>This is a parameter hash. Only use the parts you need.
 <p>
-<LI>collision_end
+<LI>backgroundcolor('skyColor','groundColor')
+<p>is the short version of <CODE>background</CODE>. It specifies only colors.
 <p>
-<LI>lod_begin('range','center')
-<p>
-<LI>lod_end
-<p>
-<LI>background('skycolor','backUrl','groundcolor','bottomURL','topURL', 'leftUrl','rightUrl','frontUrl')
+<LI>backgroundimage('Url')
+<p>is the short version of <CODE>background</CODE>. It needs only one image. The
+given Url will assigned to all parts of the background cube.
 <p>
 <LI>title('string')
 <p>
 <LI>info('string')
 <p>
-<LI>cameras_begin('whichCameraNumber')
+<LI>viewpoint_begin
+<p>starts the hidden calculation of viewpoint center and distance for the
+method <CODE><EM>viewpoint_auto_set()</EM></CODE>. It collects also the viepoints to place
+they in the first part of the VRML source.
 <p>
-<LI>camera('positionXYZ','orientationXYZ',fieldOfView) 
-// persp. camera
+<LI>viewpoint('description','position','orientation',fieldOfView,jump)
 <p>
-<LI>camera_set('positionXYZ','orientationXYZ',fieldOfView) // persp. cameras
+<LI>viewpoint_set('center','distance',fieldOfView)
+<p>places six viewpoints around the center.
 <p>
-<LI>camera_auto_set
+<LI>viewpoint_auto_set
+<p>sets all parameters of <CODE>viewpoint_set</CODE> automatically.
 <p>
-<LI>cameras_end(['comment'])
+<LI>viewpoint_end
 <p>
-<LI>light('direction','intensity','color','ambientIntensity','on') 
+<LI>directionallight('direction',intensity,ambientIntensity,'color',on)
 <p>
-<LI>box('width [height [depth]]','appearance')
+<LI>box('width height depth','appearance')
 <p>
 <LI>cone('radius height','appearance')
 <p>
-<LI>cube('width','appearance')
+<LI>cube(length,'appearance')
+<p>does the same as method <CODE>box</CODE>, but needs only one parameter.
 <p>
 <LI>cylinder('radius [height]','appearance')
 <p>
 <LI>line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
+<p>draws a line (cylinder) between two points with a given radius. If radius
+is '0' only a hairline will be printed. The last parameter specifies the
+devolution along the axes. An empty stands for direct connection.
 <p>
-<LI>sphere('radius_x [radius_y radius_z]','appearance')
+<LI>sphere(radius_x,'appearance')
 <p>
-<LI>text('string','appearance','size style family')
+<LI>text('string','appearance','size family style','align')
 <p>
-<LI>fixtext('string','appearance','size style family')
+<LI>billtext('string','appearance','size family style','align')
+<p>does the same like method <CODE>text</CODE>, but the text better readable.
+<p>
+<LI>appearance('type=value1,value2 ; type=...')
+<p>The appearance method specifies the visual properties of geometry by defining
+the material and texture. If more than one type is needed separate the types
+by semicolon. The types can choosen from the following list.
+ 
+Note: one character mnemonic are colors
+      two characters mnemonic are values in range of [0..1]
+      more characters are strings like file names or labels
+<p>
+<XMP>
+        d = diffuseColor
+        e = emissiveColor
+        s = specularColor
+        ai = ambientIntensity
+        sh = shininess
+        tr = transparency
+        tex = texture filename,wrapS,wrapT
+        name = names the MovieTexture node (for a later route)
+
+</XMP>
+<p>The color values can be strings (X11 color names) or RGB-triples. It is 
+possible to reduce the intensity of colors (names) by appending a two digit
+value (percent). This value must be separated by an underscore (_) or
+a percent symbol (%). Note: Do not use a percent symbol in URL's. It would
+be decoded in an ascii character.
+<p>Sample (valid color values):
+	'1 1 0' # VRML standard
+	'FFFF00' or 'ffff00', '255 255 0', 'yellow'
+<p>or reduced to 50%
+	'.5 .5 .5' # VRML standard
+	'808080', '128 128 0', 'yellow<STRONG>%50</STRONG>' or 'yellow_50'
+<p>For a list of <EM>X11 color names</EM> take a look at VRML::Color
 <p>
 <LI>def('name',[code])
 <p>
@@ -111,21 +212,33 @@ Following methods are currently implemented. (Values in '...' must be strings!)
 <p>
 <LI>route('from','to')
 <p>
-<LI>appearance('type=value1,value2 ; ...')
+<LI>interpolator('name','type',[keys],[keyValues])
 <p><EM>Where type can be:</EM>
 <p>
 <XMP>
-        a = ambientColor
-        d = diffuseColor
-        e = emissiveColor
-        s = specularColor
-        sh = shininess
-        tr = transparency
-        tex = texture filename[,wrapS[,wrapT]]
+        Color
+        Coordinate
+        Orientation
+        Normal
+        Position
+        Scalar
+        
 
 </XMP>
-<p><EM>and color values see</EM>
-<p>VRML::Color
+<p>
+<LI>cylindersensor('name',maxAngle,minAngle,diskAngle,offset,autoOffset,enabled)
+<p>
+<LI>planesensor('name',maxPosition,minPosition,offset,autoOffset,enabled)
+<p>
+<LI>proximitysensor('name',size,center,enabled)
+<p>
+<LI>spheresensor('name',offset,autoOffset,enabled)
+<p>
+<LI>timesensor('name',cycleInterval,loop,startTime,stopTime,enabled)
+<p>
+<LI>touchsensor('name',enabled)
+<p>
+<LI>visibitysensor('name',size,center,enabled)
 <p>
 </UL>
 .
@@ -137,7 +250,8 @@ SEE ALSO</A>
 </H1>
 VRML
 <p>VRML::VRML2::Standard
-<p>VRML::Basic
+<p>VRML::Base
+<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
 <p><p><hr>
 
 <H1> 
@@ -145,6 +259,7 @@ VRML
 AUTHOR</A>
 </H1>
 Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
 <p>
 </BODY>
 </HTML>

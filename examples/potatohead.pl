@@ -1,13 +1,12 @@
 use VRML;
 
 $vrml = new VRML (2.0);
-$vrml->browser('Live3d')
-->background('lightblue','starbak.gif','brown')
+$vrml->browser('Cosmo Player 2.0')
+->backgroundcolor('lightblue','brown')
 ->title('Potato Head')
-->headlight("on")
-->cameras_begin
-->camera_set
-->light("0 0 -1",.3)
+->viewpoint_begin
+->viewpoint_set
+->directionallight("0 0 -1",.3)
 ->def("HEAD")
 ->transform_begin
     ->touchsensor("HEAD-TOUCH")
@@ -20,40 +19,33 @@ $vrml->browser('Live3d')
 	->end
     ->back
     ->at("1 1 1")->use("eye")->back
-    ->at("r=1 0 0 90; 0 -0.3 2.5")->cone([.5, 2],"red")->back
-    ->at("0 -.4 0.7; r=1 0 0 80")->cylinder("2 1","red")->back
+    ->at("r=1 0 0 90","0 -0.3 2.5")->cone([.5, 2],"red")->back
+    ->at("0 -.4 0.7","r=1 0 0 80")->cylinder("2 1","red")->back
 ->transform_end
 ->at("0 -3 0")->cylinder("0.8 2","yellow")->back
 ->at("0 -6.5 0")->touchsensor("BODY-TOUCH")->cylinder("2.5 6",'darkgreen')->back
 ->def("ARM")->at("0 -5.5 0")
-    ->at("-4 2 0; r=0 0 1 1")
+    ->at("-4 2 0", "r=0 0 1 60")
     ->def("arm")->cylinder(".5 6",'green')->back
 ->back
-->at("4 -3.5 0; r=0 0 1 -1")->use("arm")->back
+->at("4 -3.5 0", "r=0 0 1 -60")->use("arm")->back
 ->at("1.2 -12 0")->def("leg")->cylinder(".5 5",'green')->back
 ->at("-1.2 -12 0")->use("leg")->back
 ->at("1.2 -14.5 0.3")->def("shoe")->cube("1.4 .5 2",'black')->back
 ->at("-1.2 -14.5 0.3")->use("shoe")->back
 ->sound("hallo.wav","HALLO",undef,"0 0 -1",undef,undef,2)
-->DEF("MOVE")->VRML_put("PositionInterpolator {
-    key [ 0, .5, 1]
-    keyValue [0 0 0, 0 1 0, 0 0 0]
-}\n")
-->DEF("TURN")->VRML_put("OrientationInterpolator {
-    key [ 0, .2, .5, .7, 1]
-    keyValue [0 0 1 0, 0 0 1 .5, 0 0 1 0, 0 0 1 .5, 0 0 1 0]
-}\n")
+->interpolator("MOVE","Position",[0, .5, 1],["0 0 0", "0 1 0", "0 0 0"])
+->interpolator("TURN","Orientation",[ 0, .2, .5, .7, 1], ["0 0 1 0", "0 0 1 .5", "0 0 1 0", "0 0 1 .5", "0 0 1 0"])
 ->timesensor("TS1",0.5)
 ->timesensor("TS2",2)
-->ROUTE("HEAD-TOUCH.touchTime","TS1.startTime")
-->ROUTE("HEAD-TOUCH.touchTime","HALLO.startTime")
-->ROUTE("TS1.fraction_changed","MOVE.set_fraction")
-->ROUTE("MOVE.value_changed","HEAD.set_translation")
-->ROUTE("BODY-TOUCH.touchTime","TS2.startTime")
-->ROUTE("BODY-TOUCH.touchTime","HALLO.startTime")
-->ROUTE("TS2.fraction_changed","TURN.set_fraction")
-->ROUTE("TURN.value_changed","ARM.set_rotation")
-->camera_auto_set(1.5)
-->cameras_end
-->save
-->print;
+->route("HEAD-TOUCH.touchTime","TS1.startTime")
+->route("TS1.fraction_changed","MOVE.set_fraction")
+->route("MOVE.value_changed","HEAD.translation")
+->route("BODY-TOUCH.touchTime","TS2.startTime")
+->route("TS2.fraction_changed","TURN.set_fraction")
+->route("TURN.value_changed","ARM.rotation")
+->route("HEAD-TOUCH.touchTime","HALLO.startTime")
+->route("BODY-TOUCH.touchTime","HALLO.startTime")
+->viewpoint_auto_set(1.5)
+->viewpoint_end
+->save;

@@ -1,0 +1,270 @@
+<!-- $Id$ -->
+<HTML><HEAD>
+<CENTER><TITLE>Base.pm</TITLE>
+</HEAD>
+<BODY></CENTER><p><hr>
+
+<H1> 
+<A NAME="Base.pm_name_0">
+NAME</A>
+</H1>
+VRML::Base.pm - common basic methods
+<p><p><hr>
+
+<H1> 
+<A NAME="Base.pm_synopsis_0">
+SYNOPSIS</A>
+</H1>
+
+<XMP>
+    use VRML::Base;
+
+</XMP>
+<p><p><hr>
+
+<H1> 
+<A NAME="Base.pm_description_0">
+DESCRIPTION</A>
+</H1>
+Following methods you should know.
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Base.pm_new_0">
+new</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_new_0">new</A>
+
+<p>Creates a new VRML scene object.
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_comment_0">
+comment</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_comment_0">comment('string')</A>
+
+<p>Inserts a single comment line at the current position.
+You don't need to write the # in front. If no string is given, the method
+inserts only a #.
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_insert_0">
+insert</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_insert_0">insert('string')</A>
+
+<p>Inserts the string at the current position in the VRML scene.
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_insert_data_0">
+insert__DATA__</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_insert_data_0">
+<A HREF="Base.pm.html#Base.pm_insert_data_0">insert__DATA__()</A>
+</A>
+
+<p>Inserts the text block after __DATA__ of the current perl script
+in the VRML scene. Remember there are two underscores in front and
+at the end of the word DATA.
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_include_0">
+include</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_include_0">include('filename')</A>
+
+<p>Inserts the VRML code of the specified file in the current scene.
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_print_0">
+print</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_print_0">print('mime', 'pipe')</A>
+
+<p>Prints the VRML scene to STDOUT. If <EM>mime</EM> (bool) is given, this method prints
+the scene to STDOUT with the Content-type of the current scene. If <EM>pipe</EM> is 
+given, then first the stream is send to the pipe and after that to STDOUT. 
+This is usefull to compress the VRML code with GNU-ZIP.
+<p>Example:
+<p>1.  <EM><STRONG>$vrml</STRONG>-&gt;print</EM>
+<p>2.  <EM><STRONG>$vrml</STRONG>-&gt;print(1, 'gzip -f9')</EM>
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_save_0">
+save</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_save_0">save('filename', 'pipe')</A>
+
+<p>Saves the VRML code to the specified name in <EM>filename</EM>. If no filename is
+given, this method uses the name of the perl script and changes the extension 
+against <CODE>.wrl</CODE>. If <EM>pipe</EM> is given, then first the stream is send to the pipe
+and after that to STDOUT. This is usefull to compress the VRML code with 
+GNU-ZIP.
+<p>Example:
+<p>1.  <EM><STRONG>$vrml</STRONG>-&gt;save</EM>
+<p>2.  <EM><STRONG>$vrml</STRONG>-&gt;save(undef, 'gzip -f9')</EM>
+<p>3.  <EM><STRONG>$vrml</STRONG>-&gt;save('myScene.wrl')</EM>
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_as_string_0">
+as_string</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_as_string_0">as_string</A>
+
+<p>Returns the VRML scene as string. Possible it uses too much memory to
+build the string.
+<p>
+</DL>
+.
+<p><p><hr>
+
+<H1> 
+<A NAME="Base.pm_you_0">
+You don't need the following 'native' methods. </A>
+</H1>
+If yet, tell it me and I'll describe it in the next version.
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Base.pm_debug_0">
+debug</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_debug_0">debug</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_init_0">
+VRML_init</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_init_0">VRML_init('VRML')</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_add_0">
+VRML_add</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_add_0">VRML_add</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_trim_0">
+VRML_trim</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_trim_0">VRML_trim</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_swap_0">
+VRML_swap</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_swap_0">VRML_swap</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_put_0">
+VRML_put</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_put_0">VRML_put</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_row_0">
+VRML_row</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_row_0">VRML_row</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_pos_0">
+VRML_pos</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_pos_0">VRML_pos</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Base.pm_vrml_format_0">
+VRML_format</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Base.pm.html#Base.pm_vrml_format_0">VRML_format</A>
+
+<p>
+</DL>
+.
+<p><p><hr>
+
+<H1> 
+<A NAME="Base.pm_author_0">
+AUTHOR</A>
+</H1>
+Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>
+</BODY>
+</HTML>

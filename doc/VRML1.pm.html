@@ -8,7 +8,7 @@
 <A NAME="VRML1.pm_name_0">
 NAME</A>
 </H1>
-VRML::VRML1.pm - implements VRML methods with the VRML 1.x standard
+VRML::VRML1.pm - VRML methods with the VRML 1.0 standard
 <p><p><hr>
 
 <H1> 
@@ -29,100 +29,113 @@ DESCRIPTION</A>
 Following methods are currently implemented. (Values in '...' must be strings!)
 <p>
 <UL>
-<LI>begin('comment')
+<LI><EM>begin()</EM>
 <p><CODE>  . . . </CODE>
 <p>
 <LI>end('comment')
 <p>
-<LI>group_begin('comment')
-<p><CODE>  . . . </CODE>
-<p>
-<LI>group_end
-<p>
-<LI>at('type=value ; ...')
-<p>parameter see <CODE>transform_begin</CODE>
+<LI>at('type=value', 'type=value', ...)
+<p>For a description of all parameters see <CODE>transform_begin</CODE>
 <p>
 <LI>back
+<p>see <CODE>transform_end</CODE>
 <p>
-<LI>transform_begin('type=value ; ...')
+<LI>anchor_begin('Url','description','target=parameter')
+<p>
+<LI>anchor_end('comment')
+<p>
+<LI>collision_begin
+<p>
+<LI>collision_end('comment')
+<p>
+<LI><EM>group_begin()</EM>
+<p>
+<LI>group_end('comment')
+<p>
+<LI>lod_begin('range','center')
+<p>
+<LI>lod_end('comment')
+<p>
+<LI>switch_begin(whichChild)
+<p>
+<LI>switch_end('comment')
+<p>
+<LI>transform_begin('type=value', 'type=value', ...)
 <p><EM>Where type can be:</EM>
 <p>
 <XMP>
         t = translation
         r = rotation
         c = center
-        o = scaleOrientation
-        f = scaleFactor
+        s = scaleFactor
+        so = scaleOrientation
 
 </XMP>
 <p>
 <LI>transform_end
 <p>
-<LI>anchor_begin('URL','description','target=parameter')
+<LI>background(skyColor =&gt; 'color', backUrl =&gt; 'Url')
 <p>
-<LI>anchor_end
+<LI>backgroundcolor('skyColor')
+<p>is the short version of <CODE>background</CODE>. It specifies only the background color.
 <p>
-<LI>collision_begin
-<p>
-<LI>collision_end
-<p>
-<LI>lod_begin('range','center')
-<p>
-<LI>lod_end
-<p>
-<LI>background('color','imageURL')
+<LI>backgroundimage('Url')
+<p>is the short version of <CODE>background</CODE>, use only one image. It assigns the
+given Url to the background plane.
 <p>
 <LI>title('string')
 <p>
 <LI>info('string')
 <p>
-<LI>cameras_begin('whichCameraNumber')
+<LI>viewpoint_begin('whichCamera')
 <p>
-<LI>camera('name','positionXYZ','orientationXYZ',heightAngle) // persp. camera
+<LI>viewpoint('name','positionXYZ','orientationXYZ',heightAngle)
 <p>
-<LI>camera_set('positionXYZ','orientationXYZ',heightAngle) // persp. cameras
+<LI>viewpoint_set('center','distance',heightAngle)
 <p>
-<LI>camera_auto_set
+<LI>viewpoint_auto_set
+<p>sets all parameters of <CODE>viewpoint_set</CODE> automatically
 <p>
-<LI>cameras_end
+<LI>viewpoint_end
 <p>
-<LI>light('direction','intensity','color','ambientIntensity','on') 
+<LI>directionallight('direction',intensity,ambientIntensity,'color',on)
+<p>The parameter <EM>ambientIntensity</EM> will be ignored in VRML 1.0.
 <p>
 <LI>box('width [height [depth]]','appearance')
 <p>
 <LI>cone('radius height','appearance')
 <p>
-<LI>cube('width','appearance')
+<LI>cube('length','appearance')
 <p>
-<LI>cylinder('radius [height]','appearance')
+<LI>cylinder('radius [height]','appearance',top,side,bottom)
 <p>
 <LI>line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
 <p>
-<LI>sphere('radius_x [radius_y radius_z]','appearance')
+<LI>sphere(radius,'appearance')
 <p>
-<LI>text('string','appearance','size style family')
+<LI>text('string','appearance','size family style','align')
 <p>
-<LI>fixtext('string','appearance','size style family')
-<p>
-<LI>def('name',[code])
-<p>
-<LI>use('name')
+<LI>billtext('string','appearance','size family style','align')
 <p>
 <LI>appearance('type=value1,value2 ; ...')
 <p><EM>Where type can be:</EM>
 <p>
 <XMP>
-        a = ambientColor
+        a = ambientColor (not available in VRML2)
         d = diffuseColor
         e = emissiveColor
         s = specularColor
         sh = shininess
         tr = transparency
-        tex = texture filename[,wrapS[,wrapT]]
+        tex = texture filename,wrapS,wrapT
 
 </XMP>
 <p><EM>and color values see</EM>
 <p>VRML::Color
+<p>
+<LI>def('name',[code])
+<p>
+<LI>use('name')
 <p>
 </UL>
 .
@@ -134,7 +147,8 @@ SEE ALSO</A>
 </H1>
 VRML
 <p>VRML::VRML1::Standard
-<p>VRML::Basic
+<p>VRML::Base
+<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
 <p><p><hr>
 
 <H1> 
@@ -142,6 +156,7 @@ VRML
 AUTHOR</A>
 </H1>
 Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
 <p>
 </BODY>
 </HTML>

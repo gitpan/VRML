@@ -29,22 +29,22 @@ DESCRIPTION</A>
 Following nodes are currently implemented.
 <p>[
 <A HREF="Standard.pm.html#Standard.pm_group_0">Group Nodes</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_geometry_0">Geometry Nodes</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_property_0">Property Nodes</A>
 ]
 <p>[
 <A HREF="Standard.pm.html#Standard.pm_appearance_0">Appearance Nodes</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_transform_0">Transform Nodes</A>
-] 
+]
 [
 <A HREF="Standard.pm.html#Standard.pm_common_0">Common Nodes</A>
-] 
+]
 <p>
 <H2> 
 <A NAME="Standard.pm_group_0">
@@ -61,7 +61,9 @@ Group</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_group_1">Group(<STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_group_1">
+<A HREF="Standard.pm.html#Standard.pm_group_1">Group()</A>
+</A>
 
 <p>
 <DT><STRONG>
@@ -72,7 +74,9 @@ Separator</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_separator_0">Separator(<STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_separator_0">
+<A HREF="Standard.pm.html#Standard.pm_separator_0">Separator()</A>
+</A>
 
 <p>
 <DT><STRONG>
@@ -83,7 +87,7 @@ Switch</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChild</STRONG>, <STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChild</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -108,10 +112,10 @@ LOD</A>
 
 <A HREF="Standard.pm.html#Standard.pm_lod_0">LOD(<STRONG>$range</STRONG>, <STRONG>$center</STRONG>)</A>
 
-<p><STRONG>$range</STRONG> is a string with comma separated values
+<p><STRONG>$range</STRONG>  = MFFloat
 <p><STRONG>$center</STRONG> = SFVec3f
 <p>example: 
-<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD('1, 2, 5', '0 0 0')</A>
+<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD([1, 2, 5], '0 0 0')</A>
 
 <p>
 <DT><STRONG>
@@ -156,7 +160,7 @@ Cone</A>
 
 <A HREF="Standard.pm.html#Standard.pm_cone_0">Cone(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>@parts</STRONG>)</A>
 
-<p><STRONG>@parts</STRONG> is a list of strings ('SIDES', 'BOTTOM', 'ALL')
+<p><STRONG>@parts</STRONG> is an array of strings ('SIDES', 'BOTTOM', 'ALL')
 <p>
 <DT><STRONG>
 
@@ -192,7 +196,7 @@ IndexedFaceSet</A>
 <A HREF="Standard.pm.html#Standard.pm_indexedfaceset_0">IndexedFaceSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$materialIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$textureCoordIndex_ref</STRONG>)</A>
 
 <p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
-like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
+like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
 <p><STRONG>$materialIndex_ref</STRONG> is a reference of a list of materials
 <p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
 <p><STRONG>$textureCoordIndex_ref</STRONG> is a reference of a list of textures
@@ -208,7 +212,7 @@ IndexedLineSet</A>
 <A HREF="Standard.pm.html#Standard.pm_indexedlineset_0">IndexedLineSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$materialIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$textureCoordIndex_ref</STRONG>)</A>
 
 <p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
-like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
+like <CODE>['0 1 3 2', '2 3 5 4', ...]</CODE>
 <p><STRONG>$materialIndex_ref</STRONG> is a reference of a list of materials
 <p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
 <p><STRONG>$textureCoordIndex_ref</STRONG> is a reference of a list of textures
@@ -264,12 +268,12 @@ Fontstyle</A>
 
 </STRONG>
 <DD>
-<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$style</STRONG>, <STRONG>$family</STRONG>)</CODE>
+<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$family</STRONG>, <STRONG>$style</STRONG>)</CODE>
 defines the current font style for all subsequent 
 <A HREF="Standard.pm.html#Standard.pm_asciitext_0">AsciiText</A>
  Nodes
-<p><STRONG>$style</STRONG> can be 'NONE','BOLD','ITALIC'
 <p><STRONG>$familiy</STRONG> can be 'SERIF','SANS','TYPEWRITER'
+<p><STRONG>$style</STRONG> can be 'NONE','BOLD','ITALIC'
 <p>
 </DL>
 .
@@ -322,7 +326,7 @@ Normal</A>
 
 <A HREF="Standard.pm.html#Standard.pm_normal_0">Normal(<STRONG>@vector</STRONG>)</A>
 
-<p><STRONG>@vector</STRONG> is a list of vectors with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
+<p><STRONG>@vector</STRONG> is a list of vectors with strings like <CODE>'1.0 0.0 0.0', '.5 .2 0'</CODE>
 <p>
 <DT><STRONG>
 
@@ -452,7 +456,7 @@ DirectionalLight</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_directionallight_0">DirectionalLight(<STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$ambientIntensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_directionallight_0">DirectionalLight(<STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -516,9 +520,8 @@ Info</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_info_0">Info(<STRONG>$string</STRONG>, <STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_info_0">Info(<STRONG>$string</STRONG>)</A>
 
-<p><STRONG>$comment</STRONG> is optional
 <p>
 <DT><STRONG>
 
@@ -528,7 +531,7 @@ NavigationInfo</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$headlight</STRONG>, <STRONG>$type</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$type</STRONG>, <STRONG>$speed</STRONG>, <STRONG>$headlight</STRONG>)</A>
 
 <p>Works only with Live3D and WebFX
 <p>
@@ -559,10 +562,20 @@ DEF</A>
 <p><p><hr>
 
 <H1> 
+<A NAME="Standard.pm_see_0">
+SEE ALSO</A>
+</H1>
+VRML::VRML1::Standard
+<p>VRML::Base
+<p><A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
+<p><p><hr>
+
+<H1> 
 <A NAME="Standard.pm_author_0">
 AUTHOR</A>
 </H1>
 Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
 <p>
 </BODY>
 </HTML>

@@ -1,15 +1,16 @@
 package VRML::VRML2;
-use strict "refs";
 
 require 5.000;
-use VRML::Color;
 require VRML::VRML2::Standard;
+use strict;
+use VRML::Color;
+use vars qw(@ISA $VERSION %supported);
 @ISA = qw(VRML::VRML2::Standard);
 
-# $VERSION="0.97";
-%supported = ( 'quote' => "Live3D",
-	      'target' => "Live3D|WorldView|Cosmo",
-	      'gzip'   => "Live3D|WorldView|Cosmo|VRweb|GLview",
+$VERSION="1.02";
+%supported = ('quote' => "Live3D|Cosmo Player",
+	      'gzip'   => "Live3D|WorldView|Cosmo Player|VRweb|GLview",
+	      'target' => "Live3D|WorldView|Cosmo Player",
 	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
 );
 
@@ -18,18 +19,17 @@ require VRML::VRML2::Standard;
 sub new {
     my $class = shift;
     my $version = shift;
-    my $self = new VRML::VRML2::Standard;
+    my $self = new VRML::VRML2::Standard($version);
     $self->{'browser'} = "";
-    $self->{'content_type'} = "model/vrml";
-    $self->{'version'} = 2;
-    $self->VRML_head("#VRML V2.0 utf8");
+    $self->{'viewpoint'} = [];
     return bless $self, $class;
 }
 
 sub browser {
     my $self = shift;
-    ($self->{'browser'}) = @_ if @_;
-    $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n");
+    return unless $_[0]; # @_ wouldn't work on PC
+    ($self->{'browser'}) = join("+",@_);
+    $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n") if $self->{'DEBUG'};
     return $self;
 }
 
@@ -42,27 +42,58 @@ sub supported {
 #--------------------------------------------------------------------
 #   VRML Grouping Methods
 #--------------------------------------------------------------------
-sub at {
-    my $self = shift;
-    $self->transform_begin(@_);
-    return $self;
-}
-
-sub back {
-   my $self = shift;
-    $self->transform_end($_[0]); #  close [ and {
-    return $self;
-}
-
 sub begin {
     my $self = shift;
-    $self->Group($_[0]);
+    $self->Group(@_);
     return $self;
 }
 
 sub end {
     my $self = shift;
-    $self->End($_[0],TRUE); #  close [ and {
+    $self->EndChildren->End($_[0]); #  close [ and {
+    return $self;
+}
+
+sub anchor_begin {
+    my $self = shift;
+    my ($url, $description, $parameter, $bboxSize, $bboxCenter) = @_;
+    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    $description =~ s/"/$quote/g if defined $description;
+    $parameter =~ s/"/$quote/g if defined $parameter;
+    undef $parameter if $self->{'browser'} !~ /$supported{'target'}/i;
+    $self->Anchor($url, $description, $parameter, $bboxSize, $bboxCenter);
+    return $self;
+}
+
+sub anchor_end {
+    my $self = shift;
+    $self->EndChildren->End($_[0]); #  close [ and {
+    return $self;
+}
+
+sub billboard_begin {
+    my $self = shift;
+    $self->Billboard(@_);
+    return $self;
+}
+
+sub billboard_end {
+    my $self = shift;
+    $self->EndChildren->End($_[0]); #  close [ and {
+    return $self;
+}
+
+sub collision_begin {
+    my $self = shift;
+    my ($collide, $proxy) = @_;
+    $collide = defined $collide && $collide ? "TRUE" : "FALSE";
+    $self->Collision($collide, $proxy);
+    return $self;
+}
+
+sub collision_end {
+    my $self = shift;
+    $self->EndChildren->End($_[0]); #  close [ and {
     return $self;
 }
 
@@ -74,70 +105,61 @@ sub group_begin {
 
 sub group_end {
     my $self = shift;
-    $self->End($_[0],TRUE); #  close [ and {
-    return $self;
-}
-
-sub collision_begin {
-    my $self = shift;
-    $self->Collision;
-    return $self;
-}
-
-sub collision_end {
-    my $self = shift;
-    $self->End($_[0],TRUE);
-    return $self;
-}
-
-sub anchor_begin {
-    my $self = shift;
-    my ($url, $description, $parameter) = @_;
-    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
-    $description =~ s/"/$quote/g if defined $description;
-    $parameter =~ s/"/$quote/g if defined $parameter;
-    undef $parameter if $self->{'browser'} !~ /$supported{'target'}/i;
-    $self->Anchor($url, $description, $parameter);
-    return $self;
-}
-
-sub anchor_end {
-    my $self = shift;
-    $self->End("Anchor",TRUE); #  close [ and {
+    $self->EndChildren->End($_[0]); #  close [ and {
     return $self;
 }
 
 sub lod_begin {
     my $self = shift;
-    my ($range, $center) = @_;
-    $self->LOD($range,$center);
+    $self->LOD(@_);
     return $self;
 }
 
 sub lod_end {
     my $self = shift;
-    $self->End($_[0],TRUE); #  close [ and {
+    $self->EndChildren->End($_[0]); #  close [ and {
     return $self;
 }
 
-sub inline {
+sub switch_begin {
     my $self = shift;
-    $self->WWWInline(@_);
+    $self->Switch(@_);
     return $self;
 }
 
-#--------------------------------------------------------------------
+sub switch_end {
+    my $self = shift;
+    $self->EndChildren->End($_[0]); #  close [ and {
+    return $self;
+}
+
+sub at {
+    my $self = shift;
+    $self->transform_begin(@_);
+    return $self;
+}
+
+sub back {
+   my $self = shift;
+    $self->transform_end;
+    return $self;
+}
 
 sub transform_begin {
     my $self = shift;
-    my ($transform_list) = shift;
-    return $self->Transform unless $transform_list;
-    @transform = ref($transform_list) ? @$transform_list : split(/\s*;\s*/,$transform_list);
+    my (@transform_list) = @_;
+    my @transform;
+    if (ref($transform_list[0])) {
+	@transform = @{$transform_list[0]};
+    } else {
+	@transform = @transform_list;
+    }
+    return $self->Transform unless @transform;
     my ($item, $key, $value);
-    my ($x,$y,$z,$rad,$t,$r,$f,$o,$c);
+    my ($x,$y,$z,$angle,$t,$r,$s,$o,$c,$bbs,$bbc);
     foreach $item (@transform) {
 	next if $item eq "";
-	($key,$value) = ref($item) ? @$item : split(/\s*[=:]\s*/,$item);
+	($key,$value) = ref($item) ? @$item : split(/\s*=\s*/,$item);
 	unless ($value) {
 	    ($x,$y,$z) = split(/\s/,$key);
 	    $x=0 unless defined $x;
@@ -146,31 +168,39 @@ sub transform_begin {
 	    $t = "$x $y $z";
 	}
 	MODE: {
-	    if ($key =~ /^t/) { $t = $value; last MODE; }
-	    if ($key =~ /^r/) { $r = $value; last MODE; }
-	    if ($key =~ /^s.*or|^o/) { $o = $value; last MODE; }
-	    if ($key =~ /^s|^f/) { $f = $value;	last MODE; }
-	    if ($key =~ /^c/) { $c = $value; last MODE; }
+	    if ($key eq "t" || $key eq "translation") { $t = $value; last MODE; }
+	    if ($key eq "r" || $key eq "rotation") { $r = $value; last MODE; }
+	    if ($key eq "c" || $key eq "center") { $c = $value; last MODE; }
+	    if ($key eq "s" || $key eq "scale") { $s = $value; last MODE; }
+	    if ($key eq "so" || $key eq "scaleOrientation") { $o = $value; last MODE; }
+	    if ($key eq "bbs" || $key eq "bboxSize") { $bbs = $value; last MODE; }
+	    if ($key eq "bbc" || $key eq "bboxCenter") { $bbc = $value; last MODE; }
 	}
-	if ($key =~ /^r/) {
-	    ($x,$y,$z,$rad) = split(/\s/,$value);
-	    unless ($rad) {
-		$rad=$x;
+	if ($key eq "r" || $key eq "rotation") {
+	    ($x,$y,$z,$angle) = split(/\s/,$value);
+	    unless ($angle) { # if not komplet assume first param is angle
+		$angle=$x;
 		$x=0;
 		$y=0;
 		$z=1;
 	    }
-	    $rad *= $::pi/180 if abs($rad) > 2*$::pi;
-	    $r = "$x $y $z $rad";
+	    $angle *= $::pi/180 if $self->{'CONVERT'};
+	    $r = "$x $y $z $angle";
 	}
     }
-    $self->Transform($t,$r,$f,$o,$c);
+    $self->Transform($t,$r,$s,$o,$c,$b);
     return $self;
 }
 
 sub transform_end {
-   my $self = shift;
-    $self->EndTransform("Transform"); #  close [ and {
+    my $self = shift;
+    $self->EndTransform("Transform");
+    return $self;
+}
+
+sub inline {
+    my $self = shift;
+    $self->Inline(@_);
     return $self;
 }
 
@@ -180,18 +210,58 @@ sub transform_end {
 
 sub background {
     my $self = shift;
-    my ($skyColorString, $backUrl, $groundColorString, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl) = @_;
-    my ($skyColor, $groundColor);
-    ($groundColor, $groundColorString) = rgb_color($groundColorString);
-    ($skyColor, $skyColorString) = rgb_color($skyColorString);
-    if ($backUrl) {
-	$bottomUrl = $backUrl unless $bottomUrl;
-	$topURL = $backUrl unless $topURL;
-	$leftUrl = $backUrl unless $leftUrl;
-	$rightUrl = $leftUrl unless $rightUrl;
-	$frontUrl = $backUrl unless $frontUrl;
+    my %hash = @_;
+    my ($key,$value,@list);
+    if (defined $hash{'skyColor'}) {
+	if (ref($hash{'skyColor'}) eq "ARRAY") {
+	    @list = ();
+	    for $key (@{$hash{'skyColor'}}) {
+		$value = rgb_color($key);
+		push(@list, $value);
+	    }
+	    $hash{'skyColor'} = "[ ".join(", ",@list)." ]";
+	    if (defined $hash{'skyAngle'}) {
+		if (ref($hash{'skyAngle'}) eq "ARRAY") {
+		    @list = ();
+		    for $key (@{$hash{'skyAngle'}}) {
+			$key *= $::pi/180 if $self->{'CONVERT'};
+			push(@list, $key);
+		    }
+		    $hash{'skyAngle'} = "[ ".join(", ",@list)." ]";
+		} else {
+		    $hash{'skyAngle'} *= $::pi/180 if $self->{'CONVERT'};
+		}
+	    }
+	} else {
+	    $hash{'skyColor'} = rgb_color($hash{'skyColor'});
+	}
     }
-    $self->Background($backUrl, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl, $groundColor, $skyColor);
+    if (defined $hash{'groundColor'}) {
+	if (ref($hash{'groundColor'}) eq "ARRAY") {
+	    @list = ();
+	    for $key (@{$hash{'groundColor'}}) {
+		$value = rgb_color($key);
+		push(@list, $value);
+	    }
+	    $hash{'groundColor'} = "[ ".join(", ",@list)." ]";
+	    if (defined $hash{'groundAngle'}) {
+		if (ref($hash{'groundAngle'}) eq "ARRAY") {
+		    @list = ();
+		    for $key (@{$hash{'groundAngle'}}) {
+			$key *= $::pi/180 if $self->{'CONVERT'};
+			push(@list, $key);
+		    }
+		    $hash{'groundAngle'} = "[ ".join(", ",@list)." ]";
+		} else {
+		    $hash{'groundAngle'} *= $::pi/180 if $self->{'CONVERT'};
+		}
+	    }
+	} else {
+	    $hash{'groundColor'} = rgb_color($hash{'groundColor'});
+	}
+    }
+    foreach $key (keys %hash) { $hash{$key} = "\"$hash{$key}\"" if $key =~ /Url$/; }
+    $self->Background(%hash);
     return $self;
 }
 
@@ -199,23 +269,31 @@ sub backgroundcolor {
     my $self = shift;
     my ($skyColorString, $groundColorString) = @_;
     my ($skyColor, $groundColor);
-    ($groundColor, $groundColorString) = rgb_color($groundColorString);
-    ($skyColor, $skyColorString) = rgb_color($skyColorString);
-    $self->Background(undef, undef, undef, undef, undef, undef, $groundColor, $skyColor);
+    $skyColor = rgb_color($skyColorString) if defined $skyColorString;
+    $groundColor = rgb_color($groundColorString) if defined $groundColorString;
+    $self->Background(skyColor => $skyColor, groundColor => $groundColor);
     return $self;
 }
 
 sub backgroundimage {
     my $self = shift;
-    my ($backUrl, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl) = @_;
-    $self->Background($backUrl, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl);
+    my ($url) = @_;
+    return unless $url;
+    $self->Background(
+	frontUrl => "\"$url\"",
+	leftUrl => "\"$url\"",
+	rightUrl => "\"$url\"",
+	backUrl => "\"$url\"",
+	bottomUrl => "\"$url\"",
+	topUrl => "\"$url\""
+    );
     return $self;
 }
 
 sub title {
     my $self = shift;
     my $title = shift;
-    return $self->VRML_put(qq{# CALL: ->title("string")\n}) if defined $self->{'HELP'};
+    return unless defined $title;
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $title =~ s/"/$quote/g;
     $self->WorldInfo($title);
@@ -224,7 +302,18 @@ sub title {
 
 sub info {
     my $self = shift;
-    my ($info, $title) = @_;
+    my ($info) = @_;
+    my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
+    if (defined $info) {
+	$info =~ s/"/$quote/g;
+        $self->WorldInfo(undef, $info);
+    }
+    return $self;
+}
+
+sub worldinfo {
+    my $self = shift;
+    my ($title, $info) = @_;
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $title =~ s/"/$quote/g if defined $title;
     $info =~ s/"/$quote/g if defined $info;
@@ -232,37 +321,36 @@ sub info {
     return $self;
 }
 
-sub headlight {
+sub navigationinfo {
     my $self = shift;
-    my ($headlight) = @_;
-    $headlight = defined $headlight && (!$headlight || $headlight =~ /off|false/i) ? "FALSE" : "TRUE";
-    $self->NavigationInfo($headlight);
+    my ($type, $speed, $headlight, $visibilityLimit, $avatarSize) = @_;
+    $headlight = defined $headlight && !$headlight ? "FALSE" : "TRUE";
+    $self->NavigationInfo($type, $speed, $headlight, $visibilityLimit, $avatarSize);
     return $self;
 }
 #--------------------------------------------------------------------
 
-sub cameras_begin {
+sub viewpoint_begin {
     my $self = shift;
     my ($whichChild) = @_;
     $whichChild = (defined $whichChild && $whichChild > 0) ? $whichChild-1 : 0;
     $self->{'TAB_VIEW'} = $self->{'TAB'};
-    $self->{'cameras_begin'} = $#{$self->{'VRML'}}+1 unless defined $self->{'cameras_begin'};
+    $self->{'viewpoint_begin'} = $#{$self->{'VRML'}}+1 unless defined $self->{'viewpoint_begin'};
     return $self;
 }
 
-sub cameras_end {
+sub viewpoint_end {
     my $self = shift;
-    chop($self->{'TAB_VIEW'});
-    splice(@{$self->{'VRML'}}, $self->{'cameras_begin'}, 0, @{$self->{'VIEW'}});
-    $self->{'VIEW'} = [];
+    splice(@{$self->{'VRML'}}, $self->{'viewpoint_begin'}, 0, @{$self->{'viewpoint'}});
+    $self->{'viewpoint'} = [];
     return $self;
 }
 
-sub camera_auto_set {
+sub viewpoint_auto_set {
     my $self = shift;
     my $factor = shift;
     $factor = 1 unless defined $factor;
-    if (defined $self->{'camera_set'}) {
+    if (defined $self->{'viewpoint_set'}) {
 	my $x = ($self->{'Xmax'}+$self->{'Xmin'})/2;
 	my $y = ($self->{'Ymax'}+$self->{'Ymin'})/2;
 	my $z = ($self->{'Zmax'}+$self->{'Zmin'})/2;
@@ -273,20 +361,20 @@ sub camera_auto_set {
 	$dist = $dx if $dx > $dist;
 	$dist = $dy if $dy > $dist;
 	$dist = $dz if $dz > $dist;
-	my $offset = $#{$self->{'VIEW'}}+1;
-	$self->camera_set("$x $y $z",$dist*$factor,60);
-	@_ = splice(@{$self->{'VIEW'}}, $offset);
-	splice(@{$self->{'VIEW'}}, $self->{'camera_set'}, $#_+1, @_);
+	my $offset = $#{$self->{'viewpoint'}}+1;
+	$self->viewpoint_set("$x $y $z",$dist*$factor,60);
+	@_ = splice(@{$self->{'viewpoint'}}, $offset);
+	splice(@{$self->{'viewpoint'}}, $self->{'viewpoint_set'}, $#_+1, @_);
     } else {
-	$self->camera_set(@_);
+	$self->viewpoint_set(@_);
     }
     return $self;
 }
 
-sub camera_set {
+sub viewpoint_set {
     my $self = shift;
-    my ($center, $distance, $heightAngle) = @_;
-    $self->{'camera_set'} = $#{$self->{'VIEW'}}+1 unless defined $self->{'camera_set'};
+    my ($center, $distance, $fieldOfView) = @_;
+    $self->{'viewpoint_set'} = $#{$self->{'viewpoint'}}+1 unless defined $self->{'viewpoint_set'};
     my ($x, $y, $z) = split(/\s+/,$center) if defined $center;
     my ($dx, $dy, $dz) = defined $distance ? split(/\s+/,$distance) : (0,0,0);
     $x = 0 unless defined $x;
@@ -295,40 +383,61 @@ sub camera_set {
     $dx = 1 unless defined $dx;
     $dy = $dx unless defined $dy;
     $dz = $dx unless defined $dz;
-    $self->camera("Front", "$x $y ".($z+$dz), "0 0 1 0",$heightAngle);
-    $self->camera("Right", ($x+$dx)." $y $z", "0 1 0 90",$heightAngle);
-    $self->camera("Back", "$x $y ".($z-$dz), "0 1 0 180",$heightAngle);
-    $self->camera("Left", ($x-$dx)." $y $z", "0 1 0 -90",$heightAngle);
-    $self->camera("Top", "$x ".($y+$dy)." $z", "1 0 0 -90",$heightAngle);
-    $self->camera("Bottom", "$x ".($y-$dy)." $z", "1 0 0 90",$heightAngle);
+    $self->viewpoint("Front", "$x $y ".($z+$dz), "0 0 1 0",$fieldOfView);
+    $self->viewpoint("Right", ($x+$dx)." $y $z", "0 1 0 90",$fieldOfView);
+    $self->viewpoint("Back", "$x $y ".($z-$dz), "0 1 0 180",$fieldOfView);
+    $self->viewpoint("Left", ($x-$dx)." $y $z", "0 1 0 -90",$fieldOfView);
+    $self->viewpoint("Top", "$x ".($y+$dy)." $z", "1 0 0 -90",$fieldOfView);
+    $self->viewpoint("Bottom", "$x ".($y-$dy)." $z", "1 0 0 90",$fieldOfView);
     return $self;
 }
 
-sub camera {
+sub viewpoint {
     my $self = shift;
-    my ($description,
-	$position, $orientation, $fieldOfView, $jump) = @_;
-    my ($x,$y,$z,$degree) = ref($orientation) ? @$orientation : split(/\s+/,$orientation);
-    if (defined $degree) {
-	$degree *= $::pi/180 if (abs($degree) > 2*$::pi);
-	$orientation = "$x $y $z $degree";
+    my ($description, $position, $orientation, $fieldOfView, $jump) = @_;
+    if (defined $orientation) {
+	 if ($orientation !~ /\s/) {
+	    my %val = ("FRONT" => "0 0 1 0", "BACK" => "0 1 0 3.14",
+	    	"RIGHT" => "0 1 0  1.57", "LEFT" => "0 1 0 -1.57",
+		"TOP" => "1 0 0 -1.57",	"BOTTOM" => "1 0 0 1.57");
+	    my $string = uc($orientation);
+	    undef $orientation;
+	    $orientation = $val{$string};
+            $orientation .= " # $string" if $orientation;
+	} else {
+	    my ($x,$y,$z,$angle) = ref($orientation) ? @$orientation : split(/\s+/,$orientation);
+	    if (defined $angle) {
+		$angle *= $::pi/180 if $self->{'CONVERT'};
+		$orientation = "$x $y $z $angle";
+	    }
+	}
     }
-    $fieldOfView *= $::pi/180 if defined $fieldOfView && (abs($fieldOfView) > 2*$::pi);
+    $fieldOfView *= $::pi/180 if defined $fieldOfView && $self->{'CONVERT'};
+    if (defined $jump) { $jump = $jump ? "TRUE" : "FALSE"; }
+    $self->{'TAB_VIEW'} = $self->{'TAB'} unless $self->{'TAB_VIEW'};
+    if ($description =~ /^#/) {
+	$description =~ s/^#//;
+	my ($name) = $description;
+	$name =~ s/[\x00-\x20\x7f\x22\x27\x23\x2c\x2e\x5b\x5d\x5c\x7b\x7d\x30-\x39\x2b\x2d]/_/g;
+        push @{$self->{'viewpoint'}}, $self->{'TAB_VIEW'}."DEF $name\n";
+    }
     $self->Viewpoint($description, $position, $orientation, $fieldOfView, $jump);
-    unless (defined $self->{'cameras_begin'}) {
-	splice(@{$self->{'VRML'}}, @{$self->{'VRML'}}, 0, @{$self->{'VIEW'}});
-	$self->{'VIEW'} = [];
+    push @{$self->{'viewpoint'}}, pop @{$self->{'VRML'}};
+    unless (defined $self->{'viewpoint_begin'}) {
+	splice(@{$self->{'VRML'}}, @{$self->{'VRML'}}, 0, @{$self->{'viewpoint'}});
+	$self->{'viewpoint'} = [];
     }
     return $self;
 }
 
 #--------------------------------------------------------------------
 
-sub light {
+sub directionallight {
     my $self = shift;
-    my ($direction, $intensity, $color, $ambientIntensity, $on) = @_;
-    $intensity /= 100 if defined $intensity && $intensity > 1;
-    $self->DirectionalLight($direction, $intensity, $color, $ambientIntensity, $on);
+    my ($direction, $intensity, $ambientIntensity, $color, $on) = @_;
+    if (defined $on) { $on = $on ? "TRUE" : "FALSE"; }
+    $color = rgb_color($color) if defined $color;
+    $self->DirectionalLight($direction, $intensity, $ambientIntensity, $color, $on);
     return $self;
 }
 
@@ -351,50 +460,58 @@ sub line {
     my $dy=$y1-$y2;
     my $dz=$z1-$z2;
     $order = "" unless defined $order;
-    $self->Group('line("'.join('", "',@_).'")');
-    if ($dx && $order =~ /x/) {
-	$t = ($x1-($dx/2))." $y1 $z1" if $order =~ /^x$/i;
-	$t = ($x1-($dx/2))." $y1 $z1" if $order =~ /^x../i;
-	$t = ($x1-($dx/2))." $y2 $z1" if $order =~ /yxz/i;
-	$t = ($x1-($dx/2))." $y1 $z2" if $order =~ /zxy/i;
-	$t = ($x1-($dx/2))." $y2 $z2" if $order =~ /..x$/i;
-	$self->Transform($t,"0 0 1 $::pi_2");
-	$self->Shape(sub{$self->Cylinder($radius,abs($dx))},
-		sub{$self->appearance($appearance)});
-	$self->EndTransform;
+    $self->comment('line("'.join('", "',@_).'")');
+    $self->Group();
+    if (defined $radius && $radius>0) {
+	if ($dx && $order =~ /x/) {
+	    $t = ($x1-($dx/2))." $y1 $z1" if $order =~ /^x$/i;
+	    $t = ($x1-($dx/2))." $y1 $z1" if $order =~ /^x../i;
+	    $t = ($x1-($dx/2))." $y2 $z1" if $order =~ /yxz/i;
+	    $t = ($x1-($dx/2))." $y1 $z2" if $order =~ /zxy/i;
+	    $t = ($x1-($dx/2))." $y2 $z2" if $order =~ /..x$/i;
+	    $self->Transform($t,"0 0 1 $::pi_2");
+	    $self->Shape(sub{$self->Cylinder($radius,abs($dx))},
+		    sub{$self->appearance($appearance)});
+	    $self->EndTransform;
+	}
+	if ($dy && $order =~ /y/) {
+	    $t = "$x1 ".($y1-($dy/2))." $z1" if $order =~ /^y$/i;
+	    $t = "$x1 ".($y1-($dy/2))." $z1" if $order =~ /^y../i;
+	    $t = "$x2 ".($y1-($dy/2))." $z1" if $order =~ /xyz/i;
+	    $t = "$x1 ".($y1-($dy/2))." $z2" if $order =~ /zyx/i;
+	    $t = "$x2 ".($y1-($dy/2))." $z2" if $order =~ /..y$/i;
+	    $self->Transform($t);
+	    $self->Shape(sub{$self->Cylinder($radius,abs($dy))},
+		    sub{$self->appearance($appearance)});
+	    $self->EndTransform;
+	}
+	if ($dz && $order =~ /z/) {
+	    $t = "$x1 $y1 ".($z1-($dz/2)) if $order =~ /^z$/i;
+	    $t = "$x1 $y1 ".($z1-($dz/2)) if $order =~ /^z../i;
+	    $t = "$x1 $y2 ".($z1-($dz/2)) if $order =~ /yzx/i;
+	    $t = "$x2 $y1 ".($z1-($dz/2)) if $order =~ /xzy/i;
+	    $t = "$x2 $y2 ".($z1-($dz/2)) if $order =~ /..z$/i;
+	    $self->Transform($t,"1 0 0 $::pi_2");
+	    $self->Shape(sub{$self->Cylinder($radius,abs($dz))},
+		    sub{$self->appearance($appearance)});
+	    $self->EndTransform;
+	}
+	unless ($order) {
+	    $length = sqrt($dx*$dx + $dy*$dy + $dz*$dz);
+	    $t = ($x1-($dx/2))." ".($y1-($dy/2))." ".($z1-($dz/2));
+	    $r = "$dx ".($dy+$length)." $dz $::pi";
+	    $self->Transform($t,$r);
+	    $self->Shape(sub{$self->Cylinder($radius,$length)},
+		    sub{$self->appearance($appearance)});
+	    $self->EndTransform;
+	}
+    } else {
+	my $color = rgb_color($appearance);
+	$self->Shape(sub{$self->IndexedLineSet(
+	    sub{$self->Coordinate($from,$to)},
+	    "0 1","Color { color [ $color ] }",undef,"FALSE")});
     }
-    if ($dy && $order =~ /y/) {
-	$t = "$x1 ".($y1-($dy/2))." $z1" if $order =~ /^y$/i;
-	$t = "$x1 ".($y1-($dy/2))." $z1" if $order =~ /^y../i;
-	$t = "$x2 ".($y1-($dy/2))." $z1" if $order =~ /xyz/i;
-	$t = "$x1 ".($y1-($dy/2))." $z2" if $order =~ /zyx/i;
-	$t = "$x2 ".($y1-($dy/2))." $z2" if $order =~ /..y$/i;
-	$self->Transform($t);
-	$self->Shape(sub{$self->Cylinder($radius,abs($dy))},
-		sub{$self->appearance($appearance)});
-	$self->EndTransform;
-    }
-    if ($dz && $order =~ /z/) {
-	$t = "$x1 $y1 ".($z1-($dz/2)) if $order =~ /^z$/i;
-	$t = "$x1 $y1 ".($z1-($dz/2)) if $order =~ /^z../i;
-	$t = "$x1 $y2 ".($z1-($dz/2)) if $order =~ /yzx/i;
-	$t = "$x2 $y1 ".($z1-($dz/2)) if $order =~ /xzy/i;
-	$t = "$x2 $y2 ".($z1-($dz/2)) if $order =~ /..z$/i;
-	$self->Transform($t,"1 0 0 $::pi_2");
-	$self->Shape(sub{$self->Cylinder($radius,abs($dz))},
-		sub{$self->appearance($appearance)});
-	$self->EndTransform;
-    }
-    unless ($order) {
-	$length = sqrt($dx*$dx + $dy*$dy + $dz*$dz);
-	$t = ($x1-($dx/2))." ".($y1-($dy/2))." ".($z1-($dz/2));
-	$r = "$dx ".($dy+$length)." $dz $::pi";
-	$self->Transform($t,$r);
-	$self->Shape(sub{$self->Cylinder($radius,$length)},
-		sub{$self->appearance($appearance)});
-	$self->EndTransform;
-    }
-    $self->End("line",TRUE);
+    $self->EndChildren->End("line");
     return $self;
 }
 
@@ -405,7 +522,7 @@ sub box {
     my ($dimension, $appearance) = @_;
     my ($width,$height,$depth) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
     $self->Shape(
-	sub{$self->Box($width,$height,$depth)},
+	sub{$self->Box("$width $height $depth")},
 	sub{$self->appearance($appearance)}
     );
     return $self;
@@ -426,10 +543,10 @@ sub cube {
     my $self = shift;
     my ($dimension, $appearance) = @_;
     my ($width,$height,$depth) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
-    $height=$width unless defined $height;
-    $depth=$width unless defined $depth;
+    $height = $width unless defined $height;
+    $depth = $width unless defined $depth;
     $self->Shape(
-	sub{$self->Box($width,$height,$depth)},
+	sub{$self->Box("$width $height $depth")},
 	sub{$self->appearance($appearance)}
     );
     return $self;
@@ -437,19 +554,66 @@ sub cube {
 
 sub cylinder {
     my $self = shift;
-    my ($dimension, $appearance) = @_;
+    my ($dimension, $appearance, $top, $side, $bottom) = @_;
     my ($radius, $height) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
+    $top = $top ? "TRUE" : "FALSE" if defined $top;
+    $side = $side ? "TRUE" : "FALSE" if defined $side;
+    $bottom = $bottom ? "TRUE" : "FALSE" if defined $bottom;
     $self->Shape(
-	sub{$self->Cylinder($radius, $height)},
+	sub{$self->Cylinder($radius, $height, $top, $side, $bottom)},
 	sub{$self->appearance($appearance)}
+    );
+    return $self;
+}
+
+sub elevationgrid {
+    my $self = shift;
+    my ($height_ref, $color, $xDimension, $zDimension, $xSpacing, $zSpacing) = @_;
+    $xDimension = ($$height_ref[0] =~ s/\s+/ /g) + 1 unless defined $xDimension;
+    $zDimension = @$height_ref unless defined $zDimension;
+    $xSpacing = 1 unless defined $xSpacing;
+    $zSpacing = $xSpacing unless defined $zSpacing;
+    $self->ElevationGrid($xDimension, $zDimension, $xSpacing, $zSpacing, $height_ref, $color);
+    return $self;
+}
+
+sub indexedfaceset {
+    my $self = shift;
+    my ($coord, $coordIndex, $appearance, $color, $colorIndex) = @_;
+    $colorIndex = [0..$#{@$color}] unless defined $colorIndex;
+    my @color = split(",",$appearance);
+    $self->Shape(
+	sub{$self->IndexedFaceSet(
+	    sub{$self->Coordinate($coord)}, $coordIndex,
+	    sub{$self->color(@color)}, $colorIndex, "FALSE")
+	},
+	sub{$self->appearance($appearance)}
+    );
+    return $self;
+}
+
+sub pyramid {
+    my $self = shift;
+    my ($dimension, $appearance) = @_;
+    my ($width,$height,$depth) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
+    my $x_2 = $width/2;
+    my $y_2 = $height/2;
+    my $z_2 = defined $depth ? $depth/2 : $x_2;
+    my @color = split(",",$appearance) if $appearance;
+    my @color_prop = ();
+    @color_prop = (sub{$self->color(@color)},[0..4],"FALSE") if $#color > 0;
+    $self->Shape(
+	sub{$self->IndexedFaceSet(
+	    sub{$self->Coordinate("-$x_2 -$y_2 $z_2","$x_2 -$y_2 $z_2","$x_2 -$y_2 -$z_2","-$x_2 -$y_2 -$z_2","0 $y_2 0")},
+	    ["0, 1, 4","1, 2, 4","2, 3, 4","3, 0, 4","0, 3, 2, 1"],@color_prop)
+	},sub{$self->appearance($appearance)}
     );
     return $self;
 }
 
 sub sphere {
     my $self = shift;
-    my ($dimension, $appearance) = @_;
-    my ($radius) = ref($dimension) ? @$dimension : split(/\s+/,$dimension);
+    my ($radius, $appearance) = @_;
     $self->Shape(
 	sub{$self->Sphere($radius)},
 	sub{$self->appearance($appearance)}
@@ -460,17 +624,28 @@ sub sphere {
 sub text {
     my $self = shift;
     my ($string, $appearance, $font, $align) = @_;
+    my ($size, $family, $style);
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
-    $string =~ s/"/$quote/g if defined $string;
+    if (defined $string) {
+	if (ref($string)) {
+	    map { s/"/$quote/g } @$string;
+	    $string = '["'.join('","',@$string).'"]';
+	} else {
+	    $string =~ s/"/$quote/g;
+	    $string = "\"$string\"";
+	}
+    }
     $self->Shape(sub{
       if (defined $font || defined $align) {
-	local ($size, $style, $family) = split(/\s+/,$font,3); # use local !!!
+	if (defined $font) {
+	    ($size, $family, $style) = split(/\s+/,$font,3); # local variable !!!
+	}
 	if (defined $align) {
 	    $align =~ s/LEFT/BEGIN/i;
 	    $align =~ s/CENTER/MIDDLE/i;
 	    $align =~ s/RIGHT/END/i;
 	}
-	$self->Text($string,sub{$self->FontStyle($size, $style, $family, $align)});
+	$self->Text($string,sub{$self->FontStyle($size, $family, $style, $align)});
       } else {
 	$self->Text($string);
       }},sub{$self->appearance($appearance)}
@@ -478,46 +653,23 @@ sub text {
     return $self;
 }
 
-sub fixtext {
+sub billtext {
     my $self = shift;
-    $self->Billboard("0 0 0");
-    $self->text(@_);
-    $self->End("Billboard",1);
+    my @param = @_;
+    $self->Billboard("0 0 0",sub{$self->text(@param)}); # don't use @_ directly
 }
 #--------------------------------------------------------------------
 
-sub cylindersensor {
+sub color {
     my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->cylindersensor("name")\n}) unless @_;
-    my ($name, $enabled) = @_;
-    $self->def($name)->CylinderSensor($enabled);
+    my ($rgb, $comment, @colors);
+    for (@_) {
+	($rgb, $comment) = rgb_color($_);
+	push(@colors, $rgb);
+    }
+    $self->Color(@colors);
     return $self;
 }
-
-sub spheresensor {
-    my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->spheresensor("name")\n}) unless @_;
-    my ($name, $enabled) = @_;
-    $self->def($name)->SphereSensor($enabled);
-    return $self;
-}
-
-sub timesensor {
-    my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->timesensor("name")\n}) unless @_;
-    my ($name, $cycleInterval, $loop, $enabled) = @_;
-    $self->def($name)->TimeSensor($cycleInterval, $loop, $enabled);
-    return $self;
-}
-
-sub touchsensor {
-    my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->touchsensor("name")\n}) unless @_;
-    my ($name, $enabled) = @_;
-    $self->def($name)->TouchSensor($enabled)->VRML_trim;
-    return $self;
-}
-
 #--------------------------------------------------------------------
 
 sub appearance {
@@ -525,10 +677,11 @@ sub appearance {
     my ($appearance_list) = @_;
     return $self->VRML_put("Appearance {}\n") unless $appearance_list;
     my $texture = "";
-    my ($item,$color,$multi_color,$key,$value,$num_color,%material,$name);
+    my ($item,$color,$multi_color,$key,$value,@values,$num_color,%material,$name,$def);
     ITEM:
     foreach $item (split(/\s*;\s*/,$appearance_list)) {
-	($key,$value) = split(/\s*[=:]\s*/,$item,2);
+	($key,$value) = ref($item) ? @$item : split(/\s*=\s*/,$item,2);
+#	($key,$value) = split(/\s*=\s*/,$item,2);
 	unless ($value) {	# color only
 	    $value = $key;
 	    $key = "diffuseColor";
@@ -537,36 +690,45 @@ sub appearance {
 	    if ($key eq "d")  { $key = "diffuseColor";  last MODE; }
 	    if ($key eq "e")  { $key = "emissiveColor"; last MODE; }
 	    if ($key eq "s")  { $key = "specularColor"; last MODE; }
-	    if ($key eq "ai" || $key eq "a")  { $key = "ambientIntensity";  last MODE; }
+	    if ($key eq "ai") { $key = "ambientIntensity";  last MODE; }
 	    if ($key eq "sh") { $key = "shininess";     last MODE; }
 	    if ($key eq "tr") { $key = "transparency";  last MODE; }
 	    if ($key eq "tex") { $texture = $value; next ITEM; }
-	    if ($key eq "def" || $key eq "name") { $name = $value; next ITEM; }
-	}
-	if ($value =~ /,/) {	# multi color field
-	    foreach $color (split(/\s*,\s*/,$value)) {
-	    	($num_color,$color) = rgb_color($color);
-		$value = $num_color;
-	    	$value .= "	# $color" if $color;
-	    	push @values, $value;
+	    if ($key eq "def") { $def = $value; next ITEM; }
+	    if ($key eq "name") { $name = $value; next ITEM; }
+	    if ($key eq "use") {
+		$self->use($value);
+	        return $self;
 	    }
-	    $material{$key} = $values[0]; # ignore foll. colors
-	    $multi_color = 1;	
+	}
+	if ($key eq "diffuseColor" | $key eq "emissiveColor" | $key eq "specularColor") {
+	    if ($value =~ /,/) {	# multi color field
+		foreach $color (split(/\s*,\s*/,$value)) {
+		    ($num_color,$color) = rgb_color($color);
+		    $value = $num_color;
+		    $value .= "	# $color" if $color;
+		    push @values, $value;
+		}
+		$material{$key} = $values[0]; # ignore foll. colors
+		$multi_color = 1;
+	    } else {
+		($num_color,$color) = rgb_color($value);
+		$value = $num_color;
+		$value .= "	# $color" if $color;
+		$material{$key} = $value;
+	    }
 	} else {
-	    ($num_color,$color) = rgb_color($value);
-	    $value = $num_color;
-	    $value .= "	# $color" if $color;
-	    $material{$key} = $value;
+		$material{$key} = $value;
 	}
     }
+    $self->def($def) if $def;
     $self->Appearance(
 	%material ? sub{$self->Material(%material)} : undef,
-	$texture =~ /\.gif|\.jpg|\.bmp/i ? sub{$self->ImageTexture(split(/\s+/,$texture))} : undef || 
-	$texture =~ /\.avi|\.mpg|\.mov/i ? sub{$self->def($name)->MovieTexture(split(/\s+/,$texture))} : undef 
+	$texture =~ /\.gif|\.jpg|\.png|\.bmp/i ? sub{$self->ImageTexture(split(/\s+/,$texture))} : undef ||
+	$texture =~ /\.avi|\.mpg|\.mov/i ? sub{$self->def($name)->MovieTexture(split(/\s+/,$texture))} : undef
     );
     return $self;
 }
-
 
 #--------------------------------------------------------------------
 
@@ -580,14 +742,82 @@ sub sound {
     return $self;
 }
 
-sub route {
-    shift->ROUTE(@_);
+#--------------------------------------------------------------------
+
+sub cylindersensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->cylindersensor("name")\n}) unless @_;
+    my ($name) = shift;
+    $self->def($name)->CylinderSensor(@_)->VRML_trim;
+    return $self;
 }
 
-sub routetime {
-    $self = shift;
-    ($source, $dest) = @_;
-    $self->ROUTE("$source.touchTime", "$dest.startTime");
+sub planesensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->planesensor("name")\n}) unless @_;
+    my $name = shift;
+    $self->def($name)->PlaneSensor(@_)->VRML_trim;
+    return $self;
+}
+
+sub proximitysensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->proximitysensor("name")\n}) unless @_;
+    my $name = shift;
+    $self->def($name)->ProximitySensor(@_)->VRML_trim;
+    return $self;
+}
+
+sub spheresensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->spheresensor("name")\n}) unless @_;
+    my $name = shift;
+    $self->def($name)->SphereSensor(@_)->VRML_trim;
+    return $self;
+}
+
+sub timesensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->timesensor("name")\n}) unless @_;
+    my $name = shift;
+    $self->def($name)->TimeSensor(@_)->VRML_trim;
+    return $self;
+}
+
+sub touchsensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->touchsensor("name")\n}) unless @_;
+    my $name = shift;
+    $self->def($name)->TouchSensor(@_)->VRML_trim;
+    return $self;
+}
+
+sub visibitysensor {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->visibitysensor("name")\n}) unless @_;
+    my $name = shift;
+    $self->def($name)->VisibilitySensor(@_)->VRML_trim;
+    return $self;
+}
+
+#--------------------------------------------------------------------
+
+sub interpolator {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->interpolator("name","type", [keys],[keyValues])\n}) unless @_;
+    my $name = shift;
+    my $type = shift;
+    $type .= "Interpolator";
+    $self->def($name)->$type(@_)->VRML_trim;
+    return $self;
+}
+
+#--------------------------------------------------------------------
+# other
+#--------------------------------------------------------------------
+
+sub route {
+    shift->ROUTE(@_);
 }
 
 sub def {
@@ -623,76 +853,150 @@ __END__
 
 =head1 NAME
 
-VRML::VRML2.pm - implements VRML methods with the VRML 2.0 standard
+VRML::VRML2.pm - VRML methods with the VRML 2.0 standard
 
 =head1 SYNOPSIS
 
     use VRML::VRML2;
 
+    $vrml = new VRML::VRML2;
+    $vrml->browser('CosmoPlayer 1.0','Netscape');
+    $vrml->at('-15 0 20');
+    $vrml->box('5 3 1','yellow');
+    $vrml->back;
+    $vrml->print;
+    $vrml->save;
+
+  OR with the same result
+
+  use VRML::VRML2;
+
+  VRML::VRML2->new
+  ->browser('CosmoPlayer 1.0','Netscape')
+  ->at('-15 0 20')->box('5 3 1','yellow')->back
+  ->print->save;
+
 =head1 DESCRIPTION
+
+The methods of this module are easier to use than the VRML::*::Standard methods
+because the methods are on a higher level. For example you can use X11 color
+names and it's simple to apply textures to an object. All angles could be
+assigned in degrees.
+
+If a method does the same like its VRML pedant then it has the same name but in
+lowercase (e.g. box). The open part of a group method ends with a
+_begin (e.g. anchor_begin). The closing part ends with an _end (e.g.
+anchor_end). For a detailed description how the generated node works, take a 
+look at the VRML 2.0 specification on VAG.
 
 Following methods are currently implemented. (Values in '...' must be strings!)
 
 =over 4
 
 =item *
-begin(['comment'])
+begin('comment')
 
-C<  . . . >
-
-=item *
-end(['comment'])
+Before you use an geometry or transform method please call this method.
+It's necessary to calculate something at the end.
 
 =item *
-group_begin(['comment'])
+end('comment')
 
-C<  . . . >
+After C<end> there should no geometry or transformation. This method completes
+the calculations of viewpoints etc.
+
+=item *
+at('type=value','type=value', ...)
+
+is the short version of the method C<transform_begin>. It has the same 
+parameters as C<transform_begin>.
+
+=item *
+back
+
+is the short version of the method C<transform_end>.
+
+=item *
+anchor_begin('url','description','parameter')
+
+=item *
+anchor_end
+
+=item *
+billboard_begin('axisOfRotation')
+
+=item *
+billboard_end
+
+=item *
+collision_begin(collide,proxy)
+
+=item *
+collision_end
+
+=item *
+group_begin('comment')
 
 =item *
 group_end
 
 =item *
-at('type=value ; ...')
-
-parameter see C<transform_begin>
+lod_begin(range,'center')
 
 =item *
-back
+lod_end
 
 =item *
-transform_begin('type=value ; ...')
+switch_begin(whichChoice)
+
+=item *
+switch_end
+
+=item *
+transform_begin('type=value','type=value', ...)
 
 I<Where type can be:>
 
 	t = translation
 	r = rotation
 	c = center
-	o = scaleOrientation
-	f = scaleFactor
+	s = scale
+	so = scaleOrientation
+	bbs = bboxSize
+	bbc = bboxCenter
 
 =item *
 transform_end
 
 =item *
-anchor_begin('Url','description','parameter')
+inline('Url')
 
 =item *
-anchor_end
+background(
+
+	skycolor => '...',
+	groundcolor => '...',
+	bottomUrl => '...',
+	topUrl => '...',
+	frontUrl => '...',
+	leftUrl => '...',
+	rightUrl => '...',
+	backUrl => '...'
+
+)
+
+This is a parameter hash. Only use the parts you need.
 
 =item *
-collision_begin
+backgroundcolor('skyColor','groundColor')
+
+is the short version of C<background>. It specifies only colors.
 
 =item *
-collision_end
+backgroundimage('Url')
 
-=item *
-lod_begin('range','center')
-
-=item *
-lod_end
-
-=item *
-background('skycolor','backUrl','groundcolor','bottomURL','topURL', 'leftUrl','rightUrl','frontUrl')
+is the short version of C<background>. It needs only one image. The
+given Url will assigned to all parts of the background cube.
 
 =item *
 title('string')
@@ -701,32 +1005,41 @@ title('string')
 info('string')
 
 =item *
-cameras_begin('whichCameraNumber')
+viewpoint_begin
+
+starts the hidden calculation of viewpoint center and distance for the
+method C<viewpoint_auto_set()>. It collects also the viepoints to place
+they in the first part of the VRML source.
 
 =item *
-camera('positionXYZ','orientationXYZ',fieldOfView) 
-// persp. camera
+viewpoint('description','position','orientation',fieldOfView,jump)
 
 =item *
-camera_set('positionXYZ','orientationXYZ',fieldOfView) // persp. cameras
+viewpoint_set('center','distance',fieldOfView)
+
+places six viewpoints around the center.
 
 =item *
-camera_auto_set
+viewpoint_auto_set
+
+sets all parameters of C<viewpoint_set> automatically.
 
 =item *
-cameras_end(['comment'])
+viewpoint_end
 
 =item *
-light('direction','intensity','color','ambientIntensity','on') 
+directionallight('direction',intensity,ambientIntensity,'color',on)
 
 =item *
-box('width [height [depth]]','appearance')
+box('width height depth','appearance')
 
 =item *
 cone('radius height','appearance')
 
 =item *
-cube('width','appearance')
+cube(length,'appearance')
+
+does the same as method C<box>, but needs only one parameter.
 
 =item *
 cylinder('radius [height]','appearance')
@@ -734,17 +1047,61 @@ cylinder('radius [height]','appearance')
 =item *
 line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
 
-=item *
-sphere('radius_x [radius_y radius_z]','appearance')
+draws a line (cylinder) between two points with a given radius. If radius
+is '0' only a hairline will be printed. The last parameter specifies the
+devolution along the axes. An empty stands for direct connection.
 
 =item *
-text('string','appearance','size style family')
+sphere(radius_x,'appearance')
 
 =item *
-fixtext('string','appearance','size style family')
+text('string','appearance','size family style','align')
+
+=item *
+billtext('string','appearance','size family style','align')
+
+does the same like method C<text>, but the text better readable.
+
+=item *
+appearance('type=value1,value2 ; type=...')
+
+The appearance method specifies the visual properties of geometry by defining
+the material and texture. If more than one type is needed separate the types
+by semicolon. The types can choosen from the following list.
+ 
+Note: one character mnemonic are colors
+      two characters mnemonic are values in range of [0..1]
+      more characters are strings like file names or labels
+
+	d = diffuseColor
+	e = emissiveColor
+	s = specularColor
+	ai = ambientIntensity
+	sh = shininess
+	tr = transparency
+	tex = texture filename,wrapS,wrapT
+	name = names the MovieTexture node (for a later route)
+
+The color values can be strings (X11 color names) or RGB-triples. It is 
+possible to reduce the intensity of colors (names) by appending a two digit
+value (percent). This value must be separated by an underscore (_) or
+a percent symbol (%). Note: Do not use a percent symbol in URL's. It would
+be decoded in an ascii character.
+
+Sample (valid color values):
+	'1 1 0' # VRML standard
+	'FFFF00' or 'ffff00', '255 255 0', 'yellow'
+
+or reduced to 50%
+	'.5 .5 .5' # VRML standard
+	'808080', '128 128 0', 'yellow%50' or 'yellow_50'
+
+
+For a list of I<X11 color names> take a look at VRML::Color
 
 =item *
 def('name',[code])
+
 
 =item *
 use('name')
@@ -753,21 +1110,38 @@ use('name')
 route('from','to')
 
 =item *
-appearance('type=value1,value2 ; ...')
+interpolator('name','type',[keys],[keyValues])
 
 I<Where type can be:>
 
-	a = ambientColor
-	d = diffuseColor
-	e = emissiveColor
-	s = specularColor
-	sh = shininess
-	tr = transparency
-	tex = texture filename[,wrapS[,wrapT]]
+	Color
+	Coordinate
+	Orientation
+	Normal
+	Position
+	Scalar
+	
 
-I<and color values see>
+=item *
+cylindersensor('name',maxAngle,minAngle,diskAngle,offset,autoOffset,enabled)
 
-VRML::Color
+=item *
+planesensor('name',maxPosition,minPosition,offset,autoOffset,enabled)
+
+=item *
+proximitysensor('name',size,center,enabled)
+
+=item *
+spheresensor('name',offset,autoOffset,enabled)
+
+=item *
+timesensor('name',cycleInterval,loop,startTime,stopTime,enabled)
+
+=item *
+touchsensor('name',enabled)
+
+=item *
+visibitysensor('name',size,center,enabled)
 
 =back
 
@@ -777,11 +1151,14 @@ VRML
 
 VRML::VRML2::Standard
 
-VRML::Basic
+VRML::Base
+
+http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of F<VRML-modules> and how to obtain it.
 
 =head1 AUTHOR
 
 Hartmut Palm F<E<lt>palm@gfz-potsdam.deE<gt>>
 
-=cut
+Homepage http://www.gfz-potsdam.de/~palm/
 
+=cut

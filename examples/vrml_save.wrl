@@ -1,11 +1,6 @@
 #VRML V1.0 ascii
-
-# Set Browser to: 'LIVE3D'
 DEF BackgroundColor Info {
-	string	"0 0 0" # black
-}
-DEF BackgroundImage Info {
-	string	"starbak.gif"
+	string	"0 0 0"
 }
 Group {
 	Material {

@@ -1,21 +1,10 @@
 #VRML V2.0 utf8
-
-# Set Browser to: 'Live3d'
 Background {
-	backUrl	"starbak.gif"
-	bottomUrl	"starbak.gif"
-	topUrl		"starbak.gif"
-	leftUrl		"starbak.gif"
-	rightUrl	"starbak.gif"
-	frontUrl	"starbak.gif"
 	groundColor	0.647058823529412 0.164705882352941 0.164705882352941
 	skyColor	0.67843137254902 0.847058823529412 0.901960784313726
 }
 WorldInfo {
 	title	"Potato Head"
-}
-NavigationInfo {
-	headlight	TRUE
 }
 Viewpoint {
 	description	"Front"
@@ -74,7 +63,7 @@ Transform {
 			geometry Sphere {
 				radius	1
 			}
-		}
+		} # Shape
 	    ]
 	} # Transform
 	Transform {
@@ -90,7 +79,7 @@ Transform {
 				bottomRadius	2
 				height	3
 			}
-		}
+		} # Shape
 	    ]
 	} # Transform
 	Transform {
@@ -108,7 +97,7 @@ Transform {
 				geometry Sphere {
 					radius	0.9
 				}
-			}
+			} # Shape
 			Transform {
 			    translation	0 .1 .8
 			    children [
@@ -121,7 +110,7 @@ Transform {
 					geometry Sphere {
 						radius	0.2
 					}
-				}
+				} # Shape
 			    ]
 			} # Transform
 		    ]
@@ -148,7 +137,7 @@ Transform {
 				bottomRadius	0.5
 				height	2
 			}
-		}
+		} # Shape
 	    ]
 	} # Transform
 	Transform {
@@ -165,7 +154,7 @@ Transform {
 				radius	2
 				height	1
 			}
-		}
+		} # Shape
 	    ]
 	} # Transform
     ]
@@ -183,7 +172,7 @@ Transform {
 			radius	0.8
 			height	2
 		}
-	}
+	} # Shape
     ]
 } # Transform
 Transform {
@@ -200,7 +189,7 @@ Transform {
 			radius	2.5
 			height	6
 		}
-	}
+	} # Shape
     ]
 } # Transform
 DEF ARM
@@ -209,7 +198,7 @@ Transform {
     children [
 	Transform {
 	    translation	-4 2 0
-	    rotation	0 0 1 1
+	    rotation	0 0 1 1.04719753333333
 	    children [
 		DEF arm
 		Shape {
@@ -222,14 +211,14 @@ Transform {
 				radius	.5
 				height	6
 			}
-		}
+		} # Shape
 	    ]
 	} # Transform
     ]
 } # Transform
 Transform {
     translation	4 -3.5 0
-    rotation	0 0 1 -1
+    rotation	0 0 1 -1.04719753333333
     children [
 	USE arm
     ]
@@ -248,7 +237,7 @@ Transform {
 			radius	.5
 			height	5
 		}
-	}
+	} # Shape
     ]
 } # Transform
 Transform {
@@ -270,7 +259,7 @@ Transform {
 		geometry Box {
 			size	1.4 .5 2
 		}
-	}
+	} # Shape
     ]
 } # Transform
 Transform {
@@ -289,29 +278,45 @@ Sound {
 		pitch		2
 	}
 }
-DEF MOVE
-PositionInterpolator {
-    key [ 0, .5, 1]
-    keyValue [0 0 0, 0 1 0, 0 0 0]
+DEF MOVE PositionInterpolator {
+	key [
+		0,
+		0.5,
+		1
+	]
+	keyValue [
+		0 0 0,
+		0 1 0,
+		0 0 0
+	]
 }
-DEF TURN
-OrientationInterpolator {
-    key [ 0, .2, .5, .7, 1]
-    keyValue [0 0 1 0, 0 0 1 .5, 0 0 1 0, 0 0 1 .5, 0 0 1 0]
+DEF TURN OrientationInterpolator {
+	key [
+		0,
+		0.2,
+		0.5,
+		0.7,
+		1
+	]
+	keyValue [
+		0 0 1 0,
+		0 0 1 .5,
+		0 0 1 0,
+		0 0 1 .5,
+		0 0 1 0
+	]
 }
-DEF TS1
-TimeSensor {
+DEF TS1 TimeSensor {
 	cycleInterval	0.5
 }
-DEF TS2
-TimeSensor {
+DEF TS2 TimeSensor {
 	cycleInterval	2
 }
 ROUTE HEAD-TOUCH.touchTime TO TS1.startTime
-ROUTE HEAD-TOUCH.touchTime TO HALLO.startTime
 ROUTE TS1.fraction_changed TO MOVE.set_fraction
-ROUTE MOVE.value_changed TO HEAD.set_translation
+ROUTE MOVE.value_changed TO HEAD.translation
 ROUTE BODY-TOUCH.touchTime TO TS2.startTime
-ROUTE BODY-TOUCH.touchTime TO HALLO.startTime
 ROUTE TS2.fraction_changed TO TURN.set_fraction
-ROUTE TURN.value_changed TO ARM.set_rotation
+ROUTE TURN.value_changed TO ARM.rotation
+ROUTE HEAD-TOUCH.touchTime TO HALLO.startTime
+ROUTE BODY-TOUCH.touchTime TO HALLO.startTime

@@ -1,38 +1,7 @@
 #VRML V2.0 utf8
-
-Viewpoint {
-	description	"Front"
-	position	0 0 20
-	orientation	0 0 1 0
-}
-Viewpoint {
-	description	"Right"
-	position	20 0 0
-	orientation	0 1 0 1.5707963
-}
-Viewpoint {
-	description	"Back"
-	position	0 0 -20
-	orientation	0 1 0 3.1415926
-}
-Viewpoint {
-	description	"Left"
-	position	-20 0 0
-	orientation	0 1 0 -1.5707963
-}
-Viewpoint {
-	description	"Top"
-	position	0 20 0
-	orientation	1 0 0 -1.5707963
-}
-Viewpoint {
-	description	"Bottom"
-	position	0 -20 0
-	orientation	1 0 0 1.5707963
-}
 Transform {
-    translation	0 3 -10
-    rotation	0 1 1 0.78539815
+    translation	0 0 -1
+    rotation	0 0 1 0.78539815
     children [
 	Shape {
 		appearance Appearance {
@@ -43,63 +12,6 @@ Transform {
 		geometry Box {
 			size	4 4 4
 		}
-	}
+	} # Shape
     ]
 } # Transform
-Transform {
-    translation	0 -8 0
-    children [
-	Shape {
-		appearance Appearance {
-			material Material {
-				diffuseColor	0 0 1	# blue
-			}
-		}
-		geometry Sphere {
-			radius	4
-		}
-	}
-    ]
-} # Transform
-Transform {
-    translation	0 -8 4
-    children [
-	Shape {
-		appearance Appearance {
-			material Material {
-				diffuseColor	1 1 1	# white
-			}
-		}
-		geometry Text {
-			string "Hallo world"
-			fontStyle FontStyle {
-				size 10
-				style BOLD
-				family SERIF
-				justify "MIDDLE"
-			}
-		}
-	}
-    ]
-} # Transform
-Group { # line("0 -8 0", "0 3 -10", "0.3", "yellow")
-    children [
-	Transform {
-	    translation	0 -2.5 -5
-	    rotation	0 3.86606874731851 10 3.1415926
-	    children [
-		Shape {
-			appearance Appearance {
-				material Material {
-					diffuseColor	1 1 0	# yellow
-				}
-			}
-			geometry Cylinder {
-				radius	0.3
-				height	14.8660687473185
-			}
-		}
-	    ]
-	}
-    ]
-} # line

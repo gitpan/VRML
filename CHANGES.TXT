@@ -1,0 +1,11 @@
+1.02
+* add methods "backgroundimage" and  "backgroundcolor" 
+* remove parameter 'ambientIntensity' in method "DirectionalLight" in module
+  VRML::VRML1::Standard
+
+1.01
+* add method "worldinfo" to VRML::VRML1
+* add parameter 'top', 'side' and 'bottom' to method "cylinder"
+
+1.00
+* first release

@@ -8,7 +8,7 @@
 <A NAME="Color.pm_name_0">
 NAME</A>
 </H1>
-Color.pm - implements color methods and names
+Color.pm - color functions and X11 color names
 <p><p><hr>
 
 <H1> 
@@ -18,6 +18,13 @@ SYNOPSIS</A>
 
 <XMP>
     use VRML::Color;
+    my $color = rgb_color('red');
+      or with the same result
+    my $color = rgb_color('FF0000');
+      or with the same result
+    my $color = rgb_color('255 0 0');
+      naturally works
+    my $color = rgb_color('1 0 0');
 
 </XMP>
 <p><p><hr>
@@ -171,14 +178,29 @@ DESCRIPTION</A>
         yellowgreen
 
 </XMP>
-<p>You can also use 
+<p>You can also use
 <p>
 <XMP>
-        red-40 = '0.4 0 0'
+        red_40 = '0.4 0 0'
         yellow%30 = '0.3 0.3 0'
         gray%30 = '0.7 0.7 0.7' !!!
 
 </XMP>
+<p><p><hr>
+
+<H1> 
+<A NAME="Color.pm_see_0">
+SEE ALSO</A>
+</H1>
+<A HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A> for a description of <EM>VRML-modules</EM> and how to obtain it.
+<p><p><hr>
+
+<H1> 
+<A NAME="Color.pm_author_0">
+AUTHOR</A>
+</H1>
+Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>Homepage <A HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
 <p>
 </BODY>
 </HTML>

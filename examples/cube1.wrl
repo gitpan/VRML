@@ -1,33 +1,8 @@
 #VRML V1.0 ascii
-
-DEF "Front" PerspectiveCamera {
-	position	0 0 20
-	orientation	0 0 1 0
-}
-DEF "Right" PerspectiveCamera {
-	position	20 0 0
-	orientation	0 1 0 1.5707963
-}
-DEF "Back" PerspectiveCamera {
-	position	0 0 -20
-	orientation	0 1 0 3.1415926
-}
-DEF "Left" PerspectiveCamera {
-	position	-20 0 0
-	orientation	0 1 0 -1.5707963
-}
-DEF "Top" PerspectiveCamera {
-	position	0 20 0
-	orientation	1 0 0 -1.5707963
-}
-DEF "Bottom" PerspectiveCamera {
-	position	0 -20 0
-	orientation	1 0 0 1.5707963
-}
 Separator {
 	Transform {
-		translation 0 3 -10
-		rotation 0 1 1 0.78539815
+		translation 0 0 -1
+		rotation 0 0 1 0.78539815
 	}
 	Group {
 		Material {
@@ -40,48 +15,3 @@ Separator {
 		}
 	}
 }
-Separator {
-	Transform {
-		translation 0 -8 0
-	}
-	Group {
-		Material {
-			diffuseColor	0 0 1	# blue
-		}
-		Sphere {
-			radius	4
-		}
-	}
-}
-Separator {
-	Transform {
-		translation 0 -8 4
-	}
-	Group {
-		Material {
-			diffuseColor	1 1 1	# white
-		}
-		FontStyle {
-			size 10
-			style BOLD
-			family SERIF
-		}
-		AsciiText {
-			string "Hallo world"
-			justification CENTER
-		}
-	}
-}
-Separator { # line("0 -8 0", "0 3 -10", "0.3", "yellow")
-	Material {
-		diffuseColor	1 1 0	# yellow
-	}
-	Transform {
-		translation 0 -2.5 -5
-		rotation 0 3.86606874731851 10 3.1415926
-	}
-	Cylinder {
-		radius	0.3
-		height	14.8660687473185
-	}
-} # line

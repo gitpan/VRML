@@ -1,12 +1,11 @@
 package VRML::VRML1::Standard;
 
 require 5.000;
+require VRML::Base;
 use strict;
-require VRML::Basic;
-@VRML::VRML1::Standard::ISA = qw(VRML::Basic);
-
-# $VERSION = "0.95";
-$::debug = 0 unless defined $::debug;
+use vars qw(@ISA $VERSION);
+@ISA = qw(VRML::Base);
+$VERSION = "1.02";
 
 =head1 NAME
 
@@ -20,15 +19,23 @@ VRML::VRML1::Standard.pm - implements nodes the VRML 1.x standard
 
 Following nodes are currently implemented.
 
-[C<Group Nodes>] 
-[C<Geometry Nodes>] 
+[C<Group Nodes>]
+[C<Geometry Nodes>]
 [C<Property Nodes>]
 
-[C<Appearance Nodes>] 
-[C<Transform Nodes>] 
-[C<Common Nodes>] 
+[C<Appearance Nodes>]
+[C<Transform Nodes>]
+[C<Common Nodes>]
 
 =cut
+
+sub new {
+    my $class = shift;
+    my $self = new VRML::Base;
+    $self->{'Content-type'} = "x-world/x-vrml";
+    $self->{'VRML'} = ["#VRML V1.0 ascii\n"];
+    return bless $self, $class;
+}
 
 #####################################################################
 #                        VRML Implementation                        #
@@ -42,63 +49,55 @@ I<These nodes NEED> C<End> !
 
 =item Group
 
-C<Group($comment)>
+C<Group()>
 
 =cut
 
 sub Group {
     my $self = shift;
-    my ($comment) = @_;
-    $comment = $comment ? " # $comment" : "";
     my $vrml = "";
-    $vrml = $self->{'TAB'}."Group {$comment\n";
+    $vrml = $self->{'TAB'}."Group {\n";
     $self->{'TAB'} .= "\t";
-    print "Group ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    print "Group ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $self->{'DEBUG'} == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Separator
 
-C<Separator($comment)>
+C<Separator()>
 
 =cut
 
 sub Separator {
     my $self = shift;
-    my ($comment) = @_;
-    $comment = $comment ? " # $comment" : "";
     my $vrml = "";
-    $vrml = $self->{'TAB'}."Separator {$comment\n";
+    $vrml = $self->{'TAB'}."Separator {\n";
     $self->{'TAB'} .= "\t";
-    print "Separator ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    print "Separator ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $self->{'DEBUG'} == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Switch
 
-C<Switch($whichChild, $comment)>
+C<Switch($whichChild)>
 
 =cut
 
 sub Switch {
     my $self = shift;
-    my ($whichChild, $comment) = @_;
-    $comment = $comment ? " # $comment" : "";
+    my ($whichChild) = @_;
     my $vrml = "";
-    $vrml = $self->{'TAB'}."Switch {$comment\n";
+    $vrml = $self->{'TAB'}."Switch {\n";
     $vrml .= $self->{'TAB'}."	whichChild $whichChild\n" if defined $whichChild;
     $self->{'TAB'} .= "\t";
-    print "Switch ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    print "Switch ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $self->{'DEBUG'} == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item WWWAnchor
@@ -119,22 +118,21 @@ sub WWWAnchor {
     $vrml .= $self->{'TAB'}."	description \"".$self->ascii($description)."\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."	target \"$target\"\n" if defined $target;
     $self->{'TAB'} .= "\t";
-    print "WWWAnchor ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    print "WWWAnchor ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $self->{'DEBUG'} == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item LOD
 
 C<LOD($range, $center)>
 
-$range is a string with comma separated values
+$range  = MFFloat
 
 $center = SFVec3f
 
-example: C<LOD('1, 2, 5', '0 0 0')>
+example: C<LOD([1, 2, 5], '0 0 0')>
 
 =cut
 
@@ -143,14 +141,19 @@ sub LOD {
     my ($range, $center) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."LOD {\n";
-    $vrml .= $self->{'TAB'}."	range	[$range]\n" if $range;
+    if ($range) {
+	if (ref($range) eq "ARRAY") {
+	    $vrml .= $self->{'TAB'}."    range [".join(',',@$range)."]\n";
+	} else {
+	    $vrml .= $self->{'TAB'}."    range [$range]\n";
+	}
+    }
     $vrml .= $self->{'TAB'}."	center	$center\n" if $center;
     $self->{'TAB'} .= "\t";
-    print "LOD ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    print "LOD ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $self->{'DEBUG'} == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item SpinGroup
@@ -167,11 +170,10 @@ sub SpinGroup {
     $vrml .= $self->{'TAB'}."	rotation $rotation\n";
     $vrml .= $self->{'TAB'}."	local $local\n" if defined $local;
     $self->{'TAB'} .= "\t";
-    print "SpinGroup ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    print "SpinGroup ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $self->{'DEBUG'} == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =back
@@ -193,21 +195,20 @@ sub AsciiText {
     my ($string, $width, $justification, $spacing) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."AsciiText {\n";
-    $vrml .= $self->{'TAB'}."	string \"".$self->ascii($string)."\"\n" if $string;
+    $vrml .= $self->{'TAB'}."	string ".$self->ascii($string)."\n" if $string;
     $vrml .= $self->{'TAB'}."	width $width\n" if $width;
     $vrml .= $self->{'TAB'}."	justification $justification\n" if $justification;
     $vrml .= $self->{'TAB'}."	spacing $spacing\n" if $spacing;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Cone
 
 C<Cone($radius, $height, @parts)>
 
-@parts is a list of strings ('SIDES', 'BOTTOM', 'ALL')
+@parts is an array of strings ('SIDES', 'BOTTOM', 'ALL')
 
 =cut
 
@@ -218,11 +219,10 @@ sub Cone {
     $vrml = $self->{'TAB'}."Cone {\n";
     $vrml .= $self->{'TAB'}."	bottomRadius	$radius\n" if $radius;
     $vrml .= $self->{'TAB'}."	height	$height\n" if $height;
-    $vrml .= $self->{'TAB'}."	parts	".join("|",@parts)."\n"  if @parts;
+    $vrml .= $self->{'TAB'}."	parts	(".join("|",@parts).")\n"  if @parts;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Cube
@@ -241,8 +241,7 @@ sub Cube {
     $vrml .= $self->{'TAB'}."	depth	$depth\n" if $depth;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Cylinder
@@ -255,16 +254,15 @@ C<Cylinder($radius, $height, @parts)>
 
 sub Cylinder {
     my $self = shift;
-    my ($radius, $height, @parts) = @_; # parts = SIDE|TOP|BOTTOM
+    my ($radius, $height, @parts) = @_; # parts = SIDES|TOP|BOTTOM|ALL
     my $vrml = "";
     $vrml = $self->{'TAB'}."Cylinder {\n";
     $vrml .= $self->{'TAB'}."	radius	$radius\n" if defined $radius;
     $vrml .= $self->{'TAB'}."	height	$height\n" if defined $height;
-    $vrml .= $self->{'TAB'}."	parts	".join("|",@parts)."\n"  if @parts;
+    $vrml .= $self->{'TAB'}."	parts	(".join("|",@parts).")\n"  if @parts;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item IndexedFaceSet
@@ -272,7 +270,7 @@ sub Cylinder {
 C<IndexedFaceSet($coordIndex_ref, $materialIndex_ref, $normalIndex_ref, $textureCoordIndex_ref)>
 
 $coordIndex_ref is a reference of a list of point index strings
-like C<'0 1 3 2', '2 3 5 4', ...>
+like C<['0 1 3 2', '2 3 5 4', ...]>
 
 $materialIndex_ref is a reference of a list of materials
 
@@ -296,8 +294,8 @@ sub IndexedFaceSet {
     if ($materialIndex_ref) {
 	$vrml .= $self->{'TAB'}."	materialIndex [\n";
 	$vrml .= $self->{'TAB'}."\t\t";
-	$vrml .= join(", -1,\n$self->{'TAB'}\t\t",@$materialIndex_ref);
-	$vrml .= ", -1\n".$self->{'TAB'}."	]\n";
+	$vrml .= join(",\n$self->{'TAB'}\t\t",@$materialIndex_ref);
+	$vrml .= "\n".$self->{'TAB'}."	]\n";
     }
     if ($normalIndex_ref) {
 	$vrml .= $self->{'TAB'}."	normalIndex [\n";
@@ -313,8 +311,7 @@ sub IndexedFaceSet {
     }
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item IndexedLineSet
@@ -322,7 +319,7 @@ sub IndexedFaceSet {
 C<IndexedLineSet($coordIndex_ref, $materialIndex_ref, $normalIndex_ref, $textureCoordIndex_ref)>
 
 $coordIndex_ref is a reference of a list of point index strings
-like C<'0 1 3 2', '2 3 5 4', ...>
+like C<['0 1 3 2', '2 3 5 4', ...]>
 
 $materialIndex_ref is a reference of a list of materials
 
@@ -347,7 +344,7 @@ sub IndexedLineSet {
 	$vrml .= $self->{'TAB'}."	materialIndex [\n";
 	$vrml .= $self->{'TAB'}."\t\t";
 	$vrml .= join(", -1,\n$self->{'TAB'}\t\t",@$materialIndex_ref);
-	$vrml .= ", -1\n".$self->{'TAB'}."	]\n";
+	$vrml .= "\n".$self->{'TAB'}."	]\n";
     }
     if ($normalIndex_ref) {
 	$vrml .= $self->{'TAB'}."	normalIndex [\n";
@@ -363,8 +360,7 @@ sub IndexedLineSet {
     }
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item PointSet
@@ -383,8 +379,7 @@ sub PointSet {
     $vrml .= $self->{'TAB'}."	numPoints	$numPoints\n" if $numPoints;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Sphere
@@ -403,8 +398,7 @@ sub Sphere {
     $vrml .= $self->{'TAB'}."	radius	$radius\n" if $radius;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 #--------------------------------------------------------------------
@@ -438,34 +432,31 @@ sub Coordinate3 {
     $vrml .= "\n".$self->{'TAB'}."	]\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Fontstyle
 
-C<FontStyle($size, $style, $family)>
+C<FontStyle($size, $family, $style)>
 defines the current font style for all subsequent C<AsciiText> Nodes
 
+$familiy can be 'SERIF','SANS','TYPEWRITER'
 
 $style can be 'NONE','BOLD','ITALIC'
-
-$familiy can be 'SERIF','SANS','TYPEWRITER'
 
 =cut
 
 sub FontStyle {
     my $self = shift;
-    my ($size, $style, $family) = @_;
+    my ($size, $family, $style) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."FontStyle {\n";
     $vrml .= $self->{'TAB'}."	size $size\n" if $size;
-    $vrml .= $self->{'TAB'}."	style $style\n" if $style;
     $vrml .= $self->{'TAB'}."	family $family\n" if $family;
+    $vrml .= $self->{'TAB'}."	style $style\n" if $style;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 #--------------------------------------------------------------------
@@ -514,8 +505,7 @@ sub Material {
     }
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item MaterialBinding
@@ -543,15 +533,14 @@ sub MaterialBinding {
     $vrml .= $self->{'TAB'}."	value	@_\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Normal
 
 C<Normal(@vector)>
 
-@vector is a list of vectors with strings like C<'1.0 0.0 0.0', '-1 2 0'>
+@vector is a list of vectors with strings like C<'1.0 0.0 0.0', '.5 .2 0'>
 
 =cut
 
@@ -565,8 +554,7 @@ sub Normal {
     $vrml .= "\n".$self->{'TAB'}."\t]\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item NormalBinding
@@ -584,8 +572,7 @@ sub NormalBinding {
     $vrml .= $self->{'TAB'}."	value	@_\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Texture2
@@ -604,8 +591,7 @@ sub Texture2 {
     $vrml .= $self->{'TAB'}."	wrapT	CLAMP\n" if $wrapT;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 #--------------------------------------------------------------------
@@ -640,7 +626,7 @@ sub Transform {
     my $self = shift;
     my ($translation, $rotation, $scaleFactor, $scaleOrientation, $center) = @_;
     unless (@_) {
-	return $self if $self->{'SELF'};
+	return $self;
 	return "";
     }
     $self->xyz(split(/\s+/,$translation)) if defined $translation;
@@ -653,8 +639,7 @@ sub Transform {
     $vrml .= $self->{'TAB'}."	center $center\n" if $center;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Rotation
@@ -674,8 +659,7 @@ sub Rotation {
     $vrml .= $self->{'TAB'}."	rotation @_\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Scale
@@ -695,8 +679,7 @@ sub Scale {
     $vrml .= $self->{'TAB'}."	scaleFactor @_\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Translation
@@ -718,8 +701,7 @@ sub Translation {
     $vrml .= $self->{'TAB'}."	translation $translation\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 #--------------------------------------------------------------------
@@ -742,10 +724,10 @@ C<PerspectiveCamera($position, $orientation, $heightAngle, $focalDistance, $near
 
 sub PerspectiveCamera {
     my $self = shift;
-    my ($position, $orientation, $heightAngle, 
+    my ($position, $orientation, $heightAngle,
 	$focalDistance, $nearDistance, $farDistance) = @_;
     my $vrml = "";
-    $vrml = "PerspectiveCamera {\n";
+    $vrml = $self->{'TAB_VIEW'}."PerspectiveCamera {\n";
     $vrml .= $self->{'TAB_VIEW'}."	position	$position\n" if $position;
     $vrml .= $self->{'TAB_VIEW'}."	orientation	$orientation\n" if $orientation;
     $vrml .= $self->{'TAB_VIEW'}."	heightAngle	$heightAngle\n" if $heightAngle;
@@ -753,9 +735,8 @@ sub PerspectiveCamera {
     $vrml .= $self->{'TAB_VIEW'}."	nearDistance	$nearDistance\n" if $nearDistance;
     $vrml .= $self->{'TAB_VIEW'}."	farDistance	$farDistance\n" if $farDistance;
     $vrml .= $self->{'TAB_VIEW'}."}\n";
-    push @{$self->{'VIEW'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    push @{$self->{'VRML'}}, $vrml;
+    return $self;
 }
 
 =item OrthographicCamera
@@ -766,10 +747,10 @@ C<OrthographicCamera($position, $orientation, $height, $focalDistance, $nearDist
 
 sub OrthographicCamera {
     my $self = shift;
-    my ($position, $orientation, $height, 
+    my ($position, $orientation, $height,
 	$focalDistance, $nearDistance, $farDistance) = @_;
     my $vrml = "";
-    $vrml = "OrthographicCamera {\n";
+    $vrml = $self->{'TAB_VIEW'}."OrthographicCamera {\n";
     $vrml .= $self->{'TAB_VIEW'}."	position	$position\n" if $position;
     $vrml .= $self->{'TAB_VIEW'}."	orientation	$orientation\n" if $orientation;
     $vrml .= $self->{'TAB_VIEW'}."	height		$height\n" if $height;
@@ -777,31 +758,28 @@ sub OrthographicCamera {
     $vrml .= $self->{'TAB_VIEW'}."	nearDistance	$nearDistance\n" if $nearDistance;
     $vrml .= $self->{'TAB_VIEW'}."	farDistance	$farDistance\n" if $farDistance;
     $vrml .= $self->{'TAB_VIEW'}."}\n";
-    push @{$self->{'VIEW'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    push @{$self->{'VRML'}}, $vrml;
+    return $self;
 }
 
 =item DirectionalLight
 
-C<DirectionalLight($direction, $intensity, $ambientIntensity, $color, $on)>
+C<DirectionalLight($direction, $intensity, $color, $on)>
 
 =cut
 
 sub DirectionalLight {
     my $self = shift;
-    my ($direction, $intensity, $ambientIntensity, $color, $on) = @_;
+    my ($direction, $intensity, $color, $on) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."DirectionalLight {\n";
     $vrml .= $self->{'TAB'}."	direction $direction\n" if $direction;
     $vrml .= $self->{'TAB'}."	intensity $intensity\n" if $intensity;
-    $vrml .= $self->{'TAB'}."	ambientIntensity $ambientIntensity\n" if $ambientIntensity;
     $vrml .= $self->{'TAB'}."	color $color\n" if $color;
     $vrml .= $self->{'TAB'}."	on $on\n" if $on;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item PointLight
@@ -821,8 +799,7 @@ sub PointLight {
     $vrml .= $self->{'TAB'}."	on $on\n" if $on;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item SpotLight
@@ -843,8 +820,7 @@ sub SpotLight {
     $vrml .= $self->{'TAB'}."	on $on\n" if $on;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item DirectedSound
@@ -870,8 +846,7 @@ sub DirectedSound {
     $vrml .= $self->{'TAB'}."	pause	$pause\n" if $pause;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 #--------------------------------------------------------------------
@@ -898,34 +873,29 @@ sub WWWInline {
     $vrml .= $self->{'TAB'}."	bboxCenter $bboxCenter\n" if $bboxCenter;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item Info
 
-C<Info($string, $comment)>
-
-$comment is optional
+C<Info($string)>
 
 =cut
 
 sub Info {
     my $self = shift;
-    my ($string, $comment) = @_;
-    $comment = defined $comment ? " # $comment" : "";
+    my ($string) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Info {\n";
-    $vrml .= $self->{'TAB'}."	string	\"".$self->ascii($string)."\"$comment\n";
+    $vrml .= $self->{'TAB'}."	string	\"".$self->ascii($string)."\"\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item NavigationInfo
 
-C<NavigationInfo($headlight, $type)>
+C<NavigationInfo($type, $speed, $headlight)>
 
 Works only with Live3D and WebFX
 
@@ -933,15 +903,22 @@ Works only with Live3D and WebFX
 
 sub NavigationInfo {
     my $self = shift;
-    my ($headlight, $type, $speed) = @_;
+    my ($type, $speed, $headlight) = @_;
+    my $key;
     my $vrml = "";
     $vrml = $self->{'TAB'}."NavigationInfo {\n";
-    $vrml .= $self->{'TAB'}."	headlight	$headlight\n" if defined $headlight;
-    $vrml .= $self->{'TAB'}."	type	\"$type\"\n" if defined $type;
-    $vrml .= $self->{'TAB'}."}\n";
+    if (ref($type) eq "HASH") {
+	foreach $key (keys %$type) {
+	    $vrml .= $self->{'TAB'}."	$key	\"$type->{$key}\"\n";
+	}
+    } else {
+	$vrml .= $self->{'TAB'}."	type	\"$type\"\n" if defined $type;
+	$vrml .= $self->{'TAB'}."	speed	$speed\n" if defined $speed;
+	$vrml .= $self->{'TAB'}."	headlight	$type\n" if $type;
+	$vrml .= $self->{'TAB'}."}\n";
+    }
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 sub End {
@@ -953,9 +930,8 @@ sub End {
     my $vrml = $self->{'TAB'}."}$comment\n";
     push @{$self->{'VRML'}}, $vrml;
     shift @{$self->{'XYZ'}};
-    $self->VRML_put("# End ".join(', ',@{$self->{'XYZ'}[0]})."\n") if $::debug == 1;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    $self->VRML_put("# End ".join(', ',@{$self->{'XYZ'}[0]})."\n") if $self->{'DEBUG'} == 1;
+    return $self;
 }
 
 =item USE
@@ -970,8 +946,7 @@ sub USE {
     my $vrml = "";
     $vrml = $self->{'TAB'}."USE $name\n";
     push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 =item DEF
@@ -986,8 +961,7 @@ sub DEF {
     my $vrml = $self->{'TAB'}."DEF $name\n";
     push @{$self->{'VRML'}}, $vrml;
     $self->{'DEF'}{$name} = $#{$self->{'VRML'}};
-    return $self if $self->{'SELF'};
-    return $vrml;
+    return $self;
 }
 
 1;
@@ -996,10 +970,18 @@ __END__
 
 =back
 
+=head1 SEE ALSO
+
+VRML::VRML1::Standard
+
+VRML::Base
+
+http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of F<VRML-modules> and how to obtain it.
+
 =head1 AUTHOR
 
 Hartmut Palm F<E<lt>palm@gfz-potsdam.deE<gt>>
 
+Homepage http://www.gfz-potsdam.de/~palm/
+
 =cut
-
-
