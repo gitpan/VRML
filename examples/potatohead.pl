@@ -2,9 +2,9 @@ use VRML;
 
 $vrml = new VRML (2.0);
 $vrml->browser('Live3d')
-->backgroundcolor('lightblue','red')
+->background('lightblue','starbak.gif','brown')
 ->title('Potato Head')
-#->NavigationInfo("TRUE","EXAMINE")
+->headlight("on")
 ->cameras_begin
 ->camera_set
 ->light("0 0 -1",.3)
@@ -53,7 +53,7 @@ $vrml->browser('Live3d')
 ->ROUTE("BODY-TOUCH.touchTime","HALLO.startTime")
 ->ROUTE("TS2.fraction_changed","TURN.set_fraction")
 ->ROUTE("TURN.value_changed","ARM.set_rotation")
-->auto_camera_set(1.5)
+->camera_auto_set(1.5)
 ->cameras_end
 ->save
 ->print;

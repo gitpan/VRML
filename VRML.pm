@@ -2,15 +2,15 @@ package VRML;
 
 require 5.000;
 
-$VERSION="0.94"; warn $VERSION if 0;
+$VERSION="0.97"; warn $VERSION if 0;
 
 sub new {
     my $class = shift;
     my ($version) = @_ ? @_ : 0;
     my $self;
     if ($version == 2 || $version =~ /2.0/) {
-#	$::content_type = "model/vrml";
-	$::content_type = "x-world/x-vrml";
+	$::content_type = "model/vrml";
+#	$::content_type = "x-world/x-vrml";
 	require VRML::VRML2;
 	@ISA = qw(VRML::VRML2);
 	$self = new VRML::VRML2;
@@ -42,8 +42,8 @@ VRML - implements VRML Nodes independent of specification (1.x or 2.0)
 
   $vrml = new VRML;
   $vrml->browser('Netscape+Live3D');
-  $vrml->at('5 3 1');
-  $vrml->cube('-50 -10 0','yellow');
+  $vrml->at('-15 0 20');
+  $vrml->cube('5 3 1','yellow');
   $vrml->back;
   $vrml->print;
   
@@ -53,7 +53,7 @@ VRML - implements VRML Nodes independent of specification (1.x or 2.0)
 
   VRML
   ->browser('Netscape+Live3D')
-  ->at('5 3 1')->cube('-50 -10 0','yellow')->back
+  ->at('-15 0 20')->cube('5 3 1','yellow')->back
   ->print;
 
 =head1 DESCRIPTION

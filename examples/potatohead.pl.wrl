@@ -8,6 +8,9 @@ Background {
 WorldInfo {
 	title	"Potato Head"
 }
+NavigationInfo {
+	headlight	TRUE
+}
 Viewpoint {
 	description	"Front"
 	position	0 -5.25 15.125

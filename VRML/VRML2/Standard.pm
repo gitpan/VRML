@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML2::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.94";
+# $VERSION = "0.97";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME
@@ -51,7 +51,7 @@ I<These nodes NEED> C<End> !
 
 C<Anchor($url, $description, $parameter, $bboxSize, $bboxCenter)>
 
-$parameter works only with I<some> browsers
+Currently only the first B<$parameter> is supported.
 
 =cut
 
@@ -60,11 +60,49 @@ sub Anchor {
     my ($url, $description, $parameter, $bboxSize, $bboxCenter) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Anchor {\n";
-    $vrml .= $self->{'TAB'}."    url	\"$url\"\n";
-    $vrml .= $self->{'TAB'}."    description	\"$description\"\n" if defined $description;
+    $vrml .= $self->{'TAB'}."    url	\"".$self->escape($url)."\"\n";
+    $vrml .= $self->{'TAB'}."    description	\"".$self->utf8($description)."\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."    parameter	\"$parameter\"\n" if $parameter;
     $vrml .= $self->{'TAB'}."    bboxSize	$bboxSize\n" if $bboxSize;
     $vrml .= $self->{'TAB'}."    bboxCenter	$bboxCenter\n" if $bboxCenter;
+    $vrml .= $self->{'TAB'}."    children [\n";
+    $self->{'TAB'} .= "\t";
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item Billboard
+
+C<Billboard($axisOfRotation)>
+
+=cut
+
+sub Billboard {
+    my $self = shift;
+    my ($axisOfRotation) = @_;
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."Billboard {\n";
+    $vrml .= $self->{'TAB'}."    axisOfRotation $axisOfRotation\n";
+    $vrml .= $self->{'TAB'}."    children [\n";
+    $self->{'TAB'} .= "\t";
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item Collision
+
+C<Collision($collide)>
+
+=cut
+
+sub Collision {
+    my $self = shift;
+    my ($collide) = @_;
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."Collision {\n";
+    $vrml .= $self->{'TAB'}."    collide	TRUE\n";
     $vrml .= $self->{'TAB'}."    children [\n";
     $self->{'TAB'} .= "\t";
     push @{$self->{'VRML'}}, $vrml;
@@ -155,7 +193,7 @@ sub Inline {
     my $vrml = "";
     my ($url, $bboxSize, $bboxCenter) = @_;
     $vrml = $self->{'TAB'}."Inline {\n";
-    $vrml .= $self->{'TAB'}."	url	\"$url\"\n";
+    $vrml .= $self->{'TAB'}."	url	\"".$self->escape($url)."\"\n";
     $vrml .= $self->{'TAB'}."	bboxSize $bboxSize\n" if $bboxSize;
     $vrml .= $self->{'TAB'}."	bboxCenter $bboxCenter\n" if $bboxCenter;
     $vrml .= $self->{'TAB'}."}\n";
@@ -338,8 +376,8 @@ sub AudioClip {
     my $vrml = "";
     my ($url, $description, $loop, $pitch, $startTime, $stopTime) = @_;
     $vrml = $self->{'TAB'}."AudioClip {\n";
-    $vrml .= $self->{'TAB'}."	url		\"$url\"\n" if $url;
-    $vrml .= $self->{'TAB'}."	description	\"$description\"\n" if defined $description;
+    $vrml .= $self->{'TAB'}."	url		\"".$self->escape($url)."\"\n" if $url;
+    $vrml .= $self->{'TAB'}."	description	\"".$self->utf8($description)."\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."	loop		$loop\n" if defined $loop;
     $vrml .= $self->{'TAB'}."	pitch		$pitch\n" if $pitch;
     $vrml .= $self->{'TAB'}."	startTime	$startTime\n" if $startTime;
@@ -361,8 +399,8 @@ sub WorldInfo {
     my ($title, $info) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."WorldInfo {\n";
-    $vrml .= $self->{'TAB'}."	title	\"$title\"\n" if $title;
-    $vrml .= $self->{'TAB'}."	info	\"$info\"\n" if $info;
+    $vrml .= $self->{'TAB'}."	title	\"".$self->utf8($title)."\"\n" if $title;
+    $vrml .= $self->{'TAB'}."	info	\"".$self->utf8($info)."\"\n" if $info;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -666,7 +704,7 @@ sub Text {
     my $self = shift;
     my ($string, $fontStyle, $length, $maxExtent) = @_;
     my $vrml = $self->{'TAB'}."Text {\n";
-    $vrml .= $self->{'TAB'}."	string \"$string\"\n";
+    $vrml .= $self->{'TAB'}."	string \"".$self->utf8($string)."\"\n";
     if (defined $fontStyle) {
 	if (ref($fontStyle) eq "CODE") {
 	    $vrml .= $self->{'TAB'}."	fontStyle ";
@@ -902,7 +940,7 @@ sub ImageTexture {
     my ($url, $repeatS, $repeatT) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."ImageTexture {\n";
-    $vrml .= $self->{'TAB'}."	url	\"$url\"\n";
+    $vrml .= $self->{'TAB'}."	url	\"".$self->escape($url)."\"\n";
     $vrml .= $self->{'TAB'}."	repeatS	FALSE\n" if defined $repeatS && !$repeatS;
     $vrml .= $self->{'TAB'}."	repeatT	FALSE\n" if defined $repeatT && !$repeatT;
     $vrml .= $self->{'TAB'}."}\n";
@@ -922,7 +960,7 @@ sub MovieTexture {
     my ($url, $loop, $startTime, $stopTime, $repeatS, $repeatT) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."MovieTexture {\n";
-    $vrml .= $self->{'TAB'}."	url	\"$url\"\n";
+    $vrml .= $self->{'TAB'}."	url	\"".$self->escape($url)."\"\n";
     $vrml .= $self->{'TAB'}."	loop	TRUE\n" if defined $loop && $loop;
     $vrml .= $self->{'TAB'}."	startTime	$startTime\n" if $startTime;
     $vrml .= $self->{'TAB'}."	stopTime	$stopTime\n" if $stopTime;
@@ -1071,8 +1109,8 @@ sub Background {
     $vrml = $self->{'TAB'}."Background {\n";
     $vrml .= $self->{'TAB'}."	backUrl	\"$backUrl\"\n" if $backUrl;
     $vrml .= $self->{'TAB'}."	bottomUrl	\"$bottomUrl\"\n" if $bottomUrl;
-    $vrml .= $self->{'TAB'}."	topUrl	\"$topUrl\"\n" if $topUrl;
-    $vrml .= $self->{'TAB'}."	leftUrl	\"$leftUrl\"\n" if $leftUrl;
+    $vrml .= $self->{'TAB'}."	topUrl		\"$topUrl\"\n" if $topUrl;
+    $vrml .= $self->{'TAB'}."	leftUrl		\"$leftUrl\"\n" if $leftUrl;
     $vrml .= $self->{'TAB'}."	rightUrl	\"$rightUrl\"\n" if $rightUrl;
     $vrml .= $self->{'TAB'}."	frontUrl	\"$frontUrl\"\n" if $frontUrl;
     $vrml .= $self->{'TAB'}."	groundColor	$groundColor\n" if $groundColor;
@@ -1118,7 +1156,7 @@ sub Viewpoint {
     my ($description, $position, $orientation, $fieldOfView, $jump) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB_VIEW'}."Viewpoint {\n";
-    $vrml .= $self->{'TAB_VIEW'}."	description	\"$description\"\n" if $description;
+    $vrml .= $self->{'TAB_VIEW'}."	description	\"".$self->utf8($description)."\"\n" if $description;
     $vrml .= $self->{'TAB_VIEW'}."	position	$position\n" if $position;
     $vrml .= $self->{'TAB_VIEW'}."	orientation	$orientation\n" if $orientation;
     $vrml .= $self->{'TAB_VIEW'}."	fieldOfView	$fieldOfView\n" if $fieldOfView;

@@ -3,7 +3,7 @@ package VRML::Basic;
 require 5.000;
 use strict;
 
-# $VERSION = "0.94";
+# $VERSION = "0.97";
 $::debug = 0 unless defined $::debug;
 $::pi = 3.1415926;
 $::pi_2 = $::pi/2;
@@ -30,6 +30,7 @@ sub new {
     $self->{'DX'} = 0;
     $self->{'DY'} = 0;
     $self->{'DZ'} = 0;
+    $self->{'ID'}  = 0;
     return bless $self, $class;
 }
 
@@ -139,7 +140,7 @@ sub VRML_comment {
 sub VRML_print {
     my $self = shift;
     print $self->{'HEAD'};
-    for (@{$self->{'VRML'}}) { print ascii($_); } # use ascii() in Standard.pm
+    for (@{$self->{'VRML'}}) { print; }
     return $self if $self->{'SELF'};
     return "";
 }
@@ -160,10 +161,20 @@ sub print {
     return $self;
 }
 
+sub print_as_cgi {
+    my $self = shift;
+    print "Content-type: $self->{'content_type'}\n\n" if $self->{'content_type'};
+    $self->VRML_print;
+    return $self;
+}
+
 sub save {
     my $self = shift;
     my $filename = shift;
-    $filename = "$0.wrl" unless $filename;
+    unless (defined $filename) {
+	($filename) = $0 =~ m/(.*?)\./;
+	$filename .= ".wrl";
+    }
     open(VRMLFILE, ">$filename");
     print VRMLFILE $self->as_string;
     close(VRMLFILE);
@@ -173,13 +184,20 @@ sub save {
 sub as_string {
     my $self = shift;
     my $vrml = $self->{'HEAD'};
-    for (@{$self->{'VRML'}}) { $vrml .= ascii($_) };
+    for (@{$self->{'VRML'}}) { $vrml .= $_ };
     return $vrml;
 }
 
 #--------------------------------------------------------------------
 
+sub escape { 
+    my $self = shift;
+    shift; 
+}
+
 sub ascii {
+    my $self = shift;
+    local $_ = shift;
     s/[\204\344\365]/ae/g;
     s/[\224\366]/oe/g;
     s/[\201\374]/ue/g;
@@ -191,7 +209,9 @@ sub ascii {
     return $_;
 }
 
-#sub utf8 {
+sub utf8 {
+    my $self = shift;
+    local $_ = shift;
 #    s/[\204\344\365]/\302\344/g;	# ae
 #    s/[\224\366]/\302\366/g;		# oe
 #    s/[\201\374]/\302\374/g;		# ue
@@ -199,9 +219,9 @@ sub ascii {
 #    s/[\231\305\326]/\302\326/g;	# Oe
 #    s/[\263\334]/\302\334/g;		# Ue
 #    s/[\257\337]/sz/g;			# sz
-#    s/[\000-\010\013-\037]/_/g;
-#    return $_;
-#}
+    s/[\000-\010\013-\037]/_/g;
+    return $_;
+}
 
 sub xyz {
     my $self = shift;
@@ -238,6 +258,58 @@ Following methods are currently implemented.
 
 =over 4
 
+=item new
+
+C<new>
+
+=item debug
+
+C<debug>
+
+=item VRML_init
+
+C<VRML_init>
+
+=item VRML_head
+
+C<VRML_head>
+
+=item VRML_add
+
+C<VRML_add>
+
+=item VRML_trim
+
+C<VRML_trim>
+
+=item VRML_swap
+
+C<VRML_swap>
+
+=item VRML_put
+
+C<VRML_put>
+
+=item VRML_row
+
+C<VRML_row>
+
+=item VRML_pos
+
+C<VRML_pos>
+
+=item VRML_comment
+
+C<VRML_comment>
+
+=item VRML_print
+
+C<VRML_print>
+
+=item VRML_format
+
+C<VRML_format>
+
 =item as_string
 
 C<as_string>
@@ -245,6 +317,10 @@ C<as_string>
 =item print
 
 C<print>
+
+=item print_as_cgi
+
+C<print_as_cgi>
 
 =item save
 

@@ -6,10 +6,11 @@ use VRML::Color;
 require VRML::VRML1::Standard;
 @ISA = qw(VRML::VRML1::Standard);
 
-# $VERSION="0.94";
+# $VERSION="0.97";
 %supported = ( 'quote' => "Live3D|WorldView",
-	      'target' => "Live3D|WorldView",
 	      'navinfo' => "Live3D",		# not WorldView & CosmoPlayer
+	      'gzip'   => "Live3D|WorldView|Cosmo|VRweb",
+	      'target' => "Live3D|WorldView",
 	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
 );
 
@@ -31,6 +32,12 @@ sub browser {
     ($self->{'browser'}) = @_ if @_;
     $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n");
     return $self;
+}
+
+sub supported {
+    my $self = shift;
+    my $feature = shift;
+    return $self->{'browser'} =~ /$supported{$feature}/i;
 }
 
 #--------------------------------------------------------------------
@@ -84,13 +91,15 @@ sub collision_end {
 
 sub anchor_begin {
     my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->anchor_begin("URL","description","parameter");\n}) unless @_;
+    return $self->VRML_put(qq{# CALL: ->anchor_begin("URL","description","target=parameter");\n}) unless @_;
     my ($url, $description, $parameter) = @_;
+    my $target = undef;
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $description =~ s/"/$quote/g if defined $description;
-    $parameter =~ s/"/$quote/g if defined $parameter;
-    undef $parameter if $self->{'browser'} !~ /$supported{'frames'}/i || $self->{'browser'} !~ /$supported{'target'}/i;
-    $self->WWWAnchor($url, $description, $parameter);
+    if (defined $parameter && $self->{'browser'} =~ /$supported{'target'}/i) {
+	($target = $1) =~ s/"/$quote/g if ($parameter =~ /target\s*=(.+)/i);
+    }
+    $self->WWWAnchor($url, $description, $target);
     return $self;
 }
 
@@ -114,9 +123,24 @@ sub lod_end {
     return $self;
 }
 
+sub inline {
+    my $self = shift;
+    $self->WWWInline(@_);
+    return $self;
+}
+
 #--------------------------------------------------------------------
 #   VRML Methods
 #--------------------------------------------------------------------
+
+sub background {
+    my $self = shift;
+    return $self unless @_;
+    my ($color, $image) = @_;
+    $self->def("BackgroundColor")->Info(rgb_color($color))->VRML_trim if $color;
+    $self->def("BackgroundImage")->Info($image)->VRML_trim if $image;
+    return $self;
+}
 
 sub backgroundcolor {
     my $self = shift;
@@ -154,7 +178,7 @@ sub headlight {
     my $self = shift;
     return $self unless $self->{'browser'} =~ /$supported{'navinfo'}/i;
     my ($headlight) = @_;
-    $headlight = defined $headlight && !$headlight ? "FALSE" : "TRUE";
+    $headlight = defined $headlight && (!$headlight || $headlight =~ /off|false/i) ? "FALSE" : "TRUE";
     $self->NavigationInfo($headlight);
     return $self;
 }
@@ -181,7 +205,7 @@ sub cameras_end {
     return $self;
 }
 
-sub auto_camera_set {
+sub camera_auto_set {
     my $self = shift;
     my $factor = shift;
     $factor = 1 unless defined $factor;
@@ -236,7 +260,7 @@ sub camera {
 	$orientation = "$x $y $z $degree";
     }
     $heightAngle *= $::pi/180 if defined $heightAngle && (abs($heightAngle) > 2*$::pi);
-    push @{$self->{'VIEW'}}, $self->{'TAB_VIEW'}."DEF $name ";
+    push @{$self->{'VIEW'}}, $self->{'TAB_VIEW'}."DEF \"$name\" ";
     $self->PerspectiveCamera($position, $orientation, $heightAngle);
     unless (defined $self->{'cameras_begin'}) {
 	splice(@{$self->{'VRML'}}, @{$self->{'VRML'}}, 0, @{$self->{'VIEW'}});
@@ -395,13 +419,20 @@ sub text {
     return $self;
 }
 
+sub fixtext {
+    my $self = shift;
+    $self->Separator;
+    $self->VRML_row("AxisAlignment { fields [SFBitMask alignment] alignment ALIGNAXISXYZ }\n");
+    $self->text(@_);
+    $self->end();
+}
 #--------------------------------------------------------------------
 
 sub appearance {
     my $self = shift;
     my ($appearance_list) = @_;
     return $self unless $appearance_list;
-    my ($item,$color,$multi_color,$key,$value,$num_color,$texture,%material);
+    my ($item,$color,$multi_color,$key,$value,$num_color,$texture,%material,$name);
     ITEM:
     foreach $item (split(/\s*;\s*/,$appearance_list)) {
 	($key,$value) = split(/\s*[=:]\s*/,$item,2);
@@ -410,13 +441,15 @@ sub appearance {
 	    $key = "diffuseColor";
 	}
 	MODE: {
-	    if ($key =~ /^a/i)  { $key = "ambientColor";  last MODE; }
-	    if ($key =~ /^d/i)  { $key = "diffuseColor";  last MODE; }
-	    if ($key =~ /^e/i)  { $key = "emissiveColor"; last MODE; }
-	    if ($key =~ /^sh/i) { $key = "shininess";     last MODE; }
-	    if ($key =~ /^s/i)  { $key = "specularColor"; last MODE; }
-	    if ($key =~ /^tr/i) { $key = "transparency";  last MODE; }
-	    if ($key =~ /^tex/i) { $texture = $value; next ITEM; }
+	    if ($key eq "d")  { $key = "diffuseColor";  last MODE; }
+	    if ($key eq "e")  { $key = "emissiveColor"; last MODE; }
+	    if ($key eq "s")  { $key = "specularColor"; last MODE; }
+	    if ($key eq "ai" || $key eq "a")  { $key = "ambientColor";  last MODE; }
+	    if ($key eq "sh") { $key = "shininess";     last MODE; }
+	    if ($key eq "tr") { $key = "transparency";  last MODE; }
+	    if ($key eq "tex") { $texture = $value; next ITEM; }
+	    if ($key eq "def" || $key eq "name") { $name = $value; next ITEM; }
+
 	}
 	if ($value =~ /,/) {	# multi color field
 	    foreach $color (split(/\s*,\s*/,$value)) {
@@ -434,6 +467,7 @@ sub appearance {
 	    $material{$key} = $value;
 	}
     }
+    $self->def($name) if $name;
     $self->Material(%material);
     $self->MaterialBinding("PER_PART") if $multi_color;
     $self->Texture2(split(/\s+/,$texture)) if defined $texture;
@@ -503,8 +537,8 @@ sub sound {
 
 sub def {
     my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->def("name",sub{code});\n}) unless @_;
     my ($name, $code) = @_;
+    $name = "DEF_".(++$self->{'ID'}) unless defined $name;
     $self->DEF($name);
     if (defined $code) {
 	if (ref($code) eq "CODE") {
@@ -528,35 +562,11 @@ sub use {
     return $self;
 }
 
-#--------------------------------------------------------------------
-#             D U M M I E S
-#--------------------------------------------------------------------
-
-sub cylindersensor {
+sub AUTOLOAD {
     my $self = shift;
-    my $name = shift;
-    return $self->VRML_row(qq{# cylindersensor("$name")\n});
+    $AUTOLOAD =~ s/.*:://g;
+    return $self->VRML_row(qq{### "$AUTOLOAD" unknown or not supported by VRML1.pm\n});
 }
-
-sub spheresensor {
-    my $self = shift;
-    my $name = shift;
-    return $self->VRML_row(qq{# spheresensor("$name")\n});
-}
-
-sub touchsensor {
-    my $self = shift;
-    my $name = shift;
-    return $self->VRML_row(qq{# touchsensor("$name")\n});
-}
-
-sub timesensor {
-    my $self = shift;
-    my $name = shift;
-    return $self->VRML_row(qq{# timesensor("$name")\n});
-}
-
-sub ROUTE { shift; }
 
 1;
 
@@ -572,9 +582,25 @@ VRML::VRML1.pm - implements VRML methods with the VRML 1.x standard
 
 =head1 DESCRIPTION
 
-Following methods are currently implemented. 
+Following methods are currently implemented. (Values in '...' must be strings!)
 
 =over 4
+
+=item *
+begin('comment')
+
+C<  . . . >
+
+=item *
+end('comment')
+
+=item *
+group_begin('comment')
+
+C<  . . . >
+
+=item *
+group_end
 
 =item *
 at('type=value ; ...')
@@ -585,29 +611,39 @@ parameter see C<transform_begin>
 back
 
 =item *
-begin('comment')
-C<  . . . >
+transform_begin('type=value ; ...')
+
+I<Where type can be:>
+
+	t = translation
+	r = rotation
+	c = center
+	o = scaleOrientation
+	f = scaleFactor
 
 =item *
-end('comment')
+transform_end
 
 =item *
-group_begin('comment')
-
-=item *
-group_end
-
-=item *
-anchor_begin('URL','description','parameter')
+anchor_begin('URL','description','target=parameter')
 
 =item *
 anchor_end
 
 =item *
-backgroundcolor('color')
+collision_begin
 
 =item *
-backgroundimage('URL')
+collision_end
+
+=item *
+lod_begin('range','center')
+
+=item *
+lod_end
+
+=item *
+background('color','imageURL')
 
 =item *
 title('string')
@@ -619,10 +655,19 @@ info('string')
 cameras_begin('whichCameraNumber')
 
 =item *
+camera('name','positionXYZ','orientationXYZ',heightAngle) // persp. camera
+
+=item *
 camera_set('positionXYZ','orientationXYZ',heightAngle) // persp. cameras
 
 =item *
-camera('positionXYZ','orientationXYZ',heightAngle) // persp. camera
+camera_auto_set
+
+=item *
+cameras_end
+
+=item *
+light('direction','intensity','color','ambientIntensity','on') 
 
 =item *
 box('width [height [depth]]','appearance')
@@ -646,18 +691,13 @@ sphere('radius_x [radius_y radius_z]','appearance')
 text('string','appearance','size style family')
 
 =item *
-transform_begin('type=value ; ...')
-
-I<Where type can be:>
-
-	t = translation
-	r = rotation
-	c = center
-	o = scaleOrientation
-	f = scaleFactor
+fixtext('string','appearance','size style family')
 
 =item *
-transform_end
+def('name',[code])
+
+=item *
+use('name')
 
 =item *
 appearance('type=value1,value2 ; ...')
@@ -675,7 +715,6 @@ I<Where type can be:>
 I<and color values see>
 
 VRML::Color
-
 
 =back
 

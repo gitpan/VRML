@@ -1,0 +1,37 @@
+#VRML V2.0 utf8
+
+Group {
+    children [
+	Transform {
+	    translation	2 2 2
+	    children [
+		Billboard {
+		    axisOfRotation 0 0 0
+		    children [
+			Shape {
+				appearance Appearance {
+					material Material {
+						diffuseColor	1 1 0	# yellow
+					}
+				}
+				geometry Text {
+					string "Hallo world ÄÖÜß"
+				}
+			}
+		    ]
+		} # Billboard
+	    ]
+	} # Transform
+	DEF VIDEO TouchSensor {}
+	Shape {
+		appearance Appearance {
+			texture DEF MPG
+			MovieTexture {
+				url	"file:///d|/movie/mpg/wow.mpg"
+			}
+		}
+		geometry Box {
+		}
+	}
+    ]
+}

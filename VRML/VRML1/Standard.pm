@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML1::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.94";
+# $VERSION = "0.95";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME
@@ -115,8 +115,8 @@ sub WWWAnchor {
     my ($url, $description, $target) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."WWWAnchor {\n";
-    $vrml .= $self->{'TAB'}."	name \"$url\"\n";
-    $vrml .= $self->{'TAB'}."	description \"$description\"\n" if defined $description;
+    $vrml .= $self->{'TAB'}."	name \"".$self->escape($url)."\"\n";
+    $vrml .= $self->{'TAB'}."	description \"".$self->ascii($description)."\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."	target \"$target\"\n" if defined $target;
     $self->{'TAB'} .= "\t";
     print "WWWAnchor ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
@@ -193,7 +193,7 @@ sub AsciiText {
     my ($string, $width, $justification, $spacing) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."AsciiText {\n";
-    $vrml .= $self->{'TAB'}."	string \"$string\"\n" if $string;
+    $vrml .= $self->{'TAB'}."	string \"".$self->ascii($string)."\"\n" if $string;
     $vrml .= $self->{'TAB'}."	width $width\n" if $width;
     $vrml .= $self->{'TAB'}."	justification $justification\n" if $justification;
     $vrml .= $self->{'TAB'}."	spacing $spacing\n" if $spacing;
@@ -599,7 +599,7 @@ sub Texture2 {
     my ($filename, $wrapS, $wrapT) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Texture2 {\n";
-    $vrml .= $self->{'TAB'}."	filename	\"$filename\"\n";
+    $vrml .= $self->{'TAB'}."	filename	\"".$self->escape($filename)."\"\n";
     $vrml .= $self->{'TAB'}."	wrapS	CLAMP\n" if $wrapS;
     $vrml .= $self->{'TAB'}."	wrapT	CLAMP\n" if $wrapT;
     $vrml .= $self->{'TAB'}."}\n";
@@ -857,8 +857,8 @@ sub DirectedSound {
     my $self = shift;
     my ($name, $description, $location, $direction, $intensity, $maxFrontRange, $maxBackRange, $minFrontRange, $minBackRange, $loop, $pause) = @_;
     my $vrml = $self->{'TAB'}."DirectedSound {\n";
-    $vrml .= $self->{'TAB'}."	name		\"$name\"\n";
-    $vrml .= $self->{'TAB'}."	description	\"$description\"\n" if defined $description;
+    $vrml .= $self->{'TAB'}."	name		\"".$self->escape($name)."\"\n";
+    $vrml .= $self->{'TAB'}."	description	\"".$self->ascii($description)."\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."	location	$location\n" if $location;
     $vrml .= $self->{'TAB'}."	direction	$direction\n" if $direction;
     $vrml .= $self->{'TAB'}."	intensity	$intensity\n" if $intensity;
@@ -893,7 +893,7 @@ sub WWWInline {
     my $vrml = "";
     my ($name, $bboxSize, $bboxCenter) = @_;
     $vrml = $self->{'TAB'}."WWWInline {\n";
-    $vrml .= $self->{'TAB'}."	name	\"$name\"\n";
+    $vrml .= $self->{'TAB'}."	name	\"".$self->escape($name)."\"\n";
     $vrml .= $self->{'TAB'}."	bboxSize $bboxSize\n" if $bboxSize;
     $vrml .= $self->{'TAB'}."	bboxCenter $bboxCenter\n" if $bboxCenter;
     $vrml .= $self->{'TAB'}."}\n";
@@ -916,7 +916,7 @@ sub Info {
     $comment = defined $comment ? " # $comment" : "";
     my $vrml = "";
     $vrml = $self->{'TAB'}."Info {\n";
-    $vrml .= $self->{'TAB'}."	string	\"$string\"$comment\n";
+    $vrml .= $self->{'TAB'}."	string	\"".$self->ascii($string)."\"$comment\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};

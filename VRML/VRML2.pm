@@ -6,9 +6,10 @@ use VRML::Color;
 require VRML::VRML2::Standard;
 @ISA = qw(VRML::VRML2::Standard);
 
-# $VERSION="0.94";
+# $VERSION="0.97";
 %supported = ( 'quote' => "Live3D",
-	      'target' => "Live3D",
+	      'target' => "Live3D|WorldView|Cosmo",
+	      'gzip'   => "Live3D|WorldView|Cosmo|VRweb|GLview",
 	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
 );
 
@@ -30,6 +31,12 @@ sub browser {
     ($self->{'browser'}) = @_ if @_;
     $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n");
     return $self;
+}
+
+sub supported {
+    my $self = shift;
+    my $feature = shift;
+    return $self->{'browser'} =~ /$supported{$feature}/i;
 }
 
 #--------------------------------------------------------------------
@@ -73,7 +80,7 @@ sub group_end {
 
 sub collision_begin {
     my $self = shift;
-    $self->Group("Collision\n");
+    $self->Collision;
     return $self;
 }
 
@@ -89,7 +96,7 @@ sub anchor_begin {
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $description =~ s/"/$quote/g if defined $description;
     $parameter =~ s/"/$quote/g if defined $parameter;
-    undef $parameter if $self->{'browser'} !~ /$supported{'frames'}/i || $self->{'browser'} !~ /$supported{'target'}/i;
+    undef $parameter if $self->{'browser'} !~ /$supported{'target'}/i;
     $self->Anchor($url, $description, $parameter);
     return $self;
 }
@@ -112,6 +119,13 @@ sub lod_end {
     $self->End($_[0],TRUE); #  close [ and {
     return $self;
 }
+
+sub inline {
+    my $self = shift;
+    $self->WWWInline(@_);
+    return $self;
+}
+
 #--------------------------------------------------------------------
 
 sub transform_begin {
@@ -164,6 +178,23 @@ sub transform_end {
 #   VRML Methods
 #--------------------------------------------------------------------
 
+sub background {
+    my $self = shift;
+    my ($skyColorString, $backUrl, $groundColorString, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl) = @_;
+    my ($skyColor, $groundColor);
+    ($groundColor, $groundColorString) = rgb_color($groundColorString);
+    ($skyColor, $skyColorString) = rgb_color($skyColorString);
+    if ($backUrl) {
+	$bottomUrl = $backUrl unless $bottomUrl;
+	$topURL = $backUrl unless $topURL;
+	$leftUrl = $backUrl unless $leftUrl;
+	$rightUrl = $leftUrl unless $rightUrl;
+	$frontUrl = $backUrl unless $frontUrl;
+    }
+    $self->Background($backUrl, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl, $groundColor, $skyColor);
+    return $self;
+}
+
 sub backgroundcolor {
     my $self = shift;
     my ($skyColorString, $groundColorString) = @_;
@@ -176,8 +207,8 @@ sub backgroundcolor {
 
 sub backgroundimage {
     my $self = shift;
-    my ($backUrl, $bottomUrl, $topURL) = @_;
-    $self->Background($backUrl, $bottomUrl, $topURL);
+    my ($backUrl, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl) = @_;
+    $self->Background($backUrl, $bottomUrl, $topURL, $leftUrl, $rightUrl, $frontUrl);
     return $self;
 }
 
@@ -204,7 +235,7 @@ sub info {
 sub headlight {
     my $self = shift;
     my ($headlight) = @_;
-    $headlight = defined $headlight && !$headlight ? "FALSE" : "TRUE";
+    $headlight = defined $headlight && (!$headlight || $headlight =~ /off|false/i) ? "FALSE" : "TRUE";
     $self->NavigationInfo($headlight);
     return $self;
 }
@@ -227,7 +258,7 @@ sub cameras_end {
     return $self;
 }
 
-sub auto_camera_set {
+sub camera_auto_set {
     my $self = shift;
     my $factor = shift;
     $factor = 1 unless defined $factor;
@@ -433,7 +464,7 @@ sub text {
     $string =~ s/"/$quote/g if defined $string;
     $self->Shape(sub{
       if (defined $font || defined $align) {
-	my ($size, $style, $family) = split(/\s+/,$font,3);
+	local ($size, $style, $family) = split(/\s+/,$font,3); # use local !!!
 	if (defined $align) {
 	    $align =~ s/LEFT/BEGIN/i;
 	    $align =~ s/CENTER/MIDDLE/i;
@@ -442,12 +473,17 @@ sub text {
 	$self->Text($string,sub{$self->FontStyle($size, $style, $family, $align)});
       } else {
 	$self->Text($string);
-      }},
-	sub{$self->appearance($appearance)}
+      }},sub{$self->appearance($appearance)}
     );
     return $self;
 }
 
+sub fixtext {
+    my $self = shift;
+    $self->Billboard("0 0 0");
+    $self->text(@_);
+    $self->End("Billboard",1);
+}
 #--------------------------------------------------------------------
 
 sub cylindersensor {
@@ -489,7 +525,7 @@ sub appearance {
     my ($appearance_list) = @_;
     return $self->VRML_put("Appearance {}\n") unless $appearance_list;
     my $texture = "";
-    my ($item,$color,$multi_color,$key,$value,$num_color,%material);
+    my ($item,$color,$multi_color,$key,$value,$num_color,%material,$name);
     ITEM:
     foreach $item (split(/\s*;\s*/,$appearance_list)) {
 	($key,$value) = split(/\s*[=:]\s*/,$item,2);
@@ -498,13 +534,14 @@ sub appearance {
 	    $key = "diffuseColor";
 	}
 	MODE: {
-	    if ($key =~ /^a/i)  { $key = "ambientIntensity";  last MODE; }
-	    if ($key =~ /^d/i)  { $key = "diffuseColor";  last MODE; }
-	    if ($key =~ /^e/i)  { $key = "emissiveColor"; last MODE; }
-	    if ($key =~ /^sh/i) { $key = "shininess";     last MODE; }
-	    if ($key =~ /^s/i)  { $key = "specularColor"; last MODE; }
-	    if ($key =~ /^tr/i) { $key = "transparency";  last MODE; }
-	    if ($key =~ /^tex/i) { $texture = $value; next ITEM; }
+	    if ($key eq "d")  { $key = "diffuseColor";  last MODE; }
+	    if ($key eq "e")  { $key = "emissiveColor"; last MODE; }
+	    if ($key eq "s")  { $key = "specularColor"; last MODE; }
+	    if ($key eq "ai" || $key eq "a")  { $key = "ambientIntensity";  last MODE; }
+	    if ($key eq "sh") { $key = "shininess";     last MODE; }
+	    if ($key eq "tr") { $key = "transparency";  last MODE; }
+	    if ($key eq "tex") { $texture = $value; next ITEM; }
+	    if ($key eq "def" || $key eq "name") { $name = $value; next ITEM; }
 	}
 	if ($value =~ /,/) {	# multi color field
 	    foreach $color (split(/\s*,\s*/,$value)) {
@@ -525,7 +562,7 @@ sub appearance {
     $self->Appearance(
 	%material ? sub{$self->Material(%material)} : undef,
 	$texture =~ /\.gif|\.jpg|\.bmp/i ? sub{$self->ImageTexture(split(/\s+/,$texture))} : undef || 
-	$texture =~ /\.avi|\.mpg|\.mov/i ? sub{$self->MovieTexture(split(/\s+/,$texture))} : undef 
+	$texture =~ /\.avi|\.mpg|\.mov/i ? sub{$self->def($name)->MovieTexture(split(/\s+/,$texture))} : undef 
     );
     return $self;
 }
@@ -533,10 +570,30 @@ sub appearance {
 
 #--------------------------------------------------------------------
 
+sub sound {
+    my $self = shift;
+    return $self->VRML_put(qq{# CALL: ->sound("url", "description", ...)\n}) unless @_;
+    my ($url, $description, $location, $direction, $intensity, $loop, $pitch) = @_;
+    $loop = defined $loop && $loop ? "TRUE" : "FALSE";
+    $self->Sound(sub{$self->DEF($description)->AudioClip($url, $description, $loop, $pitch)->VRML_trim},
+	$location, $direction, $intensity, 100 );
+    return $self;
+}
+
+sub route {
+    shift->ROUTE(@_);
+}
+
+sub routetime {
+    $self = shift;
+    ($source, $dest) = @_;
+    $self->ROUTE("$source.touchTime", "$dest.startTime");
+}
+
 sub def {
     my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->def("name",sub{code});\n}) unless @_;
     my ($name, $code) = @_;
+    $name = "DEF_".(++$self->{'ID'}) unless defined $name;
     $self->DEF($name);
     if (defined $code) {
 	if (ref($code) eq "CODE") {
@@ -560,23 +617,13 @@ sub use {
     return $self;
 }
 
-sub sound {
-    my $self = shift;
-    return $self->VRML_put(qq{# CALL: ->sound("url", "description", ...)\n}) unless @_;
-    my ($url, $description, $location, $direction, $intensity, $loop, $pitch) = @_;
-    $loop = defined $loop && $loop ? "TRUE" : "FALSE";
-    $self->Sound(sub{$self->DEF($description)->AudioClip($url, $description, $loop, $pitch)->VRML_trim},
-	$location, $direction, $intensity, 100 );
-    return $self;
-}
-
 1;
 
 __END__
 
 =head1 NAME
 
-VRML::VRML2.pm - implements VRML methods with the VRML 1.x standard
+VRML::VRML2.pm - implements VRML methods with the VRML 2.0 standard
 
 =head1 SYNOPSIS
 
@@ -584,77 +631,36 @@ VRML::VRML2.pm - implements VRML methods with the VRML 1.x standard
 
 =head1 DESCRIPTION
 
-Following methods are currently implemented. 
+Following methods are currently implemented. (Values in '...' must be strings!)
 
 =over 4
 
 =item *
-begin(['comment']);
+begin(['comment'])
+
 C<  . . . >
 
 =item *
-end(['comment']);
+end(['comment'])
 
 =item *
-group_begin(['comment']);
+group_begin(['comment'])
+
 C<  . . . >
 
 =item *
-group_end;
+group_end
 
 =item *
-anchor_begin('Url','description','parameter');
+at('type=value ; ...')
+
+parameter see C<transform_begin>
 
 =item *
-anchor_end;
+back
 
 =item *
-backgroundcolor('groundcolor','skycolor');
-
-=item *
-backgroundimage('backUrl','bottomUrl');
-
-=item *
-title('string');
-
-=item *
-info('string');
-
-=item *
-cameras_begin('whichCameraNumber');
-
-=item *
-camera_set('positionXYZ','orientationXYZ',fieldOfView); // persp. cameras
-
-=item *
-camera('positionXYZ','orientationXYZ',fieldOfView); // persp. camera
-
-=item *
-cameras_end(['comment']);
-
-=item *
-box('width [height [depth]]','appearance');
-
-=item *
-cone('radius height','appearance');
-
-=item *
-cube('width','appearance');
-
-=item *
-cylinder('radius [height]','appearance');
-
-=item *
-line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]');
-
-=item *
-sphere('radius_x [radius_y radius_z]','appearance');
-
-=item *
-text('string','appearance','size style family');
-
-=item *
-transform_begin('type=value ; ...');
+transform_begin('type=value ; ...')
 
 I<Where type can be:>
 
@@ -668,7 +674,86 @@ I<Where type can be:>
 transform_end
 
 =item *
-appearance('type=value1,value2 ; ...');
+anchor_begin('Url','description','parameter')
+
+=item *
+anchor_end
+
+=item *
+collision_begin
+
+=item *
+collision_end
+
+=item *
+lod_begin('range','center')
+
+=item *
+lod_end
+
+=item *
+background('skycolor','backUrl','groundcolor','bottomURL','topURL', 'leftUrl','rightUrl','frontUrl')
+
+=item *
+title('string')
+
+=item *
+info('string')
+
+=item *
+cameras_begin('whichCameraNumber')
+
+=item *
+camera('positionXYZ','orientationXYZ',fieldOfView) 
+// persp. camera
+
+=item *
+camera_set('positionXYZ','orientationXYZ',fieldOfView) // persp. cameras
+
+=item *
+camera_auto_set
+
+=item *
+cameras_end(['comment'])
+
+=item *
+light('direction','intensity','color','ambientIntensity','on') 
+
+=item *
+box('width [height [depth]]','appearance')
+
+=item *
+cone('radius height','appearance')
+
+=item *
+cube('width','appearance')
+
+=item *
+cylinder('radius [height]','appearance')
+
+=item *
+line('fromXYZ','toXYZ',radius,'appearance','[x][y][z]')
+
+=item *
+sphere('radius_x [radius_y radius_z]','appearance')
+
+=item *
+text('string','appearance','size style family')
+
+=item *
+fixtext('string','appearance','size style family')
+
+=item *
+def('name',[code])
+
+=item *
+use('name')
+
+=item *
+route('from','to')
+
+=item *
+appearance('type=value1,value2 ; ...')
 
 I<Where type can be:>
 

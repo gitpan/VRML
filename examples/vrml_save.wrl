@@ -1,0 +1,19 @@
+#VRML V1.0 ascii
+
+# Set Browser to: 'LIVE3D'
+DEF BackgroundColor Info {
+	string	"0 0 0" # black
+}
+DEF BackgroundImage Info {
+	string	"starbak.gif"
+}
+Group {
+	Material {
+		diffuseColor	1 0.647058823529412 0	# orange
+	}
+	Cube {
+		width	2
+		height	2
+		depth	2
+	}
+}

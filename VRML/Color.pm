@@ -14,10 +14,10 @@ sub rgb_color {
     my ($key,$value,$intensity,$r,$g,$b);
 
     ($key,$intensity) = split(/\W/,$string);
-    if (defined $namespace && $namespace =~ /xcolor.*/i) {
-	$value = $XColor{$key};
+    if (defined $namespace && $namespace =~ /^o.*l.*color.*/i) {
+	$value = $OpenLookColor{$key};
     } else {
-	$value = $NetscapeColor{$key};
+	$value = $X11Color{$key};
     }
     if ($value) {
 	    $r = $$value[0]/255;
@@ -62,7 +62,7 @@ sub rgb_color {
 
 #--------------------------------------------------------------------
 
-%NetscapeColor = (
+%X11Color = (
 	"aliceblue" => [240,248,255],
 	"antiquewhite" => [250,235,215],
 	"aqua" => [0,255,255],
@@ -205,7 +205,7 @@ sub rgb_color {
 	"yellowgreen" => [154,205,50]
 );
 
-%XColor = (
+%OpenLookColor = (
 	"AliceBlue" => [240,248,255],
 	"AntiqueWhite" => [250,235,215],
 	"AntiqueWhite1" => [255,239,219],
@@ -959,7 +959,7 @@ Color.pm - implements color methods and names
 =head1 DESCRIPTION
 
 
-I<Netscape colornames are:>
+I<X11 colornames are:>
 
 	aliceblue
 	antiquewhite
@@ -1104,8 +1104,9 @@ I<Netscape colornames are:>
 
 You can also use 
 
-	yellow%30 = '0.3 0.3 0'	yellow%30
-	gray%30 = '0.7 0.7 0.7' gray%30 !!!
+	red-40 = '0.4 0 0'
+	yellow%30 = '0.3 0.3 0'
+	gray%30 = '0.7 0.7 0.7' !!!
 
 =cut
 

@@ -1,7 +1,7 @@
 use VRML;
 
-$vrml = new VRML (1.0);
-$vrml->browser('Live3D')
+$vrml = new VRML (1);
+$vrml->browser('Netscape+Live3D')
 ->cameras_begin(1)
   ->camera_set(undef,5)
   ->camera("Red","0 0 -5","0 1 0 180")
