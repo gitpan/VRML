@@ -50,11 +50,20 @@ Following nodes are currently implemented.
 <A NAME="Standard.pm_group_0">
 Group Nodes</A>
 </H2>
-These nodes NEED 
-<A HREF="Standard.pm.html#Standard.pm_end_0">End</A>
- !
+<EM>These nodes NEED</EM> <CODE>End</CODE> !
 <p>
 <DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_group_1">
+Group</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_group_1">Group(<STRONG>$comment</STRONG>)</A>
+
+<p>
 <DT><STRONG>
 
 <A NAME="Standard.pm_separator_0">
@@ -74,18 +83,7 @@ Switch</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$comment</STRONG>)</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_group_1">
-Group</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_group_1">Group(<STRONG>$comment</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$whichChild</STRONG>, <STRONG>$comment</STRONG>)</A>
 
 <p>
 <DT><STRONG>
@@ -98,7 +96,7 @@ WWWAnchor</A>
 
 <A HREF="Standard.pm.html#Standard.pm_wwwanchor_0">WWWAnchor(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$target</STRONG>)</A>
 
-<p><STRONG>$target</STRONG> works only with <EM>Live3D</EM>
+<p><STRONG>$target</STRONG> works only with <EM>some</EM> browsers
 <p>
 <DT><STRONG>
 
@@ -111,6 +109,7 @@ LOD</A>
 <A HREF="Standard.pm.html#Standard.pm_lod_0">LOD(<STRONG>$range</STRONG>, <STRONG>$center</STRONG>)</A>
 
 <p><STRONG>$range</STRONG> is a string with comma separated values
+<p><STRONG>$center</STRONG> = SFVec3f
 <p>example: 
 <A HREF="Standard.pm.html#Standard.pm_lod_0">LOD('1, 2, 5', '0 0 0')</A>
 
@@ -123,8 +122,8 @@ SpinGroup</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_spingroup_0">SpinGroup(<STRONG>$axis</STRONG>, <STRONG>$radians</STRONG>)</A>
- is supported only be <EM>Live3D</EM>
+<A HREF="Standard.pm.html#Standard.pm_spingroup_0">SpinGroup(<STRONG>$rotation</STRONG>, <STRONG>$local</STRONG>)</A>
+ is supported only by <EM>some</EM> browsers
 <p>
 </DL>
 .
@@ -178,7 +177,7 @@ Cylinder</A>
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_cylinder_0">Cylinder(<STRONG>$height</STRONG>, <STRONG>$radius</STRONG>, <STRONG>@parts</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_cylinder_0">Cylinder(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>@parts</STRONG>)</A>
 
 <p><STRONG>@parts</STRONG> is a list of strings ('SIDES', 'TOP', 'BOTTOM', 'ALL')
 <p>
@@ -268,7 +267,7 @@ Fontstyle</A>
 <CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$style</STRONG>, <STRONG>$family</STRONG>)</CODE>
 defines the current font style for all subsequent 
 <A HREF="Standard.pm.html#Standard.pm_asciitext_0">AsciiText</A>
-
+ Nodes
 <p><STRONG>$style</STRONG> can be 'NONE','BOLD','ITALIC'
 <p><STRONG>$familiy</STRONG> can be 'SERIF','SANS','TYPEWRITER'
 <p>
@@ -386,10 +385,7 @@ Rotation</A>
 <A HREF="Standard.pm.html#Standard.pm_rotation_0">Rotation(<STRONG>$rotation</STRONG>)</A>
 
 <p><STRONG>$rotation</STRONG> is a string like ``0 0 1 1.57''
-<p>This node is not supported under VRML 2.0
-<p><EM>use</EM> 
-<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform</A>
-
+<p><CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
 <p>
 <DT><STRONG>
 
@@ -402,10 +398,7 @@ Scale</A>
 <A HREF="Standard.pm.html#Standard.pm_scale_0">Scale(<STRONG>$scaleFactor</STRONG>)</A>
 
 <p><STRONG>$scaleFactor</STRONG> is a string like ``1 1 1''
-<p>This node is not supported under VRML 2.0
-<p><EM>use</EM> 
-<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform</A>
-
+<p><CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
 <p>
 <DT><STRONG>
 
@@ -418,10 +411,7 @@ Translation</A>
 <A HREF="Standard.pm.html#Standard.pm_translation_0">Translation(<STRONG>$translation</STRONG>)</A>
 
 <p><STRONG>$translation</STRONG> is a string like ``0 1 -2''
-<p>This node is not supported under VRML 2.0
-<p><EM>use</EM> 
-<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform</A>
-
+<p><CODE>This node is not supported under VRML 2.0. Use Transform</CODE>
 <p>
 </DL>
 .
@@ -487,6 +477,17 @@ SpotLight</A>
 <A HREF="Standard.pm.html#Standard.pm_spotlight_0">SpotLight(<STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
 
 <p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_directedsound_0">
+DirectedSound</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_directedsound_0">DirectedSound(<STRONG>$name</STRONG>, <STRONG>$description</STRONG>, <STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$maxFrontRange</STRONG>, <STRONG>$maxBackRange</STRONG>, <STRONG>$minFrontRange</STRONG>, <STRONG>$minBackRange</STRONG>, <STRONG>$loop</STRONG>, <STRONG>$pause</STRONG>)</A>
+
+<p>
 </DL>
 .
 <p>
@@ -521,37 +522,15 @@ Info</A>
 <p>
 <DT><STRONG>
 
-<A NAME="Standard.pm_def_0">
-DEF</A>
+<A NAME="Standard.pm_navigationinfo_0">
+NavigationInfo</A>
 
 </STRONG>
 <DD>
 
-<A HREF="Standard.pm.html#Standard.pm_def_0">DEF(<STRONG>$name</STRONG>)</A>
+<A HREF="Standard.pm.html#Standard.pm_navigationinfo_0">NavigationInfo(<STRONG>$headlight</STRONG>, <STRONG>$type</STRONG>)</A>
 
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_use_0">
-USE</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_use_0">USE(<STRONG>$name</STRONG>)</A>
-
-<p>
-<DT><STRONG>
-
-<A NAME="Standard.pm_end_0">
-End</A>
-
-</STRONG>
-<DD>
-
-<A HREF="Standard.pm.html#Standard.pm_end_0">End(<STRONG>$comment</STRONG>)</A>
-
-<p><STRONG>$comment</STRONG> is optional
+<p>Works only with Live3D and WebFX
 <p>
 </DL>
 .

@@ -2,51 +2,48 @@ package VRML;
 
 require 5.000;
 
-$content_type = "x-world/x-vrml";
-
-$VERSION="0.85";
-sub Version {
-    my $self = shift;
-    return $VERSION, $self;
-}
+$VERSION="0.90"; warn $VERSION if 0;
 
 sub new {
     my $class = shift;
     my ($version) = @_ ? @_ : 0;
     my $self;
     if ($version == 2 || $version =~ /2.0/) {
-	$content_type = "model/vrml";
+	$::content_type = "model/vrml";
 	require VRML::VRML2;
 	@ISA = qw(VRML::VRML2);
-	$self = new VRML::VRML2 ($version);
-    } elsif ($version == 1.1 || $version =~ /1.1/) {
-	$content_type = "x-world/x-vrml";
+	$self = new VRML::VRML2;
+    } elsif ($version == 1 || $version =~ /1.0/) {
+	$::content_type = "x-world/x-vrml";
 	require VRML::VRML1;
 	@ISA = qw(VRML::VRML1);
-	$self = new VRML::VRML1 ($version);
+	$self = new VRML::VRML1;
     } else {
-	$content_type = "x-world/x-vrml";
-	$version = 1;
+	$::content_type = "x-world/x-vrml";
 	require VRML::VRML1;
 	@ISA = qw(VRML::VRML1);
-	$self = new VRML::VRML1 ($version);
+	$self = new VRML::VRML1;
     }
     return bless $self, $class;
 }
+
+1;
 
 __END__
 
 =head1 NAME
 
-VRML.pm - implements VRML primitives and extensions
+VRML - implements VRML Nodes independent of specification (1.x or 2.0)
 
 =head1 SYNOPSIS
 
   use VRML;
 
-  $vrml = new VRML (1.0);
-  $vrml->browser('Live3D');
-  $vrml->cube('5 3 1','-50 -10 0','yellow');
+  $vrml = new VRML;
+  $vrml->browser('Netscape+Live3D');
+  $vrml->at('5 3 1');
+  $vrml->cube('-50 -10 0','yellow');
+  $vrml->end;
   $vrml->print;
   
   OR with the same result
@@ -54,9 +51,8 @@ VRML.pm - implements VRML primitives and extensions
   use VRML;
 
   VRML
-  ->version(1.0)
-  ->browser('Live3D')
-  ->cube('5 3 1','-50 -10 0','yellow')
+  ->browser('Netscape+Live3D')
+  ->at('5 3 1')->cube('-50 -10 0','yellow')->end
   ->print;
 
 =head1 DESCRIPTION
@@ -64,9 +60,9 @@ VRML.pm - implements VRML primitives and extensions
 =over 4
 
 =item *
-$VRML::content_type; # for CGI scripts only
+$content_type; # for CGI scripts only
 
-content_type is C<'x-world/x-vrml'> for VRML 1.0 and 1.1
+content_type is C<'x-world/x-vrml'> for VRML 1.0
 
 or C<'model/vrml'> for VRML 2.0
 
@@ -77,6 +73,12 @@ or C<'model/vrml'> for VRML 2.0
 VRML::VRML1
 
 VRML::VRML1::Standard
+
+VRML::VRML2
+
+VRML::VRML2::Standard
+
+VRML::Basic
 
 =head1 AUTHOR
 

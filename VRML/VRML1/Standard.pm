@@ -2,9 +2,11 @@ package VRML::VRML1::Standard;
 
 require 5.000;
 use strict;
+require VRML::Basic;
+@VRML::VRML1::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.88";
-$VRML::VRML1::Standard::debug = 0;
+# $VERSION = "0.90";
+$::debug = 0 unless defined $::debug;
 
 =head1 NAME
 
@@ -28,227 +30,15 @@ Following nodes are currently implemented.
 
 =cut
 
-sub new {
-    my $class = shift;
-    my $tabs = shift;
-    my $self = {};
-    $self->{'TAB'} = defined $tabs ? "\t" x $tabs : "";
-    $self->{'SELF'} = 1;
-    $self->{'XYZ'}  = [[0,0,0]];
-    $self->{'Xmax'} = 0;
-    $self->{'Ymax'} = 0;
-    $self->{'Zmax'} = 0;
-    $self->{'Xmin'} = 0;
-    $self->{'Ymin'} = 0;
-    $self->{'Zmin'} = 0;
-    $self->{'DX'} = 0;
-    $self->{'DY'} = 0;
-    $self->{'DZ'} = 0;
-    return bless $self, $class;
-}
-
-#####################################################################
-#               Methods to modify the VRML array                    #
-#####################################################################
-
-sub VRML_init {
-    my $self = shift;
-    my $vrml = shift;
-    $self->{'VRML'} = [$vrml];
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub VRML_head {
-    my $self = shift;
-    my $vrml = shift;
-    ${$self->{'VRML'}}[0] = "$vrml\n\n";
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub VRML_add {
-    my $self = shift;
-    my $vrml = shift;
-    ${$self->{'VRML'}}[$#{$self->{'VRML'}}] .= $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub VRML_insert {
-    my $self = shift;
-    my $vrml = shift;
-    my $last = pop @{$self->{'VRML'}};
-    push @{$self->{'VRML'}}, $vrml;
-    push @{$self->{'VRML'}}, $last;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub VRML_trim {
-    my $self = shift;
-    my $pattern = shift;
-    $pattern = "^\\s+" unless defined $pattern;
-    $self->{'VRML'}[$#{$self->{'VRML'}}] =~ s/$pattern//o;
-    return $self if $self->{'SELF'};
-    return "";
-}
-
-sub VRML_swap {
-    my $self = shift;
-    my $element1 = pop @{$self->{'VRML'}};
-    my $element2 = pop @{$self->{'VRML'}};
-    push @{$self->{'VRML'}}, $element1;
-    push @{$self->{'VRML'}}, $element2;
-    return $self if $self->{'SELF'};
-    return "";
-}
-
-sub VRML_put {
-    my $self = shift;
-    my $vrml = shift;
-    push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub VRML_row {
-    my $self = shift;
-    my ($row) = @_;
-    my $vrml = $self->{'TAB'}.$row;
-    push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub VRML_pos {
-    my $self = shift;
-    return $#{$self->{'VRML'}};
-}
-
-sub VRML_comment {
-    my $self = shift;
-    my ($comment) = @_;
-    $comment = defined $comment ? "# ".$comment : "#";
-    push @{$self->{'VRML'}}, $comment;
-    return $self if $self->{'SELF'};
-    return $comment;
-}
-
-sub VRML_print {
-    my $self = shift;
-    for (@{$self->{'VRML'}}) {
-	print ascii($_);
-    }
-    return $self if $self->{'SELF'};
-    return "";
-}
-
-#--------------------------------------------------------------------
-
-sub as_ascii {
-    my $self = shift;
-    my $vrml = "";
-    for (@{$self->{'VRML'}}) { $vrml .= ascii($_) };
-    return $vrml;
-}
-
-sub ascii {
-    s/[\204\344\365]/ae/g;
-    s/[\224\366]/oe/g;
-    s/[\201\374]/ue/g;
-    s/[\216\304]/Ae/g;
-    s/[\231\305\326]/Oe/g;
-    s/[\263\374]/Ue/g;
-    s/[\257\337]/sz/g;
-    s/[\000-\010\013-\037\177-\377]/_/g;
-    return $_;
-}
-
-#sub as_utf8 {
-#    my $self = shift;
-#    my $vrml = "";
-#    for (@{$self->{'VRML'}}) { $vrml .= utf8($_); }
-#    return $vrml;
-#}
-#
-#sub utf8 {
-#    s/[\204\344\365]/\302\344/g;	# ae
-#    s/[\224\366]/\302\366/g;		# oe
-#    s/[\201\374]/\302\374/g;		# ue
-#    s/[\216\304]/\302\304/g;		# Ae
-#    s/[\231\305\326]/\302\326/g;	# Oe
-#    s/[\263\334]/\302\334/g;		# Ue
-#    s/[\257\337]/sz/g;			# sz
-#    s/[\000-\010\013-\037]/_/g;
-#    return $_;
-#}
-
-sub xyz {
-    my $self = shift;
-    return $self unless @_;
-    ($self->{'DX'}, $self->{'DY'}, $self->{'DZ'}) = @_;
-    ${$self->{'XYZ'}[0]}[0] += $self->{'DX'};
-    ${$self->{'XYZ'}[0]}[1] += $self->{'DY'};
-    ${$self->{'XYZ'}[0]}[2] += $self->{'DZ'};
-    print "XYZ = ".join(', ',@{$self->{'XYZ'}[0]})."\n" if $VRML::VRML1::Standard::debug == 2;
-    $self->{'Xmax'} = ${$self->{'XYZ'}[0]}[0] if $self->{'Xmax'} < ${$self->{'XYZ'}[0]}[0];
-    $self->{'Ymax'} = ${$self->{'XYZ'}[0]}[1] if $self->{'Ymax'} < ${$self->{'XYZ'}[0]}[1];
-    $self->{'Zmax'} = ${$self->{'XYZ'}[0]}[2] if $self->{'Zmax'} < ${$self->{'XYZ'}[0]}[2];
-    $self->{'Xmin'} = ${$self->{'XYZ'}[0]}[0] if $self->{'Xmin'} > ${$self->{'XYZ'}[0]}[0];
-    $self->{'Ymin'} = ${$self->{'XYZ'}[0]}[1] if $self->{'Ymin'} > ${$self->{'XYZ'}[0]}[1];
-    $self->{'Zmin'} = ${$self->{'XYZ'}[0]}[2] if $self->{'Zmin'} > ${$self->{'XYZ'}[0]}[2];
-}
-
 #####################################################################
 #                        VRML Implementation                        #
 #####################################################################
 
 =head2 Group Nodes
-These nodes NEED C<End> !
+
+I<These nodes NEED> C<End> !
 
 =over 4
-
-=item Separator
-
-C<Separator($comment)>
-
-=cut
-
-sub Separator {
-    my $self = shift;
-    my ($comment) = @_;
-    $comment = $comment ? " # $comment" : "";
-    my $vrml = "";
-    $vrml = $self->{'TAB'}."Separator {$comment\n";
-    $self->{'TAB'} .= "\t";
-    print "Separator ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $VRML::VRML1::Standard::debug == 1;
-    unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
-    push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-=item Switch
-
-C<Switch($comment)>
-
-=cut
-
-sub Switch {
-    my $self = shift;
-    my ($whichChild, $comment) = @_;
-    $comment = $comment ? " # $comment" : "";
-    my $vrml = "";
-    $vrml = $self->{'TAB'}."Switch {$comment\n";
-    $vrml .= $self->{'TAB'}."	whichChild $whichChild\n\n" if defined $whichChild;
-    $self->{'TAB'} .= "\t";
-    print "Switch ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $VRML::VRML1::Standard::debug == 1;
-    unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
-    push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
 
 =item Group
 
@@ -263,7 +53,48 @@ sub Group {
     my $vrml = "";
     $vrml = $self->{'TAB'}."Group {$comment\n";
     $self->{'TAB'} .= "\t";
-    print "Group ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $VRML::VRML1::Standard::debug == 1;
+    print "Group ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item Separator
+
+C<Separator($comment)>
+
+=cut
+
+sub Separator {
+    my $self = shift;
+    my ($comment) = @_;
+    $comment = $comment ? " # $comment" : "";
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."Separator {$comment\n";
+    $self->{'TAB'} .= "\t";
+    print "Separator ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
+    unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item Switch
+
+C<Switch($whichChild, $comment)>
+
+=cut
+
+sub Switch {
+    my $self = shift;
+    my ($whichChild, $comment) = @_;
+    $comment = $comment ? " # $comment" : "";
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."Switch {$comment\n";
+    $vrml .= $self->{'TAB'}."	whichChild $whichChild\n" if defined $whichChild;
+    $self->{'TAB'} .= "\t";
+    print "Switch ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -275,23 +106,20 @@ sub Group {
 C<WWWAnchor($url, $description, $target)>
 
 
-$target works only with I<Live3D>
+$target works only with I<some> browsers
 
 =cut
 
 sub WWWAnchor {
     my $self = shift;
     my ($url, $description, $target) = @_;
-    $url =~ s/"/\\"/g if defined $url;
-    $description =~ s/"/\\"/g if defined $description;
-    $target =~ s/"/\\"/g if defined $target;
     my $vrml = "";
     $vrml = $self->{'TAB'}."WWWAnchor {\n";
     $vrml .= $self->{'TAB'}."	name \"$url\"\n";
     $vrml .= $self->{'TAB'}."	description \"$description\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."	target \"$target\"\n" if defined $target;
     $self->{'TAB'} .= "\t";
-    print "WWWAnchor ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $VRML::VRML1::Standard::debug == 1;
+    print "WWWAnchor ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -303,6 +131,8 @@ sub WWWAnchor {
 C<LOD($range, $center)>
 
 $range is a string with comma separated values
+
+$center = SFVec3f
 
 example: C<LOD('1, 2, 5', '0 0 0')>
 
@@ -316,7 +146,7 @@ sub LOD {
     $vrml .= $self->{'TAB'}."	range	[$range]\n" if $range;
     $vrml .= $self->{'TAB'}."	center	$center\n" if $center;
     $self->{'TAB'} .= "\t";
-    print "LOD ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $VRML::VRML1::Standard::debug == 1;
+    print "LOD ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -325,18 +155,19 @@ sub LOD {
 
 =item SpinGroup
 
-C<SpinGroup($axis, $radians)> is supported only be I<Live3D>
+C<SpinGroup($rotation, $local)> is supported only by I<some> browsers
 
 =cut
 
 sub SpinGroup {
     my $self = shift;
-    my ($axis, $radians) = @_;
+    my ($rotation, $local) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."SpinGroup {\n";
-    $vrml .= $self->{'TAB'}."	rotation $axis $radians\n";
+    $vrml .= $self->{'TAB'}."	rotation $rotation\n";
+    $vrml .= $self->{'TAB'}."	local $local\n" if defined $local;
     $self->{'TAB'} .= "\t";
-    print "SpinGroup ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $VRML::VRML1::Standard::debug == 1;
+    print "SpinGroup ",join(', ',@{$self->{'XYZ'}[0]}),"\n" if $::debug == 1;
     unshift @{$self->{'XYZ'}}, [@{$self->{'XYZ'}[0]}];
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -360,7 +191,6 @@ $justification is a string ('LEFT','CENTER','RIGHT')
 sub AsciiText {
     my $self = shift;
     my ($string, $width, $justification, $spacing) = @_;
-    $string =~ s/"/\\"/g if defined $string;
     my $vrml = "";
     $vrml = $self->{'TAB'}."AsciiText {\n";
     $vrml .= $self->{'TAB'}."	string \"$string\"\n" if $string;
@@ -404,7 +234,6 @@ C<Cube($width, $height, $depth)>
 sub Cube {
     my $self = shift;
     my ($width, $height, $depth) = @_;
-#    $self->xyz($width, $height, $depth) if defined $width;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Cube {\n";
     $vrml .= $self->{'TAB'}."	width	$width\n" if $width;
@@ -418,7 +247,7 @@ sub Cube {
 
 =item Cylinder
 
-C<Cylinder($height, $radius, @parts)>
+C<Cylinder($radius, $height, @parts)>
 
 @parts is a list of strings ('SIDES', 'TOP', 'BOTTOM', 'ALL')
 
@@ -616,7 +445,7 @@ sub Coordinate3 {
 =item Fontstyle
 
 C<FontStyle($size, $style, $family)>
-defines the current font style for all subsequent C<AsciiText>
+defines the current font style for all subsequent C<AsciiText> Nodes
 
 
 $style can be 'NONE','BOLD','ITALIC'
@@ -810,6 +639,10 @@ $center is a string like "0 0 0"
 sub Transform {
     my $self = shift;
     my ($translation, $rotation, $scaleFactor, $scaleOrientation, $center) = @_;
+    unless (@_) {
+	return $self if $self->{'SELF'};
+	return "";
+    }
     $self->xyz(split(/\s+/,$translation)) if defined $translation;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Transform {\n";
@@ -830,9 +663,7 @@ C<Rotation($rotation)>
 
 $rotation is a string like "0 0 1 1.57"
 
-This node is not supported under VRML 2.0
-
-F<use> C<Transform>
+C<This node is not supported under VRML 2.0. Use Transform>
 
 =cut
 
@@ -853,9 +684,7 @@ C<Scale($scaleFactor)>
 
 $scaleFactor is a string like "1 1 1"
 
-This node is not supported under VRML 2.0
-
-F<use> C<Transform>
+C<This node is not supported under VRML 2.0. Use Transform>
 
 =cut
 
@@ -876,17 +705,17 @@ C<Translation($translation)>
 
 $translation is a string like "0 1 -2"
 
-This node is not supported under VRML 2.0
-
-F<use> C<Transform>
+C<This node is not supported under VRML 2.0. Use Transform>
 
 =cut
 
 sub Translation {
     my $self = shift;
+    my ($translation) = @_;
+    $self->xyz(split(/\s+/,$translation)) if defined $translation;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Translation {\n";
-    $vrml .= $self->{'TAB'}."	translation @_\n";
+    $vrml .= $self->{'TAB'}."	translation $translation\n";
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -916,15 +745,15 @@ sub PerspectiveCamera {
     my ($position, $orientation, $heightAngle, 
 	$focalDistance, $nearDistance, $farDistance) = @_;
     my $vrml = "";
-    $vrml = $self->{'TAB'}."PerspectiveCamera {\n";
-    $vrml .= $self->{'TAB'}."	position	$position\n" if $position;
-    $vrml .= $self->{'TAB'}."	orientation	$orientation\n" if $orientation;
-    $vrml .= $self->{'TAB'}."	heightAngle	$heightAngle\n" if $heightAngle;
-    $vrml .= $self->{'TAB'}."	focalDistance	$focalDistance\n" if $focalDistance;
-    $vrml .= $self->{'TAB'}."	nearDistance	$nearDistance\n" if $nearDistance;
-    $vrml .= $self->{'TAB'}."	farDistance	$farDistance\n" if $farDistance;
-    $vrml .= $self->{'TAB'}."}\n";
-    push @{$self->{'VRML'}}, $vrml;
+    $vrml = "PerspectiveCamera {\n";
+    $vrml .= $self->{'TAB_VIEW'}."	position	$position\n" if $position;
+    $vrml .= $self->{'TAB_VIEW'}."	orientation	$orientation\n" if $orientation;
+    $vrml .= $self->{'TAB_VIEW'}."	heightAngle	$heightAngle\n" if $heightAngle;
+    $vrml .= $self->{'TAB_VIEW'}."	focalDistance	$focalDistance\n" if $focalDistance;
+    $vrml .= $self->{'TAB_VIEW'}."	nearDistance	$nearDistance\n" if $nearDistance;
+    $vrml .= $self->{'TAB_VIEW'}."	farDistance	$farDistance\n" if $farDistance;
+    $vrml .= $self->{'TAB_VIEW'}."}\n";
+    push @{$self->{'VIEW'}}, $vrml;
     return $self if $self->{'SELF'};
     return $vrml;
 }
@@ -940,15 +769,15 @@ sub OrthographicCamera {
     my ($position, $orientation, $height, 
 	$focalDistance, $nearDistance, $farDistance) = @_;
     my $vrml = "";
-    $vrml = $self->{'TAB'}."OrthographicCamera {\n";
-    $vrml .= $self->{'TAB'}."	position	$position\n" if $position;
-    $vrml .= $self->{'TAB'}."	orientation	$orientation\n" if $orientation;
-    $vrml .= $self->{'TAB'}."	height		$height\n" if $height;
-    $vrml .= $self->{'TAB'}."	focalDistance	$focalDistance\n" if $focalDistance;
-    $vrml .= $self->{'TAB'}."	nearDistance	$nearDistance\n" if $nearDistance;
-    $vrml .= $self->{'TAB'}."	farDistance	$farDistance\n" if $farDistance;
-    $vrml .= $self->{'TAB'}."}\n";
-    push @{$self->{'VRML'}}, $vrml;
+    $vrml = "OrthographicCamera {\n";
+    $vrml .= $self->{'TAB_VIEW'}."	position	$position\n" if $position;
+    $vrml .= $self->{'TAB_VIEW'}."	orientation	$orientation\n" if $orientation;
+    $vrml .= $self->{'TAB_VIEW'}."	height		$height\n" if $height;
+    $vrml .= $self->{'TAB_VIEW'}."	focalDistance	$focalDistance\n" if $focalDistance;
+    $vrml .= $self->{'TAB_VIEW'}."	nearDistance	$nearDistance\n" if $nearDistance;
+    $vrml .= $self->{'TAB_VIEW'}."	farDistance	$farDistance\n" if $farDistance;
+    $vrml .= $self->{'TAB_VIEW'}."}\n";
+    push @{$self->{'VIEW'}}, $vrml;
     return $self if $self->{'SELF'};
     return $vrml;
 }
@@ -1018,6 +847,33 @@ sub SpotLight {
     return $vrml;
 }
 
+=item DirectedSound
+
+C<DirectedSound($name, $description, $location, $direction, $intensity, $maxFrontRange, $maxBackRange, $minFrontRange, $minBackRange, $loop, $pause)>
+
+=cut
+
+sub DirectedSound {
+    my $self = shift;
+    my ($name, $description, $location, $direction, $intensity, $maxFrontRange, $maxBackRange, $minFrontRange, $minBackRange, $loop, $pause) = @_;
+    my $vrml = $self->{'TAB'}."DirectedSound {\n";
+    $vrml .= $self->{'TAB'}."	name		\"$name\"\n";
+    $vrml .= $self->{'TAB'}."	description	\"$description\"\n" if defined $description;
+    $vrml .= $self->{'TAB'}."	location	$location\n" if $location;
+    $vrml .= $self->{'TAB'}."	direction	$direction\n" if $direction;
+    $vrml .= $self->{'TAB'}."	intensity	$intensity\n" if $intensity;
+    $vrml .= $self->{'TAB'}."	maxFrontRange	$maxFrontRange\n" if $maxFrontRange;
+    $vrml .= $self->{'TAB'}."	maxBackRange	$maxBackRange\n" if $maxBackRange;
+    $vrml .= $self->{'TAB'}."	minFrontRange	$minFrontRange\n" if $minFrontRange;
+    $vrml .= $self->{'TAB'}."	minBackRange	$minBackRange\n" if $minBackRange;
+    $vrml .= $self->{'TAB'}."	loop	$loop\n" if defined $loop;
+    $vrml .= $self->{'TAB'}."	pause	$pause\n" if $pause;
+    $vrml .= $self->{'TAB'}."}\n";
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
 #--------------------------------------------------------------------
 
 =back
@@ -1036,7 +892,6 @@ sub WWWInline {
     my $self = shift;
     my $vrml = "";
     my ($name, $bboxSize, $bboxCenter) = @_;
-    $name =~ s/"/\\"/g if defined $name;
     $vrml = $self->{'TAB'}."WWWInline {\n";
     $vrml .= $self->{'TAB'}."	name	\"$name\"\n";
     $vrml .= $self->{'TAB'}."	bboxSize $bboxSize\n" if $bboxSize;
@@ -1058,7 +913,6 @@ $comment is optional
 sub Info {
     my $self = shift;
     my ($string, $comment) = @_;
-    $string =~ s/"/\\"/g if defined $string;
     $comment = defined $comment ? " # $comment" : "";
     my $vrml = "";
     $vrml = $self->{'TAB'}."Info {\n";
@@ -1069,56 +923,37 @@ sub Info {
     return $vrml;
 }
 
-=item DEF
+=item NavigationInfo
 
-C<DEF($name)>
+C<NavigationInfo($headlight, $type)>
+
+Works only with Live3D and WebFX
 
 =cut
 
-sub DEF {
+sub NavigationInfo {
     my $self = shift;
-    my ($name) = @_;
+    my ($headlight, $type, $speed) = @_;
     my $vrml = "";
-    $vrml = $self->{'TAB'}."DEF \"$name\" ";
+    $vrml = $self->{'TAB'}."NavigationInfo {\n";
+    $vrml .= $self->{'TAB'}."	headlight	$headlight\n" if defined $headlight;
+    $vrml .= $self->{'TAB'}."	type	\"$type\"\n" if defined $type;
+    $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
     return $vrml;
 }
-
-=item USE
-
-C<USE($name)>
-
-=cut
-
-sub USE {
-    my $self = shift;
-    my ($name) = @_;
-    my $vrml = "";
-    $vrml = $self->{'TAB'}."USE \"$name\"\n";
-    push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-=item End
-
-C<End($comment)>
-
-$comment is optional
-
-=cut
 
 sub End {
     my $self = shift;
     my ($comment) = @_;
-    return "# ERROR: TAB < 0 !\n" unless $self->{'TAB'};
+    return $self->VRML_put("# ERROR: TAB < 0 !\n") unless $self->{'TAB'};
     chop($self->{'TAB'});
     $comment = $comment ? " # $comment" : "";
-    my $vrml = "";
-    $vrml = $self->{'TAB'}."}$comment\n";
-    shift @{$self->{'XYZ'}};
+    my $vrml = $self->{'TAB'}."}$comment\n";
     push @{$self->{'VRML'}}, $vrml;
+    shift @{$self->{'XYZ'}};
+    $self->VRML_put("# End ".join(', ',@{$self->{'XYZ'}[0]})."\n") if $::debug == 1;
     return $self if $self->{'SELF'};
     return $vrml;
 }

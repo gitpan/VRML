@@ -8,7 +8,7 @@
 <A NAME="VRML.pm_name_0">
 NAME</A>
 </H1>
-VRML.pm - implements VRML primitives and extensions
+VRML - implements VRML Nodes independent of specification (1.x or 2.0)
 <p><p><hr>
 
 <H1> 
@@ -18,18 +18,19 @@ SYNOPSIS</A>
 
 <XMP>
   use VRML;
-  $vrml = new VRML (1.0);
-  $vrml->browser('Live3D');
-  $vrml->cube('5 3 1','-50 -10 0','yellow');
+  $vrml = new VRML;
+  $vrml->browser('Netscape+Live3D');
+  $vrml->at('5 3 1');
+  $vrml->cube('-50 -10 0','yellow');
+  $vrml->end;
   $vrml->print;
   
   OR with the same result
   
   use VRML;
   VRML
-  ->version(1.0)
-  ->browser('Live3D')
-  ->cube('5 3 1','-50 -10 0','yellow')
+  ->browser('Netscape+Live3D')
+  ->at('5 3 1')->cube('-50 -10 0','yellow')->end
   ->print;
 
 </XMP>
@@ -41,8 +42,8 @@ DESCRIPTION</A>
 </H1>
 <p>
 <UL>
-<LI><STRONG>$VRML::content_type</STRONG>; # for CGI scripts only
-<p>content_type is <CODE>'x-world/x-vrml'</CODE> for VRML 1.0 and 1.1
+<LI><STRONG>$content_type</STRONG>; # for CGI scripts only
+<p>content_type is <CODE>'x-world/x-vrml'</CODE> for VRML 1.0
 <p>or <CODE>'model/vrml'</CODE> for VRML 2.0
 <p>
 </UL>
@@ -55,6 +56,9 @@ SEE ALSO</A>
 </H1>
 VRML::VRML1
 <p>VRML::VRML1::Standard
+<p>VRML::VRML2
+<p>VRML::VRML2::Standard
+<p>VRML::Basic
 <p><p><hr>
 
 <H1> 

@@ -4,14 +4,13 @@ require 5.000;
 require Exporter;
 
 @ISA = qw(Exporter);
-@EXPORT = qw(vrml_color);
+@EXPORT = qw(rgb_color);
 
-$VERSION="0.97";
-sub Version { $VERSION; }
+# $VERSION="0.97";
 
-sub vrml_color {
-#    my $self = shift;
+sub rgb_color {
     my ($string,$namespace) = @_;
+    return undef unless $string;
     my ($key,$value,$intensity,$r,$g,$b);
 
     ($key,$intensity) = split(/\W/,$string);
@@ -951,7 +950,7 @@ __END__
 
 =head1 NAME
 
-Color.pm - implements color functions and names
+Color.pm - implements color methods and names
 
 =head1 SYNOPSIS
 

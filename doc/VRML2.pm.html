@@ -1,42 +1,42 @@
 <!-- $Id$ -->
 <HTML><HEAD>
-<CENTER><TITLE>VRML1.pm</TITLE>
+<CENTER><TITLE>VRML2.pm</TITLE>
 </HEAD>
 <BODY></CENTER><p><hr>
 
 <H1> 
-<A NAME="VRML1.pm_name_0">
+<A NAME="VRML2.pm_name_0">
 NAME</A>
 </H1>
-VRML::VRML1.pm - implements VRML methods with the VRML 1.x standard
+VRML::VRML2.pm - implements VRML methods with the VRML 1.x standard
 <p><p><hr>
 
 <H1> 
-<A NAME="VRML1.pm_synopsis_0">
+<A NAME="VRML2.pm_synopsis_0">
 SYNOPSIS</A>
 </H1>
 
 <XMP>
-    use VRML::VRML1;
+    use VRML::VRML2;
 
 </XMP>
 <p><p><hr>
 
 <H1> 
-<A NAME="VRML1.pm_description_0">
+<A NAME="VRML2.pm_description_0">
 DESCRIPTION</A>
 </H1>
 Following methods are currently implemented. 
 <p>
 <UL>
-<LI><EM>begin()</EM>;
+<LI>begin('transformation');
 <CODE>  . . . </CODE>
 <p>
-<LI><EM>end()</EM>;
+<LI>end(['comment']);
 <p>
-<LI>backgroundcolor('color');
+<LI>backgroundcolor('groundcolor','skycolor');
 <p>
-<LI>backgroundimage('URL');
+<LI>backgroundimage('backUrl','bottomUrl');
 <p>
 <LI>title('string');
 <p>
@@ -44,11 +44,11 @@ Following methods are currently implemented.
 <p>
 <LI>cameras_begin('whichCameraNumber');
 <p>
-<LI>camera_set('positionXYZ','orientationXYZ',heightAngle); // persp. cameras
+<LI>camera_set('positionXYZ','orientationXYZ',fieldOfView); // persp. cameras
 <p>
-<LI>camera('positionXYZ','orientationXYZ',heightAngle); // persp. camera
+<LI>camera('positionXYZ','orientationXYZ',fieldOfView); // persp. camera
 <p>
-<LI>anchor_begin('URL','description','parameter');
+<LI>anchor_begin('Url','description','parameter');
 <p>
 <LI>box('width [height [depth]]','appearance');
 <p>
@@ -97,16 +97,16 @@ Following methods are currently implemented.
 <p><p><hr>
 
 <H1> 
-<A NAME="VRML1.pm_see_0">
+<A NAME="VRML2.pm_see_0">
 SEE ALSO</A>
 </H1>
 VRML
-<p>VRML::VRML1::Standard
+<p>VRML::VRML2::Standard
 <p>VRML::Basic
 <p><p><hr>
 
 <H1> 
-<A NAME="VRML1.pm_author_0">
+<A NAME="VRML2.pm_author_0">
 AUTHOR</A>
 </H1>
 Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
