@@ -3,7 +3,7 @@ package VRML::Basic;
 require 5.000;
 use strict;
 
-# $VERSION = "0.91";
+# $VERSION = "0.94";
 $::debug = 0 unless defined $::debug;
 $::pi = 3.1415926;
 $::pi_2 = $::pi/2;
@@ -139,7 +139,7 @@ sub VRML_comment {
 sub VRML_print {
     my $self = shift;
     print $self->{'HEAD'};
-    for (@{$self->{'VRML'}}) { print ascii($_); }
+    for (@{$self->{'VRML'}}) { print ascii($_); } # use ascii() in Standard.pm
     return $self if $self->{'SELF'};
     return "";
 }
@@ -176,6 +176,8 @@ sub as_string {
     for (@{$self->{'VRML'}}) { $vrml .= ascii($_) };
     return $vrml;
 }
+
+#--------------------------------------------------------------------
 
 sub ascii {
     s/[\204\344\365]/ae/g;
@@ -217,26 +219,6 @@ sub xyz {
     $self->{'Zmin'} = ${$self->{'XYZ'}[0]}[2] if $self->{'Zmin'} > ${$self->{'XYZ'}[0]}[2];
 }
 
-sub DEF {
-    my $self = shift;
-    my ($name) = @_;
-    my $vrml = $self->{'TAB'}."DEF $name\n";
-    push @{$self->{'VRML'}}, $vrml;
-    $self->{'DEF'}{$name} = $#{$self->{'VRML'}};
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
-sub USE {
-    my $self = shift;
-    my ($name) = @_;
-    my $vrml = "";
-    $vrml = $self->{'TAB'}."USE $name\n";
-    push @{$self->{'VRML'}}, $vrml;
-    return $self if $self->{'SELF'};
-    return $vrml;
-}
-
 1;
 
 __END__
@@ -256,13 +238,17 @@ Following methods are currently implemented.
 
 =over 4
 
-=item USE
+=item as_string
 
-C<USE($name)>
+C<as_string>
 
-=item DEF
+=item print
 
-C<DEF($name)>
+C<print>
+
+=item save
+
+C<save($filename)>
 
 =back
 

@@ -6,10 +6,11 @@ use VRML::Color;
 require VRML::VRML2::Standard;
 @ISA = qw(VRML::VRML2::Standard);
 
-# $VERSION="0.91";
-$supported{'quote'} = "Live3D|WebFx";
-$supported{'target'} = "Live3D|WebFx";
-$supported{'frames'} = "Netscape|Mozilla|Internet Explorer|MSIE";
+# $VERSION="0.94";
+%supported = ( 'quote' => "Live3D",
+	      'target' => "Live3D",
+	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
+);
 
 #--------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ sub new {
     my $version = shift;
     my $self = new VRML::VRML2::Standard;
     $self->{'browser'} = "";
-    $self->{'content_type'} = "x-world/x-vrml";
+    $self->{'content_type'} = "model/vrml";
     $self->{'version'} = 2;
     $self->VRML_head("#VRML V2.0 utf8");
     return bless $self, $class;
@@ -67,6 +68,18 @@ sub group_begin {
 sub group_end {
     my $self = shift;
     $self->End($_[0],TRUE); #  close [ and {
+    return $self;
+}
+
+sub collision_begin {
+    my $self = shift;
+    $self->Group("Collision\n");
+    return $self;
+}
+
+sub collision_end {
+    my $self = shift;
+    $self->End($_[0],TRUE);
     return $self;
 }
 
@@ -188,6 +201,13 @@ sub info {
     return $self;
 }
 
+sub headlight {
+    my $self = shift;
+    my ($headlight) = @_;
+    $headlight = defined $headlight && !$headlight ? "FALSE" : "TRUE";
+    $self->NavigationInfo($headlight);
+    return $self;
+}
 #--------------------------------------------------------------------
 
 sub cameras_begin {
@@ -301,7 +321,6 @@ sub line {
     my $dz=$z1-$z2;
     $order = "" unless defined $order;
     $self->Group('line("'.join('", "',@_).'")');
-    $self->def("Line-Material")->appearance($appearance);
     if ($dx && $order =~ /x/) {
 	$t = ($x1-($dx/2))." $y1 $z1" if $order =~ /^x$/i;
 	$t = ($x1-($dx/2))." $y1 $z1" if $order =~ /^x../i;
@@ -310,7 +329,7 @@ sub line {
 	$t = ($x1-($dx/2))." $y2 $z2" if $order =~ /..x$/i;
 	$self->Transform($t,"0 0 1 $::pi_2");
 	$self->Shape(sub{$self->Cylinder($radius,abs($dx))},
-		sub{$self->use("Line-Material")});
+		sub{$self->appearance($appearance)});
 	$self->EndTransform;
     }
     if ($dy && $order =~ /y/) {
@@ -321,7 +340,7 @@ sub line {
 	$t = "$x2 ".($y1-($dy/2))." $z2" if $order =~ /..y$/i;
 	$self->Transform($t);
 	$self->Shape(sub{$self->Cylinder($radius,abs($dy))},
-		sub{$self->use("Line-Material")});
+		sub{$self->appearance($appearance)});
 	$self->EndTransform;
     }
     if ($dz && $order =~ /z/) {
@@ -332,7 +351,7 @@ sub line {
 	$t = "$x2 $y2 ".($z1-($dz/2)) if $order =~ /..z$/i;
 	$self->Transform($t,"1 0 0 $::pi_2");
 	$self->Shape(sub{$self->Cylinder($radius,abs($dz))},
-		sub{$self->use("Line-Material")});
+		sub{$self->appearance($appearance)});
 	$self->EndTransform;
     }
     unless ($order) {
@@ -341,7 +360,7 @@ sub line {
 	$r = "$dx ".($dy+$length)." $dz $::pi";
 	$self->Transform($t,$r);
 	$self->Shape(sub{$self->Cylinder($radius,$length)},
-		sub{$self->use("Line-Material")});
+		sub{$self->appearance($appearance)});
 	$self->EndTransform;
     }
     $self->End("line",TRUE);
@@ -409,15 +428,23 @@ sub sphere {
 
 sub text {
     my $self = shift;
-    my ($string, $appearance, $font) = @_;
+    my ($string, $appearance, $font, $align) = @_;
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $string =~ s/"/$quote/g if defined $string;
-    $self->appearance($appearance) if $appearance;
-    if ($font) {
-	$self->Text($string,sub{$self->FontStyle(split(/\s+/,$font))});
-    } else {
+    $self->Shape(sub{
+      if (defined $font || defined $align) {
+	my ($size, $style, $family) = split(/\s+/,$font,3);
+	if (defined $align) {
+	    $align =~ s/LEFT/BEGIN/i;
+	    $align =~ s/CENTER/MIDDLE/i;
+	    $align =~ s/RIGHT/END/i;
+	}
+	$self->Text($string,sub{$self->FontStyle($size, $style, $family, $align)});
+      } else {
 	$self->Text($string);
-    }
+      }},
+	sub{$self->appearance($appearance)}
+    );
     return $self;
 }
 
@@ -638,6 +665,9 @@ I<Where type can be:>
 	f = scaleFactor
 
 =item *
+transform_end
+
+=item *
 appearance('type=value1,value2 ; ...');
 
 I<Where type can be:>
@@ -653,9 +683,6 @@ I<Where type can be:>
 I<and color values see>
 
 VRML::Color
-
-=item *
-transform_end;
 
 =back
 

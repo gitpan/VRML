@@ -6,10 +6,12 @@ use VRML::Color;
 require VRML::VRML1::Standard;
 @ISA = qw(VRML::VRML1::Standard);
 
-# $VERSION="0.91";
-$supported{'quote'} = "Live3D|WebFx";
-$supported{'target'} = "Live3D|WebFx";
-$supported{'frames'} = "Netscape|Mozilla|Internet Explorer|MSIE";
+# $VERSION="0.94";
+%supported = ( 'quote' => "Live3D|WorldView",
+	      'target' => "Live3D|WorldView",
+	      'navinfo' => "Live3D",		# not WorldView & CosmoPlayer
+	      'frames' => "Netscape|Mozilla|Internet Explorer|MSIE"
+);
 
 #--------------------------------------------------------------------
 
@@ -36,13 +38,13 @@ sub browser {
 #--------------------------------------------------------------------
 sub at {
     my $self = shift;
-    $self->transform(@_);
+    $self->transform_begin(@_);
     return $self;
 }
 
 sub back {
     my $self = shift;
-    $self->End();
+    $self->transform_end();
     return $self;
 }
 
@@ -68,6 +70,16 @@ sub group_end {
     my $self = shift;
     $self->End($_[0]);
     return $self;
+}
+
+sub collision_begin {
+    my $self = shift;
+    $self->VRML_row("CollideStyle { collide TRUE }\n");
+    return $self;
+}
+
+sub collision_end {
+    return shift;
 }
 
 sub anchor_begin {
@@ -138,6 +150,14 @@ sub info {
     return $self;
 }
 
+sub headlight {
+    my $self = shift;
+    return $self unless $self->{'browser'} =~ /$supported{'navinfo'}/i;
+    my ($headlight) = @_;
+    $headlight = defined $headlight && !$headlight ? "FALSE" : "TRUE";
+    $self->NavigationInfo($headlight);
+    return $self;
+}
 #--------------------------------------------------------------------
 
 sub cameras_begin {
@@ -357,12 +377,20 @@ sub sphere {
 
 sub text {
     my $self = shift;
-    my ($string, $appearance, $font) = @_;
+    my ($string, $appearance, $font, $align) = @_;
     my $quote = $self->{'browser'} =~ /$supported{'quote'}/i ? '\\"' : "'";
     $string =~ s/"/$quote/g if defined $string;
     $self->Group->appearance($appearance) if $appearance || $font;
-    $self->FontStyle(split(/\s+/,$font)) if $font;
-    $self->AsciiText($string, undef, "CENTER");
+    if (defined $font) {
+	my ($size, $style, $family) = split(/\s+/,$font,3);
+        $self->FontStyle($size, $style, $family);
+    }
+    if (defined $align) {
+	$align =~ s/BEGIN/LEFT/i;
+	$align =~ s/MIDDLE/CENTER/i;
+	$align =~ s/END/RIGHT/i;
+    }
+    $self->AsciiText($string, undef, $align);
     $self->End if $appearance || $font;
     return $self;
 }
@@ -415,7 +443,7 @@ sub appearance {
 
 #--------------------------------------------------------------------
 
-sub transform {
+sub transform_begin {
     my $self = shift;
     return $self->Separator unless @_;
     my ($transform_list) = @_;
@@ -551,7 +579,7 @@ Following methods are currently implemented.
 =item *
 at('type=value ; ...')
 
-parameter see C<transform>
+parameter see C<transform_begin>
 
 =item *
 back
@@ -618,7 +646,7 @@ sphere('radius_x [radius_y radius_z]','appearance')
 text('string','appearance','size style family')
 
 =item *
-transform('type=value ; ...')
+transform_begin('type=value ; ...')
 
 I<Where type can be:>
 
@@ -627,6 +655,9 @@ I<Where type can be:>
 	c = center
 	o = scaleOrientation
 	f = scaleFactor
+
+=item *
+transform_end
 
 =item *
 appearance('type=value1,value2 ; ...')

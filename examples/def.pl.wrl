@@ -1,6 +1,6 @@
 #VRML V1.0 ascii
 
-Separator {
+Group {
 	DEF Cameras Switch {
 		whichChild 0
 		DEF Front PerspectiveCamera {

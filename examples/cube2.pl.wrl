@@ -1,32 +1,32 @@
 #VRML V2.0 utf8
 
 Viewpoint {
-	description	Front
+	description	"Front"
 	position	0 0 20
 	orientation	0 0 1 0
 }
 Viewpoint {
-	description	Right
+	description	"Right"
 	position	20 0 0
 	orientation	0 1 0 1.5707963
 }
 Viewpoint {
-	description	Back
+	description	"Back"
 	position	0 0 -20
 	orientation	0 1 0 3.1415926
 }
 Viewpoint {
-	description	Left
+	description	"Left"
 	position	-20 0 0
 	orientation	0 1 0 -1.5707963
 }
 Viewpoint {
-	description	Top
+	description	"Top"
 	position	0 20 0
 	orientation	1 0 0 -1.5707963
 }
 Viewpoint {
-	description	Bottom
+	description	"Bottom"
 	position	0 -20 0
 	orientation	1 0 0 1.5707963
 }
@@ -37,7 +37,7 @@ Transform {
 	Shape {
 		appearance Appearance {
 			material Material {
-				diffuseColor	geen
+				diffuseColor	0 0.501960784313725 0	# green
 			}
 		}
 		geometry Box {
@@ -45,7 +45,7 @@ Transform {
 		}
 	}
     ]
-}
+} # Transform
 Transform {
     translation	0 -8 0
     children [
@@ -60,25 +60,27 @@ Transform {
 		}
 	}
     ]
-}
+} # Transform
 Transform {
     translation	0 -8 4
     children [
-	Appearance {
-		material Material {
-			diffuseColor	1 1 1	# white
+	Shape {
+		appearance Appearance {
+			material Material {
+				diffuseColor	1 1 1	# white
+			}
 		}
-	}
-	Text {
-		string "Hallo world"
-		fontStyle FontStyle {
-			size 10
-			style BOLD
-			family SERIF
+		geometry Text {
+			string "Hallo world"
+			fontStyle FontStyle {
+				size 10
+				style BOLD
+				family SERIF
+			}
 		}
 	}
     ]
-}
+} # Transform
 Group { # line("0 -8 0", "0 3 -10", "0.3", "yellow")
     children [
 	DEF Line-Material

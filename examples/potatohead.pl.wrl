@@ -1,45 +1,45 @@
 #VRML V2.0 utf8
 
 # Set Browser to: 'Live3d'
-WorldInfo {
-	title	"Potato Head"
-}
 Background {
 	groundColor	1 0 0
 	skyColor	0.67843137254902 0.847058823529412 0.901960784313726
 }
+WorldInfo {
+	title	"Potato Head"
+}
 Viewpoint {
-	description	Front
+	description	"Front"
 	position	0 -5.25 15.125
 	orientation	0 0 1 0
 	fieldOfView	1.04719753333333
 }
 Viewpoint {
-	description	Right
+	description	"Right"
 	position	13.875 -5.25 1.25
 	orientation	0 1 0 1.5707963
 	fieldOfView	1.04719753333333
 }
 Viewpoint {
-	description	Back
+	description	"Back"
 	position	0 -5.25 -12.625
 	orientation	0 1 0 3.1415926
 	fieldOfView	1.04719753333333
 }
 Viewpoint {
-	description	Left
+	description	"Left"
 	position	-13.875 -5.25 1.25
 	orientation	0 1 0 -1.5707963
 	fieldOfView	1.04719753333333
 }
 Viewpoint {
-	description	Top
+	description	"Top"
 	position	0 8.625 1.25
 	orientation	1 0 0 -1.5707963
 	fieldOfView	1.04719753333333
 }
 Viewpoint {
-	description	Bottom
+	description	"Bottom"
 	position	0 -19.125 1.25
 	orientation	1 0 0 1.5707963
 	fieldOfView	1.04719753333333
@@ -67,7 +67,7 @@ Transform {
 			}
 		}
 	    ]
-	}
+	} # Transform
 	Transform {
 	    translation	0 4 0
 	    children [
@@ -83,12 +83,12 @@ Transform {
 			}
 		}
 	    ]
-	}
+	} # Transform
 	Transform {
 	    translation	-1 1 1
 	    children [
 		DEF eye
-		Transform {
+		Group {
 		    children [
 			Shape {
 				appearance Appearance {
@@ -114,17 +114,17 @@ Transform {
 					}
 				}
 			    ]
-			}
+			} # Transform
 		    ]
 		}
 	    ]
-	}
+	} # Transform
 	Transform {
 	    translation	1 1 1
 	    children [
 		USE eye
 	    ]
-	}
+	} # Transform
 	Transform {
 	    translation	0 -0.3 2.5
 	    rotation	1 0 0 1.5707963
@@ -141,7 +141,7 @@ Transform {
 			}
 		}
 	    ]
-	}
+	} # Transform
 	Transform {
 	    translation	0 -.4 0.7
 	    rotation	1 0 0 1.39626337777778
@@ -158,9 +158,9 @@ Transform {
 			}
 		}
 	    ]
-	}
+	} # Transform
     ]
-}
+} # Transform
 Transform {
     translation	0 -3 0
     children [
@@ -176,7 +176,7 @@ Transform {
 		}
 	}
     ]
-}
+} # Transform
 Transform {
     translation	0 -6.5 0
     children [
@@ -193,7 +193,7 @@ Transform {
 		}
 	}
     ]
-}
+} # Transform
 DEF ARM
 Transform {
     translation	0 -5.5 0
@@ -215,16 +215,16 @@ Transform {
 			}
 		}
 	    ]
-	}
+	} # Transform
     ]
-}
+} # Transform
 Transform {
     translation	4 -3.5 0
     rotation	0 0 1 -1
     children [
 	USE arm
     ]
-}
+} # Transform
 Transform {
     translation	1.2 -12 0
     children [
@@ -241,13 +241,13 @@ Transform {
 		}
 	}
     ]
-}
+} # Transform
 Transform {
     translation	-1.2 -12 0
     children [
 	USE leg
     ]
-}
+} # Transform
 Transform {
     translation	1.2 -14.5 0.3
     children [
@@ -263,13 +263,13 @@ Transform {
 		}
 	}
     ]
-}
+} # Transform
 Transform {
     translation	-1.2 -14.5 0.3
     children [
 	USE shoe
     ]
-}
+} # Transform
 Sound {
 	direction	0 0 -1
 	maxFront	100

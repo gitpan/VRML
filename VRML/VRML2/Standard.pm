@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML2::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.92";
+# $VERSION = "0.94";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME
@@ -60,7 +60,7 @@ sub Anchor {
     my ($url, $description, $parameter, $bboxSize, $bboxCenter) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."Anchor {\n";
-    $vrml .= $self->{'TAB'}."    url	$url\n";
+    $vrml .= $self->{'TAB'}."    url	\"$url\"\n";
     $vrml .= $self->{'TAB'}."    description	\"$description\"\n" if defined $description;
     $vrml .= $self->{'TAB'}."    parameter	\"$parameter\"\n" if $parameter;
     $vrml .= $self->{'TAB'}."    bboxSize	$bboxSize\n" if $bboxSize;
@@ -155,7 +155,7 @@ sub Inline {
     my $vrml = "";
     my ($url, $bboxSize, $bboxCenter) = @_;
     $vrml = $self->{'TAB'}."Inline {\n";
-    $vrml .= $self->{'TAB'}."	url	$url\n";
+    $vrml .= $self->{'TAB'}."	url	\"$url\"\n";
     $vrml .= $self->{'TAB'}."	bboxSize $bboxSize\n" if $bboxSize;
     $vrml .= $self->{'TAB'}."	bboxCenter $bboxCenter\n" if $bboxCenter;
     $vrml .= $self->{'TAB'}."}\n";
@@ -843,7 +843,7 @@ sub Appearance {
 
 =item Fontstyle
 
-C<FontStyle($size, $style, $family)>
+C<FontStyle($size, $style, $family, $justify)>
 defines the current font style for all subsequent C<Text> Nodes
 
 
@@ -851,16 +851,19 @@ $style can be 'NONE','BOLD','ITALIC'
 
 $familiy can be 'SERIF','SANS','TYPEWRITER'
 
+$justify can be 'BEGIN', 'MIDDLE', 'END'
+
 =cut
 
 sub FontStyle {
     my $self = shift;
-    my ($size, $style, $family) = @_;
+    my ($size, $style, $family, $justify) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."FontStyle {\n";
     $vrml .= $self->{'TAB'}."	size $size\n" if $size;
     $vrml .= $self->{'TAB'}."	style $style\n" if $style;
     $vrml .= $self->{'TAB'}."	family $family\n" if $family;
+    $vrml .= $self->{'TAB'}."	justify \"$justify\"\n" if $justify;
     $vrml .= $self->{'TAB'}."}\n";
     push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
@@ -899,7 +902,7 @@ sub ImageTexture {
     my ($url, $repeatS, $repeatT) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."ImageTexture {\n";
-    $vrml .= $self->{'TAB'}."	url	$url\n";
+    $vrml .= $self->{'TAB'}."	url	\"$url\"\n";
     $vrml .= $self->{'TAB'}."	repeatS	FALSE\n" if defined $repeatS && !$repeatS;
     $vrml .= $self->{'TAB'}."	repeatT	FALSE\n" if defined $repeatT && !$repeatT;
     $vrml .= $self->{'TAB'}."}\n";
@@ -919,7 +922,7 @@ sub MovieTexture {
     my ($url, $loop, $startTime, $stopTime, $repeatS, $repeatT) = @_;
     my $vrml = "";
     $vrml = $self->{'TAB'}."MovieTexture {\n";
-    $vrml .= $self->{'TAB'}."	url	$url\n";
+    $vrml .= $self->{'TAB'}."	url	\"$url\"\n";
     $vrml .= $self->{'TAB'}."	loop	TRUE\n" if defined $loop && $loop;
     $vrml .= $self->{'TAB'}."	startTime	$startTime\n" if $startTime;
     $vrml .= $self->{'TAB'}."	stopTime	$stopTime\n" if $stopTime;
@@ -1065,16 +1068,19 @@ sub Background {
     my $self = shift;
     my ($backUrl, $bottomUrl, $topUrl, $leftUrl, $rightUrl, $frontUrl, $groundColor, $skyColor, $groundAngle, $skyAngle) = @_;
     my $vrml = "";
-    $vrml = $self->{'TAB_VIEW'}."Background {\n";
-    $vrml .= $self->{'TAB_VIEW'}."	backUrl	$backUrl\n" if $backUrl;
-    $vrml .= $self->{'TAB_VIEW'}."	bottomUrl	$bottomUrl\n" if $bottomUrl;
-    $vrml .= $self->{'TAB_VIEW'}."	topUrl	$topUrl\n" if $topUrl;
-    $vrml .= $self->{'TAB_VIEW'}."	groundColor	$groundColor\n" if $groundColor;
-    $vrml .= $self->{'TAB_VIEW'}."	groundAngle	$groundAngle\n" if $groundAngle;
-    $vrml .= $self->{'TAB_VIEW'}."	skyColor	$skyColor\n" if $skyColor;
-    $vrml .= $self->{'TAB_VIEW'}."	skyAngle	$skyAngle\n" if $skyAngle;
-    $vrml .= $self->{'TAB_VIEW'}."}\n";
-    push @{$self->{'VIEW'}}, $vrml;
+    $vrml = $self->{'TAB'}."Background {\n";
+    $vrml .= $self->{'TAB'}."	backUrl	\"$backUrl\"\n" if $backUrl;
+    $vrml .= $self->{'TAB'}."	bottomUrl	\"$bottomUrl\"\n" if $bottomUrl;
+    $vrml .= $self->{'TAB'}."	topUrl	\"$topUrl\"\n" if $topUrl;
+    $vrml .= $self->{'TAB'}."	leftUrl	\"$leftUrl\"\n" if $leftUrl;
+    $vrml .= $self->{'TAB'}."	rightUrl	\"$rightUrl\"\n" if $rightUrl;
+    $vrml .= $self->{'TAB'}."	frontUrl	\"$frontUrl\"\n" if $frontUrl;
+    $vrml .= $self->{'TAB'}."	groundColor	$groundColor\n" if $groundColor;
+    $vrml .= $self->{'TAB'}."	groundAngle	$groundAngle\n" if $groundAngle;
+    $vrml .= $self->{'TAB'}."	skyColor	$skyColor\n" if $skyColor;
+    $vrml .= $self->{'TAB'}."	skyAngle	$skyAngle\n" if $skyAngle;
+    $vrml .= $self->{'TAB'}."}\n";
+    push @{$self->{'VRML'}}, $vrml;
     return $self if $self->{'SELF'};
     return $vrml;
 }
@@ -1134,6 +1140,38 @@ sub Viewpoint {
 =cut
 
 #--------------------------------------------------------------------
+
+=item USE
+
+C<USE($name)>
+
+=cut
+
+sub USE {
+    my $self = shift;
+    my ($name) = @_;
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."USE $name\n";
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item DEF
+
+C<DEF($name)>
+
+=cut
+
+sub DEF {
+    my $self = shift;
+    my ($name) = @_;
+    my $vrml = $self->{'TAB'}."DEF $name\n";
+    push @{$self->{'VRML'}}, $vrml;
+    $self->{'DEF'}{$name} = $#{$self->{'VRML'}};
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
 
 =item ROUTE
 

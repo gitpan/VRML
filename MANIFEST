@@ -1,3 +1,4 @@
+CHANGES
 MANIFEST
 Makefile.PL
 README
@@ -20,8 +21,10 @@ doc/VRML2/Standard.pm.html
 doc/XColor.txt
 doc/demo.gif
 examples/camera.pl
-examples/cube.pl
-examples/cube.pl.wrl
+examples/cube1.pl
+examples/cube1.pl.wrl
+examples/cube2.pl
+examples/cube2.pl.wrl
 examples/def.pl
 examples/def.pl.wrl
 examples/hallo.wav
@@ -34,5 +37,6 @@ examples/std2pyramide.pl
 examples/std2pyramide.pl.wrl
 examples/vrml_print.pl
 examples/vrml_string.pl
-t/01_shapes.t
-t/02_chain.t
+t/chain.t
+t/vrml1_shapes.t
+t/vrml2_shapes.t

@@ -5,7 +5,7 @@ use strict;
 require VRML::Basic;
 @VRML::VRML1::Standard::ISA = qw(VRML::Basic);
 
-# $VERSION = "0.92";
+# $VERSION = "0.94";
 $::debug = 0 unless defined $::debug;
 
 =head1 NAME
@@ -954,6 +954,38 @@ sub End {
     push @{$self->{'VRML'}}, $vrml;
     shift @{$self->{'XYZ'}};
     $self->VRML_put("# End ".join(', ',@{$self->{'XYZ'}[0]})."\n") if $::debug == 1;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item USE
+
+C<USE($name)>
+
+=cut
+
+sub USE {
+    my $self = shift;
+    my ($name) = @_;
+    my $vrml = "";
+    $vrml = $self->{'TAB'}."USE $name\n";
+    push @{$self->{'VRML'}}, $vrml;
+    return $self if $self->{'SELF'};
+    return $vrml;
+}
+
+=item DEF
+
+C<DEF($name)>
+
+=cut
+
+sub DEF {
+    my $self = shift;
+    my ($name) = @_;
+    my $vrml = $self->{'TAB'}."DEF $name\n";
+    push @{$self->{'VRML'}}, $vrml;
+    $self->{'DEF'}{$name} = $#{$self->{'VRML'}};
     return $self if $self->{'SELF'};
     return $vrml;
 }
