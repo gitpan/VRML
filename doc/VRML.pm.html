@@ -1,0 +1,67 @@
+<!-- $Id$ -->
+<HTML><HEAD>
+<CENTER><TITLE>VRML.pm</TITLE>
+</HEAD>
+<BODY></CENTER><p><hr>
+
+<H1> 
+<A NAME="VRML.pm_name_0">
+NAME</A>
+</H1>
+VRML.pm - implements VRML primitives and extensions
+<p><p><hr>
+
+<H1> 
+<A NAME="VRML.pm_synopsis_0">
+SYNOPSIS</A>
+</H1>
+
+<XMP>
+  use VRML;
+  $vrml = new VRML (1.0);
+  $vrml->browser('Live3D');
+  $vrml->cube('5 3 1','-50 -10 0','yellow');
+  $vrml->print;
+  
+  OR with the same result
+  
+  use VRML;
+  VRML
+  ->version(1.0)
+  ->browser('Live3D')
+  ->cube('5 3 1','-50 -10 0','yellow')
+  ->print;
+
+</XMP>
+<p><p><hr>
+
+<H1> 
+<A NAME="VRML.pm_description_0">
+DESCRIPTION</A>
+</H1>
+<p>
+<UL>
+<LI><STRONG>$VRML::content_type</STRONG>; # for CGI scripts only
+<p>content_type is <CODE>'x-world/x-vrml'</CODE> for VRML 1.0 and 1.1
+<p>or <CODE>'model/vrml'</CODE> for VRML 2.0
+<p>
+</UL>
+.
+<p><p><hr>
+
+<H1> 
+<A NAME="VRML.pm_see_0">
+SEE ALSO</A>
+</H1>
+VRML::VRML1
+<p>VRML::VRML1::Standard
+<p><p><hr>
+
+<H1> 
+<A NAME="VRML.pm_author_0">
+AUTHOR</A>
+</H1>
+Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>
+</BODY>
+</HTML>

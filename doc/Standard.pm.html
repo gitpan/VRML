@@ -1,0 +1,567 @@
+<!-- $Id$ -->
+<HTML><HEAD>
+<CENTER><TITLE>Standard.pm</TITLE>
+</HEAD>
+<BODY></CENTER><p><hr>
+
+<H1> 
+<A NAME="Standard.pm_name_0">
+NAME</A>
+</H1>
+VRML::VRML1::Standard.pm - implements nodes the VRML 1.x standard
+<p><p><hr>
+
+<H1> 
+<A NAME="Standard.pm_synopsis_0">
+SYNOPSIS</A>
+</H1>
+
+<XMP>
+    use VRML::VRML1::Standard;
+
+</XMP>
+<p><p><hr>
+
+<H1> 
+<A NAME="Standard.pm_description_0">
+DESCRIPTION</A>
+</H1>
+Following nodes are currently implemented.
+<p>[
+<A HREF="Standard.pm.html#Standard.pm_group_0">Group Nodes</A>
+] 
+[
+<A HREF="Standard.pm.html#Standard.pm_geometry_0">Geometry Nodes</A>
+] 
+[
+<A HREF="Standard.pm.html#Standard.pm_property_0">Property Nodes</A>
+]
+<p>[
+<A HREF="Standard.pm.html#Standard.pm_appearance_0">Appearance Nodes</A>
+] 
+[
+<A HREF="Standard.pm.html#Standard.pm_transform_0">Transform Nodes</A>
+] 
+[
+<A HREF="Standard.pm.html#Standard.pm_common_0">Common Nodes</A>
+] 
+<p>
+<H2> 
+<A NAME="Standard.pm_group_0">
+Group Nodes</A>
+</H2>
+These nodes NEED 
+<A HREF="Standard.pm.html#Standard.pm_end_0">End</A>
+ !
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_separator_0">
+Separator</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_separator_0">Separator(<STRONG>$comment</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_switch_0">
+Switch</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_switch_0">Switch(<STRONG>$comment</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_group_1">
+Group</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_group_1">Group(<STRONG>$comment</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_wwwanchor_0">
+WWWAnchor</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_wwwanchor_0">WWWAnchor(<STRONG>$url</STRONG>, <STRONG>$description</STRONG>, <STRONG>$target</STRONG>)</A>
+
+<p><STRONG>$target</STRONG> works only with <EM>Live3D</EM>
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_lod_0">
+LOD</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD(<STRONG>$range</STRONG>, <STRONG>$center</STRONG>)</A>
+
+<p><STRONG>$range</STRONG> is a string with comma separated values
+<p>example: 
+<A HREF="Standard.pm.html#Standard.pm_lod_0">LOD('1, 2, 5', '0 0 0')</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_spingroup_0">
+SpinGroup</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_spingroup_0">SpinGroup(<STRONG>$axis</STRONG>, <STRONG>$radians</STRONG>)</A>
+ is supported only be <EM>Live3D</EM>
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_geometry_0">
+Geometry Nodes</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_asciitext_0">
+AsciiText</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_asciitext_0">AsciiText(<STRONG>$string</STRONG>, <STRONG>$width</STRONG>, <STRONG>$justification</STRONG>, <STRONG>$spacing</STRONG>)</A>
+
+<p><STRONG>$justification</STRONG> is a string ('LEFT','CENTER','RIGHT')
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_cone_0">
+Cone</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_cone_0">Cone(<STRONG>$radius</STRONG>, <STRONG>$height</STRONG>, <STRONG>@parts</STRONG>)</A>
+
+<p><STRONG>@parts</STRONG> is a list of strings ('SIDES', 'BOTTOM', 'ALL')
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_cube_0">
+Cube</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_cube_0">Cube(<STRONG>$width</STRONG>, <STRONG>$height</STRONG>, <STRONG>$depth</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_cylinder_0">
+Cylinder</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_cylinder_0">Cylinder(<STRONG>$height</STRONG>, <STRONG>$radius</STRONG>, <STRONG>@parts</STRONG>)</A>
+
+<p><STRONG>@parts</STRONG> is a list of strings ('SIDES', 'TOP', 'BOTTOM', 'ALL')
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_indexedfaceset_0">
+IndexedFaceSet</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_indexedfaceset_0">IndexedFaceSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$materialIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$textureCoordIndex_ref</STRONG>)</A>
+
+<p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
+like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
+<p><STRONG>$materialIndex_ref</STRONG> is a reference of a list of materials
+<p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
+<p><STRONG>$textureCoordIndex_ref</STRONG> is a reference of a list of textures
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_indexedlineset_0">
+IndexedLineSet</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_indexedlineset_0">IndexedLineSet(<STRONG>$coordIndex_ref</STRONG>, <STRONG>$materialIndex_ref</STRONG>, <STRONG>$normalIndex_ref</STRONG>, <STRONG>$textureCoordIndex_ref</STRONG>)</A>
+
+<p><STRONG>$coordIndex_ref</STRONG> is a reference of a list of point index strings
+like <CODE>'0 1 3 2', '2 3 5 4', ...</CODE>
+<p><STRONG>$materialIndex_ref</STRONG> is a reference of a list of materials
+<p><STRONG>$normalIndex_ref</STRONG> is a reference of a list of normals
+<p><STRONG>$textureCoordIndex_ref</STRONG> is a reference of a list of textures
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_pointset_0">
+PointSet</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_pointset_0">PointSet(<STRONG>$numPoints</STRONG>, <STRONG>$startIndex</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_sphere_0">
+Sphere</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_sphere_0">Sphere(<STRONG>$radius</STRONG>)</A>
+
+<p><STRONG>$radius</STRONG> have to be &gt; 0
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_property_0">
+Property Nodes</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_coordinate_0">
+Coordinate3</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_coordinate_0">Coordinate3(<STRONG>@points</STRONG>)</A>
+
+<p><STRONG>@points</STRONG> is a list of points with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_fontstyle_0">
+Fontstyle</A>
+
+</STRONG>
+<DD>
+<CODE>FontStyle(<STRONG>$size</STRONG>, <STRONG>$style</STRONG>, <STRONG>$family</STRONG>)</CODE>
+defines the current font style for all subsequent 
+<A HREF="Standard.pm.html#Standard.pm_asciitext_0">AsciiText</A>
+
+<p><STRONG>$style</STRONG> can be 'NONE','BOLD','ITALIC'
+<p><STRONG>$familiy</STRONG> can be 'SERIF','SANS','TYPEWRITER'
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_appearance_0">
+Appearance Nodes</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_material_0">
+Material</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_material_0">Material(<STRONG>%materials</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_materialbinding_0">
+MaterialBinding</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_materialbinding_0">MaterialBinding(<STRONG>$value</STRONG>)</A>
+
+<p><STRONG>$value</STRONG> can be
+<p><UL><LI>    DEFAULT	Use default bindng</LI>
+<LI>    OVERALL	Whole object has same material</LI>
+<LI>    PER_PART	One material for each part of object</LI>
+<LI>    PER_PART_INDEXED	One material for each part, indexed</LI>
+<LI>    PER_FACE	One material for each face of object</LI>
+<LI>    PER_FACE_INDEXED	One material for each face, indexed</LI>
+<LI>    PER_VERTEX	One material for each vertex of object</LI>
+<LI>    PER_VERTEX_INDEXED	One material for each vertex, indexed</LI>
+</UL>
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_normal_0">
+Normal</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_normal_0">Normal(<STRONG>@vector</STRONG>)</A>
+
+<p><STRONG>@vector</STRONG> is a list of vectors with strings like <CODE>'1.0 0.0 0.0', '-1 2 0'</CODE>
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_normalbinding_0">
+NormalBinding</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_normalbinding_0">NormalBinding(<STRONG>$value</STRONG>)</A>
+
+<p><STRONG>$value</STRONG> is the same as 
+<A HREF="Standard.pm.html#Standard.pm_materialbinding_0">MaterialBinding</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_texture_0">
+Texture2</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_texture_0">Texture2(<STRONG>$value</STRONG>)</A>
+
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_transform_0">
+Transform Nodes</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_transform_1">
+Transform</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform(<STRONG>$translation</STRONG>, <STRONG>$rotation</STRONG>, <STRONG>$scaleFactor</STRONG>, <STRONG>$scaleOrientation</STRONG>, <STRONG>$center</STRONG>)</A>
+
+<p><STRONG>$translation</STRONG> is a string like ``0 1 -2''
+<p><STRONG>$rotation</STRONG> is a string like ``0 0 1 1.57''
+<p><STRONG>$scaleFactor</STRONG> is a string like ``1 1 1''
+<p><STRONG>$scaleOrientation</STRONG> is a string like ``0 0 1 0''
+<p><STRONG>$center</STRONG> is a string like ``0 0 0''
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_rotation_0">
+Rotation</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_rotation_0">Rotation(<STRONG>$rotation</STRONG>)</A>
+
+<p><STRONG>$rotation</STRONG> is a string like ``0 0 1 1.57''
+<p>This node is not supported under VRML 2.0
+<p><EM>use</EM> 
+<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_scale_0">
+Scale</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_scale_0">Scale(<STRONG>$scaleFactor</STRONG>)</A>
+
+<p><STRONG>$scaleFactor</STRONG> is a string like ``1 1 1''
+<p>This node is not supported under VRML 2.0
+<p><EM>use</EM> 
+<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_translation_0">
+Translation</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_translation_0">Translation(<STRONG>$translation</STRONG>)</A>
+
+<p><STRONG>$translation</STRONG> is a string like ``0 1 -2''
+<p>This node is not supported under VRML 2.0
+<p><EM>use</EM> 
+<A HREF="Standard.pm.html#Standard.pm_transform_1">Transform</A>
+
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_common_0">
+Common Nodes</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_perspectivecamera_0">
+PerspectiveCamera</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_perspectivecamera_0">PerspectiveCamera(<STRONG>$position</STRONG>, <STRONG>$orientation</STRONG>, <STRONG>$heightAngle</STRONG>, <STRONG>$focalDistance</STRONG>, <STRONG>$nearDistance</STRONG>, <STRONG>$farDistance</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_orthographiccamera_0">
+OrthographicCamera</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_orthographiccamera_0">OrthographicCamera(<STRONG>$position</STRONG>, <STRONG>$orientation</STRONG>, <STRONG>$height</STRONG>, <STRONG>$focalDistance</STRONG>, <STRONG>$nearDistance</STRONG>, <STRONG>$farDistance</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_directionallight_0">
+DirectionalLight</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_directionallight_0">DirectionalLight(<STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$ambientIntensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_pointlight_0">
+PointLight</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_pointlight_0">PointLight(<STRONG>$location</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_spotlight_0">
+SpotLight</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_spotlight_0">SpotLight(<STRONG>$location</STRONG>, <STRONG>$direction</STRONG>, <STRONG>$intensity</STRONG>, <STRONG>$color</STRONG>, <STRONG>$on</STRONG>)</A>
+
+<p>
+</DL>
+.
+<p>
+<H2> 
+<A NAME="Standard.pm_other_0">
+other</A>
+</H2>
+<p>
+<DL COMPACT>
+<DT><STRONG>
+
+<A NAME="Standard.pm_wwwinline_0">
+WWWInline</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_wwwinline_0">WWWInline(<STRONG>$name</STRONG>, <STRONG>$bboxSize</STRONG>, <STRONG>$bboxCenter</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_info_0">
+Info</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_info_0">Info(<STRONG>$string</STRONG>, <STRONG>$comment</STRONG>)</A>
+
+<p><STRONG>$comment</STRONG> is optional
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_def_0">
+DEF</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_def_0">DEF(<STRONG>$name</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_use_0">
+USE</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_use_0">USE(<STRONG>$name</STRONG>)</A>
+
+<p>
+<DT><STRONG>
+
+<A NAME="Standard.pm_end_0">
+End</A>
+
+</STRONG>
+<DD>
+
+<A HREF="Standard.pm.html#Standard.pm_end_0">End(<STRONG>$comment</STRONG>)</A>
+
+<p><STRONG>$comment</STRONG> is optional
+<p>
+</DL>
+.
+<p><p><hr>
+
+<H1> 
+<A NAME="Standard.pm_author_0">
+AUTHOR</A>
+</H1>
+Hartmut Palm <EM>&lt;<A HREF="MAILTO:palm@gfz-potsdam.de">palm@gfz-potsdam.de</A>&gt;</EM>
+<p>
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<!-- $Id$ -->
+<HTML><HEAD>
+<CENTER><TITLE>VRML1.pm</TITLE>
+</HEAD>
+<BODY></CENTER><p><hr>
+
+<H1> 
+<A NAME="VRML1.pm_name_0">
+NAME</A>
+</H1>
+VRML::VRML1.pm - implements VRML methods with the VRML 1.x standard
+<p><p><hr>
+
+<H1> 
+<A NAME="VRML1.pm_synopsis_0">
+SYNOPSIS</A>
+</H1>
+
+<XMP>
+    use VRML::VRML1;
+
+</XMP>
+<p><p><hr>
+
+<H1> 
+<A NAME="VRML1.pm_description_0">
+DESCRIPTION</A>
+</H1>
+Following functions are currently implemented. 
+<p>
+<UL>
+<LI>begin(['comment']);
+<CODE>  . . . </CODE>
+<p>
+<LI>end(['comment']);
+<p>
+<LI>backgroundcolor('color');
+<p>
+<LI>backgroundimage('URL');
+<p>
+<LI>info('string');
+<p>
+<LI>cameras_begin('whichCameraNumber');
+<p>
+<LI>camera_set('positionXYZ','orientationXYZ',heightAngle); // persp. cameras
+<p>
+<LI>camera('positionXYZ','orientationXYZ',heightAngle); // persp. camera
+<p>
+<LI>anchor_begin('URL','description','parameter');
+<p>
+<LI>spin_begin('axisXYZ','degree'); // Live3D only
+<p>
+<LI>text('string','transformation','material','size style family');
+<p>
+<LI>cube('width [height [depth]]','transformation','material');
+<p>
+<LI>cylinder('radius [height]','transformation','material');
+<p>
+<LI>tube('radius height','transformation','material');
+<p>
+<LI>disk(radius,'transformation','material');
+<p>
+<LI>cone('radius height','transformation','material');
+<p>
+<LI>sphere('radius_x [radius_y radius_z]','transformation','material');
+<p>
+<LI>line('fromXYZ','toXYZ',radius,'material','[x][y][z]');
+<p>
+<LI>transform('type=value ; ...');
+<p><EM>Where type can be:</EM>
+<p>
+<XMP>
+        t = translation
+        r = rotation
+        c = center
+        o = scaleOrientation
+        f = scaleFactor
+
+</XMP>
+<p>
+<LI>material('type=value1,value2 ; ...');
+<p><EM>Where type can be:</EM>
+<p>
+<XMP>
+        a = ambientColor
+        d = diffuseColor
+        e = emissiveColor
+        s = specularColor
+        sh = shininess
+        tr = transparency
+        tex = texture filename[,wrapS[,wrapT]]
+
+</XMP>
+<p><EM>and color values see VRML::Color</EM>
+<p>
+</UL>
+.
+<p>
+</BODY>
+</HTML>
