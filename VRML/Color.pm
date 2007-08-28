@@ -25,7 +25,7 @@ use strict;
 use vars qw(@ISA @EXPORT $VERSION %X11Color);
 @ISA = qw(Exporter);
 @EXPORT = qw(rgb_color);
-$VERSION="1.03";
+$VERSION="1.03de";
 
 sub rgb_color {
     my ($string,$colorspace) = @_;
@@ -229,7 +229,7 @@ __END__
 
 =head1 NAME
 
-Color.pm - color functions and X11 color names
+Color.pm - Farben und Konvertierungsfunktionen
 
 =head1 SYNOPSIS
 
@@ -237,22 +237,22 @@ Color.pm - color functions and X11 color names
 
     my $color = rgb_color('red');
 
-      or with the same result
+      ODER mit dem gleichen Ergebnis
 
     my $color = rgb_color('FF0000');
 
-      or with the same result
+      ODER mit dem gleichen Ergebnis
 
     my $color = rgb_color('255 0 0');
 
-      naturally works
+      Natürlich geht auch
 
     my $color = rgb_color('1 0 0');
 
 =head1 DESCRIPTION
 
 
-I<X11 colornames are:>
+I<X11 Farbnamen:>
 
 	aliceblue
 	antiquewhite
@@ -395,7 +395,8 @@ I<X11 colornames are:>
 	yellow
 	yellowgreen
 
-You can also use
+Es können auch prozentuale Anteile einer Farbe angeben werden (Trennzeichen
+_ oder %).
 
 	red_40 = '0.4 0 0'
 	yellow%30 = '0.3 0.3 0'
@@ -403,12 +404,14 @@ You can also use
 
 =head1 BUGS
 
-X11-green is 0x008000. In VRML it should be 0x00FF00.
-This module will set 'green' to '0 1 0' instead of '0 0.5 0'.
+Grün wird in X11 durch den Wert 0x008000 dargestellt. Für VRML ist jedoch
+0x00FF00 besser geeignet. Deshalb wird in diesem Modul für 'green' der
+Wert '0 1 0' generiert anstatt '0 0.5 0'.
 
 =head1 SEE ALSO
 
-http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of F<VRML-modules> and how to obtain it.
+Siehe auch http://www.gfz-potsdam.de/~palm/vrmlperl/ für eine detailierte
+Beschreibung der F<VRML-Module> und wie man sie einsetzen kann.
 
 =head1 AUTHOR
 

@@ -27,7 +27,7 @@ use VRML::Base;
 use vars qw(@ISA $AUTOLOAD $VERSION %supported);
 @ISA = qw(VRML::VRML1::Standard);
 
-$VERSION = "1.10";
+$VERSION = "1.10de";
 %supported = ('quote' => "Live3D|WorldView|Cosmo Player",
  'L3D_ext' => "Live3D|Cosmo Player",    # not WorldView
  'gzip'   => "Live3D|WorldView|Cosmo Player|libcosmoplayer|VRweb|GLview",
@@ -712,7 +712,7 @@ __END__
 
 =head1 NAME
 
-VRML::VRML1.pm - VRML methods with the VRML 1.0 standard
+VRML::VRML1.pm - VRML Methoden für den VRML 1.0 Standard
 
 =head1 SYNOPSIS
 
@@ -726,7 +726,7 @@ VRML::VRML1.pm - VRML methods with the VRML 1.0 standard
   $vrml->print;
   $vrml->save;
 
-  OR with the same result
+  ODER mit dem gleichen Ergebnis
 
   use VRML::VRML1;
 
@@ -737,19 +737,23 @@ VRML::VRML1.pm - VRML methods with the VRML 1.0 standard
 
 =head1 DESCRIPTION
 
-The methods are identically implemented in VRML::VRML1 and VRML::VRML2. They
-described in modul VRML.
+Die Beschreibung der implementierten VRML-Methoden befindet sich in dem Modul
+VRML, die der Basis-Methoden im Modul VRML::Base.
 
 =head1 SEE ALSO
 
 VRML
 
+VRML::VRML1::Standard
+
 VRML::Base
 
-VRML::Color
+Siehe auch http://www.gfz-potsdam.de/~palm/vrmlperl/ für weitere
+Informationen zu den F<VRML-Modulen> und wie man sie einsetzen kann.
 
-http://www.gfz-potsdam.de/~palm/vrmlperl/ for a description of
-F<VRML-modules> and how to obtain it.
+=head1 BUGS
+
+Nicht alle Methoden wurden ausgiebig getestet.
 
 =head1 AUTHOR
 

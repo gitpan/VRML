@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>VRML - Specification independent VRML methods</title>
+<title>VRML - spezfikationsunabhängige VRML-Methoden</title>
 <link rev="made" href="mailto:" />
 </head>
 
@@ -15,18 +15,19 @@
 	<li><a href="#name">NAME</a></li>
 	<li><a href="#synopsis">SYNOPSIS</a></li>
 	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#description">DESCRIPTION</a></li>
 	<ul>
 
-		<li><a href="#groups">Groups</a></li>
-		<li><a href="#independent_methods">Independent Methods</a></li>
-		<li><a href="#shapes">Shapes</a></li>
-		<li><a href="#misc">Misc</a></li>
-		<li><a href="#interpolators">Interpolators</a></li>
-		<li><a href="#sensors">Sensors</a></li>
+		<li><a href="#gruppen">Gruppen</a></li>
+		<li><a href="#unabhängige_methoden">Unabhängige Methoden</a></li>
+		<li><a href="#geometrien">Geometrien</a></li>
+		<li><a href="#material___farbe">Material &amp; Farbe</a></li>
+		<li><a href="#interpolatoren">Interpolatoren</a></li>
+		<li><a href="#sensoren">Sensoren</a></li>
+		<li><a href="#sonstiges">Sonstiges</a></li>
 	</ul>
 
 	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#bugs">BUGS</a></li>
 	<li><a href="#author">AUTHOR</a></li>
 </ul>
 <!-- INDEX END -->
@@ -35,7 +36,7 @@
 <p>
 </p>
 <h1><a name="name">NAME</a></h1>
-<p>VRML - Specification independent VRML methods (1.0, 2.0, 97)</p>
+<p>VRML - spezfikationsunabhängige VRML-Methoden (1.0, 2.0, 97)</p>
 <p>
 </p>
 <hr />
@@ -51,7 +52,7 @@
   $vrml-&gt;print;
   $vrml-&gt;save;</pre>
 <pre>
-  OR with the same result</pre>
+  ODER mit dem gleichen Ergebnis</pre>
 <pre>
   use VRML;</pre>
 <pre>
@@ -63,51 +64,55 @@
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p>These modules were conceived for the production of VRML worlds on WWW servers
-via GCI and/or for generating abstract worlds. They are the clarity of Perl
-scripts with VRML code to increase and (hopefully) for VRML beginners the
-entrance in VRML facilitate. In the following the modules are described
-briefly.</p>
+<p>Diese Module wurden für die Erzeugung von VRML auf WWW-Servern über die
+CGI-Schnittestelle und/oder zum Generieren abstrakter Welten konzipiert. Sie
+sollen die Übersichtlichkeit von Perl-Skripten mit VRML-Code erhöhen und
+(hoffentlich) VRML-Anfängern den Einstieg in VRML erleichtern.
+Im folgenden werden die Module kurz beschrieben.</p>
 <dl>
 <dt><strong><a name="item_vrml_3a_3abase">VRML::Base</a></strong><br />
 </dt>
 <dd>
-contains base functionality such as a producing, an outputting and saving. It
-represents the base class for all other modules
+enthält die Basisfunktionalität wie Erzeugen, Ausgeben und Speichern. Es
+stellt die Basisklasse für alle anderen Module dar.
 </dd>
 <p></p>
 <dt><strong><a name="item_vrml_3a_3avrml1">VRML::VRML1</a></strong><br />
 </dt>
 <dd>
-combines several VRML 1.0 nodes into complex methods - e.g. geometric shapes
-inclusive there material. This module accepts angle data in degrees and as
-material color names. The methods have the same names as in the VRML
-specification (if meaningfully), are however in lower case.
+faßt mehrere VRML 1.0 Knoten zu komplexen Methoden zusammen - wie z.B.
+geometrische Körper inklusive Material. Dieses Modul akzeptiert Winkelangaben
+in Grad und als Material Farbnamen. Die Methoden haben die gleichen Namen wie
+in der VRML-Spezifikation (sofern sinnvoll), werden jedoch
+<em>kleingeschrieben</em>.
 </dd>
 <p></p>
 <dt><strong><a name="item_vrml_3a_3avrml1_3a_3astandard">VRML::VRML1::Standard</a></strong><br />
 </dt>
 <dd>
-implemented only the VRML 1.0 nodes. All method names are identical (in the
-way of writing) with those of the VRML specification. The parameters are
-arranged after the frequency of their use (subjective estimate). This module
-is possibly omitted in the next version. The production of the VRML nodes
-takes over then VRML::Base.
+realisiert nur die VRML 1.0 Knoten. Alle Methodennamen sind identisch (in der
+Schreibweise) mit denen der VRML-Spezifikation. Die Parameter sind nach der
+Häufigkeit ihrer Verwendung angeordnet. (subjektive Einschätzung)
+</dd>
+<dd>
+<p>Dieses Modul fällt möglicherweise in der nächsten Version weg. Die Erzeugung
+der VRML-Knoten übernimmt dann VRML::Base.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_vrml_3a_3avrml2">VRML::VRML2</a></strong><br />
 </dt>
 <dd>
-combines several VRML 2.0 nodes into complex methods - e.g. geometric shapes
-inclusive there material. This module accepts angle data in degrees and as
-material color names. The methods have the same names as in the VRML
-specification (if meaningfully), are however in lower case. The names are also
-as far as possible identical to those of the module VRML::VRML1. Thus the
-user between the VRML versions which can be produced can switch.
+faßt mehrere VRML 2.0 Knoten zu komplexen Methoden zusammen - wie z.B.
+geometrische Körper inklusive Material. Dieses Modul akzeptiert Winkelangaben
+in Grad und als Material Farbnamen. Die Methoden haben die gleichen Namen wie
+in der VRML-Spezifikation (sofern sinnvoll), werden jedoch
+<em>kleingeschrieben</em>. Die Namen sind auch weitestgehend identisch mit denen
+des Moduls VRML::VRML1. Dadurch kann der Nutzer zwischen den zu erzeugenden
+VRML-Versionen umschalten.
 </dd>
 <dd>
-<p>Contains for example $in{VRML} '1' or '2' (e.g. via CGI), then only the following
-line at the start of the Perl script must be inserted.</p>
+<p>Enthält beispielsweise <code>$in{VRML}</code> '1' oder '2' (z.B. über CGI), so muß
+nur die folgende Zeile am Anfang des Perl-Skripts eingefügt werden.</p>
 </dd>
 <dd>
 <pre>
@@ -117,39 +122,27 @@ line at the start of the Perl script must be inserted.</p>
 <dt><strong><a name="item_vrml_3a_3avrml2_3a_3astandard">VRML::VRML2::Standard</a></strong><br />
 </dt>
 <dd>
-implemented only the VRML 2.0 nodes. All method names are identical (in the
-way of writing) with those the VRML specification. The parameters are
-arranged after the frequency of their use (subjective estimate) This module
-is possibly omitted in the next version. The production of the VRML nodes
-takes over then VRML::Base.
+realisiert nur die VRML 2.0 Knoten. Alle Methodennamen sind identisch (in der
+Schreibweise) mit denen der VRML-Spezifikation. Die Parameter sind nach der
+Häufigkeit ihrer Verwendung angeordnet. (subjektive Einschätzung)
+</dd>
+<dd>
+<p>Dieses Modul fällt möglicherweise in der nächsten Version weg. Die Erzeugung
+der VRML-Knoten übernimmt dann VRML::Base.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_vrml_3a_3acolor">VRML::Color</a></strong><br />
 </dt>
 <dd>
-contains the color names and conversion functions.
+enthält die Farbnamen und Konvertierungsfunktionen.
 </dd>
 <p></p></dl>
-<p>The VRML methods are at present identically in the modules VRML::VRML1.pm and
-VRML::VRML2.pm implemented. The basic methods like <code>new</code>, <code>print</code>
-or <code>save</code> are in the module VRML::Base described.</p>
+<p>Die VRML-Methoden sind derzeit identisch in den Modulen VRML::VRML1.pm
+und VRML::VRML2.pm implementiert. Die Basis-Methoden wie <code>new</code>, <code>print</code>
+oder <code>save</code> sind im Modul VRML::Base beschrieben.</p>
 <p>
 </p>
-<hr />
-<h1><a name="description">DESCRIPTION</a></h1>
-<p>The methods of this module are easier to use than the VRML::*::Standard methods
-because the methods are on a higher level. For example you can use X11 color
-names and it's simple to apply textures to an object. All angles could be
-assigned in degrees.</p>
-<p>If a method does the same like its VRML pedant then it has the same name but in
-lowercase (e.g. box). The open part of a group method ends with a
-_begin (e.g. anchor_begin). The closing part ends with an _end (e.g.
-anchor_end). For a detailed description how the generated node works, take a
-look at the VRML 2.0 specification on VAG.</p>
-<p>Following methods are currently implemented. (Values in '...' must be strings!)</p>
-<p>
-</p>
-<h2><a name="groups">Groups</a></h2>
+<h2><a name="gruppen">Gruppen</a></h2>
 <dl>
 <dt><strong><a name="item_begin">begin</a></strong><br />
 </dt>
@@ -157,11 +150,14 @@ look at the VRML 2.0 specification on VAG.</p>
 <em>begin('comment')</em>
 </dd>
 <dd>
-<p>Before you use an geometry or transform method please call this method.
-It's necessary to calculate something at the end.</p>
+<p>Die Methoden <strong>begin</strong> und <strong>end</strong> stellen die äußere Klammer der VRML-Szene
+dar. Die Methode <strong>begin</strong> führt einige Initialisierungen und die Methode
+<strong>end</strong> abschließende Berechnungen durch. Jedes VRML-Skript sollte stets nach
+dem Erzeugen des Szenenobjekts ein <strong>begin</strong> aufrufen und vor dem Ausgeben
+bzw. Speichern die Methode <strong>end</strong> ausführen.</p>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
@@ -180,31 +176,9 @@ It's necessary to calculate something at the end.</p>
 <em>end('comment')</em>
 </dd>
 <dd>
-<p>After <a href="#item_end"><code>end</code></a> there should no geometry or transformation. This method completes
-the calculations of viewpoints etc.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item_at">at('type=value','type=value', ...)</a></strong><br />
-</dt>
-<dd>
-is the short version of the method <a href="#item_transform_begin"><code>transform_begin</code></a>. It has the same
-parameters as <a href="#item_transform_begin"><code>transform_begin</code></a>.
-</dd>
-<dd>
-<p>Example:</p>
-</dd>
-<dd>
-<pre>
-    $vrml
-    -&gt;at('0 2 0')
-      -&gt;sphere(0.5,'red')
-    -&gt;back</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_back">back</a></strong><br />
-</dt>
-<dd>
-is the short version of the method <a href="#item_transform_end"><code>transform_end</code></a>.
+<p>Diese Methode beendet die Ausdehnungs- und Viewpoint-Berechnungen. Nach
+<strong>end</strong> sollte keine Geometrie positioniert oder Transformation durchgeführt
+werden.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_anchor_begin">anchor_begin</a></strong><br />
@@ -221,21 +195,107 @@ is the short version of the method <a href="#item_transform_end"><code>transform
  bboxCenter  SFVec3f  '0 0 0'</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Die Methoden <strong>anchor_begin</strong> und <strong>anchor_end</strong> umschließen eine Gruppe von
+Objekten, die wie ein Hyperlink arbeitet. Diese lädt den Inhalt einer URL,
+sobald der Betrachter die Geometrien, die diese Methode enthält, aktiviert
+(z. B. anklickt). Wenn die URL auf eine gültige VRML-Datei zeigt, wird die
+aktuelle Szene durch eine neue ersetzt (ausgenommen der <em>parameter</em>-Parameter
+wird wie unten beschrieben eingesetzt). Werden Nicht-VRML-Daten empfangen, so
+sollte der Browser ermitteln, wie diese Daten zu behandeln sind;
+üblicherweise werden sie an einen entsprechenden Nicht-VRML-Browser
+weitergereicht.</p>
+</dd>
+<dd>
+<p>Eine Anchor-Methode mit einem leeren <em>url</em>-Parameter führt keine Aktion aus,
+auch wenn ihr Geometrieinhalt aktiviert wird.</p>
+</dd>
+<dd>
+<p>Der <em>description</em>-Parameter in der Anchor-Methode spezifiziert eine sprachliche
+Beschreibung dieser Methode. Sie kann durch ein Browser-spezifisches
+Benutzer-Interface verwendet werden, um zusätzliche Informationen zum Anchor
+zu liefern.</p>
+</dd>
+<dd>
+<p>Der <em>parameter</em>-Parameter kann auch eingesetzt werden, um dem VRML- oder
+HTML-Browser zusätzliche Informationen zu übermitteln. Jede Zeichenkette
+muß den Aufbau Schlüssel=Wert besitzen. Beispielsweise, erlauben einige
+Browser die Angabe eines 'target' für einen Link, um ihn in einem anderen Teil
+des HTML-Dokuments zu laden. Der <em>parameter</em>-Parameter lautet dann:</p>
+</dd>
+<dd>
+<pre>
+    $vrml
+    -&gt;anchor_begin('<a href="http://www.yourdomain.de">http://www.yourdomain.de</a>', 'Neue Seite',
+      'target=name_des_frames')
+      -&gt;cylinder('2 4','red')
+    -&gt;anchor_end</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>anchor_begin</strong> kann auch benutzt werden, um den Eingangs-Viewpoint
+einer Welt zu bestimmen, indem ein auf #ViewpointName endender URL
+spezifiziert wird. Dabei ist ViewpointName der Name eines Viewpoints einer
+VRML-Szene.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml
+    -&gt;anchor_begin('<a href="http://www.gfz-potsdam.de/~palm/vrml/index.wrl#Eingang">http://www.gfz-potsdam.de/~palm/vrml/index.wrl#Eingang</a>')
+      -&gt;box('1 2 3','green')
+    -&gt;anchor_end</pre>
+</dd>
+<dd>
+<p>Wird der obige Quader aktiviert, so lädt dieser die Datei <code>index.wrl</code> und
+positioniert den Betrachter auf einen Viewpoint mit dem Namen Eingang. Ist
+der benannte Viewpoint nicht vorhanden, dann wird der Standard-Viewpoint der
+Szene verwendet.</p>
+</dd>
+<dd>
+<p>Wenn der <em>url</em>-Parameter nur den #ViewpointName enthält (d. h. ohne
+Dateinamen), wird der Viewpoint mit dem Namen ViewpointName in der aktuellen
+Welt eingestellt. Zum Beispiel binden die folgenden Programmzeilen:</p>
+</dd>
+<dd>
+<pre>
+    $vrml
+    -&gt;anchor_begin('#Start')
+      -&gt;sphere(1,'blue')
+    -&gt;anchor_end</pre>
+</dd>
+<dd>
+<p>den Browser an die Kameraposition, die durch den Viewpoint Start in der
+aktuellen Welt definiert ist, sobald die Kugel aktiviert wird. Im Fall, daß
+der Viewpoint nicht gefunden werden kann, führt der Browser keine Aktion aus.</p>
+</dd>
+<dd>
+<p>Die <em>bboxCenter</em>- und <em>bboxSize</em>-Parameter spezifizieren ein Begrenzungsvolumen,
+der alle anchor-Kinder einschließt. Diese Information ist für den Browser nur
+ein Hinweis und kann von ihm für Optimierungszwecke benutzt werden. Wenn das
+spezifizierte Begrenzungsvolumen kleiner als das wirkliche Begrenzungsvolumen
+der Kinder ist, kann das zu unerwünschten Ergebnissen führen. Der
+Standardwert für <em>bboxSize</em>, (-1 -1 -1), steht für ein undefiniertes
+Begrenzungsvolumen. Wird es benötigt, so muß es vom Browser selbst berechnet
+werden.</p>
+</dd>
+<dd>
+<p>Das folgende Beispiel lädt die HTML-Startseite des VRML-Moduls in ein neues
+Fenster:</p>
 </dd>
 <dd>
 <pre>
     $vrml
     -&gt;anchor_begin('<a href="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</a>',
-      'VRML-Perl Moduls', 'target=_blank')
-      -&gt;sphere(1,'blue')
+      'VRML-Perl Module', 'target=_blank')
+    -&gt;sphere(1,'blue')
     -&gt;anchor_end;</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_anchor_end">anchor_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_anchor_begin"><code>anchor_begin</code></a>.
+Beendet <a href="#item_anchor_begin"><code>anchor_begin</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_billboard_begin">billboard_begin</a></strong><br />
@@ -249,11 +309,42 @@ close <a href="#item_anchor_begin"><code>anchor_begin</code></a>.
  bboxSize        SFVec3f  undef
  bboxCenter      SFVec3f  '0 0 0'</pre>
 </dd>
+<dd>
+<p>Die Methode <strong>billboard_begin</strong> richtet das lokale Koordinatensystem so aus,
+daß die z-Achse dem Betrachter zugewandt ist. Dadurch werden alle sichtbaren
+Objekte gewissermaßen auf die Kamera ausgerichtet. Der
+<em>axisOfRotation</em>-Parameter spezifiziert, um welche Achse die Rotation
+ausgeführt werden soll. Diese Achse befindet sich innerhalb des lokalen
+Koordinatensystems.</p>
+</dd>
+<dd>
+<p>Ein Spezialfall ist die vollständige Betrachterausrichtung. In diesem Fall
+wird die lokale y-Achse des Objekts mit der des Betrachters parallel
+gehalten. Das läßt sich erreichen, indem man den Parameter <em>axisOfRotation</em>
+auf den Wert (0 0 0) setzt.</p>
+</dd>
+<dd>
+<p>In einigen anderen Fällen kann es zu unerwarteten Ergebnissen kommen. Setzt
+man zum Beispiel die <em>axisOfRotation</em> auf (0 1 0), d. h. auf die y-Achse, und
+der Betrachter fliegt über diese und schaut darauf, so entsteht ein
+undefinierter Zustand.</p>
+</dd>
+<dd>
+<p>Die <em>bboxCenter</em>- und <em>bboxSize</em>-Parameter spezifizieren ein
+Begrenzungsvolumen, das alle Billboard-Kinder einschließt. Diese Information
+ist für den Browser nur ein Hinweis und kann von ihm für Optimierungszwecke
+benutzt werden. Wenn das spezifizierte Begrenzungsvolumen kleiner als das
+wirkliche Begrenzungsvolumen der Kinder ist, kann das zu unerwünschten
+Ergebnissen führen. Der Standardwert für <em>bboxSize</em>, (-1 -1 -1), steht für ein
+undefiniertes Begrenzungsvolumen. Wird es benötigt, so muß es vom Browser
+selbst berechnet werden. Die Methode <a href="#item_billboard_end"><code>billboard_end</code></a> hebt die
+Betrachterausrichtung wieder auf.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_billboard_end">billboard_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_billboard_begin"><code>billboard_begin</code></a>.
+Beendet <a href="#item_billboard_begin"><code>billboard_begin</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_collision_begin">collision_begin</a></strong><br />
@@ -269,26 +360,42 @@ close <a href="#item_billboard_begin"><code>billboard_begin</code></a>.
  bboxCenter SFVec3f '0 0 0'</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Alle geometrischen Körper besitzen in VRML 2.0 grundsätzlich die Eigenschaft,
+mit dem Betrachter zu kollidieren, sowie er einen bestimmten Abstand
+unterschreitet. Diese Eigenschaft kann über den Parameter <em>collide</em> beeinflußt
+werden. Geometrische Strukturen, die sich innerhalb der Methoden
+<strong>collision_begin</strong> und <strong>collision_end</strong> befinden, gelten als durchdringbar, wenn
+collide auf 0 gesetzt wird. Die Methode kann auch bei besonders komplexen
+Strukturen verwendet werden, um einen Vertreter (engl. Proxy) als
+alternatives Objekt für die Kollisionsberechnung anzugeben, das eine
+ähnliche, aber einfachere Struktur besitzt.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
     $vrml
     -&gt;collision_begin(1, sub{$vrml-&gt;box('5 1 0.01')})
-      -&gt;text('collide','yellow',1,'MIDDLE')
+      -&gt;text('undurchdringbar','yellow',1,'MIDDLE')
     -&gt;collision_end</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_collision_end">collision_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_collision_begin"><code>collision_begin</code></a>.
+Beendet <a href="#item_collision_begin"><code>collision_begin</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_group_begin"><code>group_begin('comment')</code></a></strong><br />
 </dt>
 <dd>
-Example:
+Die Methoden <strong>group_begin</strong> und <strong>group_end</strong> stellen die einfachste Form einer
+Gruppierung dar. Sie bewirken keine zusätzlichen Aktivitäten außer der
+Gruppierung und führen auch keine Transformationen aus.
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
@@ -301,7 +408,7 @@ Example:
 <dt><strong><a name="item_group_end">group_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_group_begin"><code>group_begin</code></a>.
+Beendet <a href="#item_group_begin"><code>group_begin</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_lod_begin">lod_begin</a></strong><br />
@@ -315,21 +422,38 @@ close <a href="#item_group_begin"><code>group_begin</code></a>.
  center SFVec3f '0 0 0'</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Die Methoden <strong>lod_begin</strong> und <strong>lod_end</strong> gestatten es dem VRML-Browser, zwischen
+unterschiedlich detaillierten und damit unterschiedlich aufwendigen
+Strukturen umzuschalten. Die Reihenfolge der Kindmethoden beginnt mit der
+komplexesten und endet mit der einfachsten. Die Entfernungen im Parameter
+<em>range</em> müssen aufsteigend sortiert sein und immer mindestens einen Wert
+weniger besitzen als Kindmethoden vorhanden sind. Werden keine Parameter
+angegeben, so kann der VRML-Browser unter Gesichtspunkten der Optimierung
+auswählen, welche Kindstruktur er darstellt. Der Parameter <em>center</em> bestimmt
+den Punkt, der für die Berechnung der Entfernung vom Betrachter aus verwendet
+wird.</p>
+</dd>
+<dd>
+<p>Das folgende Beispiel bringt einen Text in der VRML-Szene unter, der nur bis
+zu einer bestimmten Entfernung gut lesbar ist und darüber hinaus
+verschwindet. Natürlich hängt die Lesbarkeit von der Schrift- und
+Bildschirmgröße ab. Diese Beziehung kann man im Bedarfsfall mit Variablen
+recht einfach realisieren. Die Methode <strong>lod_begin</strong> enthält in diesem Beispiel
+eine Entfernung und benötigt somit zwei Kinder.</p>
 </dd>
 <dd>
 <pre>
     $vrml
     -&gt;lod_begin('30')
-      -&gt;text('good readable')
-      -&gt;group_begin-&gt;group_end # empty Group
+      -&gt;text('gut lesbar')
+      -&gt;group_begin-&gt;group_end # leere Gruppe
     -&gt;lod_end</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_lod_end">lod_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_lod_begin"><code>lod_begin</code></a>.
+Beendet <a href="#item_lod_begin"><code>lod_begin</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_switch_begin">switch_begin</a></strong><br />
@@ -341,46 +465,127 @@ close <a href="#item_lod_begin"><code>lod_begin</code></a>.
 <pre>
  whichChoice SFInt32 -1</pre>
 </dd>
+<dd>
+<p>Die Methoden <strong>switch_begin</strong> und <strong>switch_end</strong> umschließen mehrere Kinder,
+von denen über den Parameter <em>whichChoice</em> jeweils nur einer oder keiner
+wiedergegeben wird. Alle Kinder sind mit 0 beginnend durchnumeriert und
+können über ihren Index ausgewählt werden. Ist der Wert kleiner als 0 oder
+größer als die Anzahl der zur Verfügung stehenden Kinder, so erfolgt keine
+Wiedergabe. In VRML 1.0 wird dieses Verfahren hauptsächlich zum Umschalten
+der Kameras und zur Definition von noch nicht benötigten Knoten eingesetzt.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_switch_end">switch_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_switch_begin"><code>switch_begin</code></a>.
+Beendet <a href="#item_switch_begin"><code>switch_begin</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_transform_begin">transform_begin</a></strong><br />
 </dt>
 <dd>
-<em>transform_begin('type=value','type=value', ...)</em>
-</dd>
-<dd>
-<p><em>Where type can be:</em></p>
+<em>transform_begin(transformationsListe)</em>
 </dd>
 <dd>
 <pre>
-    t = translation
-    r = rotation
-    c = center
-    s = scale
-    so = scaleOrientation
-    bbs = bboxSize
-    bbc = bboxCenter</pre>
+ transformationsListe  SFString &quot;&quot;</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Die wichtigste und mächtigste Methode zum Gruppieren stellt <strong>transform_begin</strong>
+dar. Sie bietet die Möglichkeit Translationen (Verschiebungen), Rotationen
+(Drehungen) und Skalierungen (Vergrößerungen bzw. Verkleinerungen)
+durchzuführen. Dabei wird ein lokales Koordinatensystem relativ zum
+übergeordneten Koordinatensystem definiert. Alle durchgeführten
+Transformationen werden in dem lokalen Koordinatensystem ausgeführt. Um alle
+Transformationen zu beenden und zum übergeordneten Koordinatensystem
+zurückzukehren, muß die Methode <a href="#item_transform_end"><code>transform_end</code></a> aufgerufen werden. Sie benötigt
+keinen Parameter.</p>
 </dd>
 <dd>
+<p>Die <em>transformationsListe</em> hat folgenden Aufbau:</p>
+</dd>
+<dd>
+<pre>
+    'Param1=Wert1', 'Param2=Wert2', ...</pre>
+</dd>
+<dd>
+<p>Param* kann die Anfangsbuchstaben der folgenden Wort belegen. Die
+Kompatibilität zu VRML 1.0 ist nur bei Verwendung der Anfangsbuchstaben
+gewährleistet.</p>
+</dd>
+<dl>
+<dt><strong><a name="item_translation">t = translation (Verschiebung)</a></strong><br />
+</dt>
+<dd>
+Das lokale Koordinatensystem wird um die entsprechenden Anteile in x-, y- und
+z-Richtung relativ zum übergeordneten Koordinatensystem verschoben.
+</dd>
+<p></p>
+<dt><strong><a name="item_rotation">r = rotation (Drehung)</a></strong><br />
+</dt>
+<dd>
+Die Drehung wird um die angegebenen Achsen mit dem entsprechenden Winkel
+durchgeführt. Das Rotationszentrum kann über den Parameter c (<em>center</em>)
+angegeben werden.
+</dd>
+<p></p>
+<dt><strong><a name="item_0">s = scale bzw. scaleFactor in VRML 1.0 (Vergrößerungsvektor bzw.
+Vergrößerungsfaktor)</a></strong><br />
+</dt>
+<dd>
+Gibt für jede Richtung einen Skalierungsfaktor an. Die neuen Koordinaten
+werden bezüglich des Punktes im Parameter c (<em>center</em>) berechnet.
+</dd>
+<p></p>
+<dt><strong><a name="item_scaleorientation">so = scaleOrientation (Skalierungsrichtung)</a></strong><br />
+</dt>
+<dd>
+Dient zur Angabe einer Drehung, die sich nur bei der Skalierung auswirkt.
+</dd>
+<p></p>
+<dt><strong><a name="item_center">c = center (Zentrum)</a></strong><br />
+</dt>
+<dd>
+Der Vektor wird als Verschiebung relativ zum lokalen Koordinatensystem
+angegeben; er wird bei einer Skalierung oder Rotation als Ursprung benutzt.
+</dd>
+<p></p></dl>
+<p>Wert* beinhaltet eine Zeichenkette des entsprechenden Typs.</p>
+<p>Beispiel:</p>
 <pre>
     $vrml
     -&gt;transform_begin('t=0 1 0','r=180')
       -&gt;cone('0.5 2','red')
     -&gt;transform_end</pre>
-</dd>
-<p></p>
 <dt><strong><a name="item_transform_end">transform_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_transform_begin"><code>transform_begin</code></a>.
+Beendet <a href="#item_transform_begin"><code>transform_begin</code></a>.
+</dd>
+<p></p>
+<dt><strong><a name="item_at">at</a></strong><br />
+</dt>
+<dd>
+Die Methode <strong>at</strong> bzw. die Methode <a href="#item_back"><code>back</code></a> sind verkürzte Schreibweisen für
+<a href="#item_transform_begin"><code>transform_begin</code></a> bzw. <a href="#item_transform_end"><code>transform_end</code></a>. Da diese Methoden am häufigsten benötigt
+werden, läßt sich mit der verkürzten Schreibweise eine bessere Lesbarkeit
+erreichen.
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml
+    -&gt;at('0 2 0')
+      -&gt;sphere(0.5,'red')
+    -&gt;back</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_back">back</a></strong><br />
+</dt>
+<dd>
+ist die Kurzversion von <a href="#item_transform_end"><code>transform_end</code></a>.
 </dd>
 <p></p>
 <dt><strong><a name="item_inline">inline</a></strong><br />
@@ -394,10 +599,19 @@ close <a href="#item_transform_begin"><code>transform_begin</code></a>.
  bboxSize   SFVec3f  undef
  bboxCenter SFVec3f  '0 0 0'</pre>
 </dd>
+<dd>
+<p>Die Methode <strong>inline</strong> kommt ohne _begin und _end aus, da ihre Kinder nur über
+URLs eingebunden werden. Als zusätzliche Informationen können dem Browser
+Angaben über Ausdehnung und Position der Szene in Form eines
+Begrenzungsvolumens mitgeteilt werden. Da es sich aber möglicherweise um
+Szenen eines anderen Servers handelt, bedarf es eines ausgeklügelten
+Kontrollmechanismus', den der Anwender selbst implementieren muß, um externe
+Änderungen in den lokalen bbox-Angaben nachzuführen.</p>
+</dd>
 <p></p></dl>
 <p>
 </p>
-<h2><a name="independent_methods">Independent Methods</a></h2>
+<h2><a name="unabhängige_methoden">Unabhängige Methoden</a></h2>
 <dl>
 <dt><strong><a name="item_background">background</a></strong><br />
 </dt>
@@ -429,10 +643,74 @@ groundAngle =&gt; '...'
  groundAngle MFFloat  []</pre>
 </dd>
 <dd>
-<p>This is a parameter hash. Only use the parts you need.</p>
+<p>Die <strong>background</strong>-Methode kann sowohl zum Erzeugen eines farbigen Himmels und
+Bodens, als auch einer Hintergrundtextur in Form eines Panoramas, das sich
+hinter der gesamten Geometrie befindet, verwendet werden. Hintergrundmotive
+werden in dem lokalen Koordinatensystem spezifiziert und nur durch Rotationen
+beeinflußt.</p>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Der <em>skyColor</em>-Parameter spezifiziert die Farbe des Himmels in verschiedenen
+Winkeln auf der Himmelskugel. Der erste Wert des <em>skyColor</em>-Parameters gibt die
+Farbe des Himmels bei 0 Grad an. Der <em>skyAngle</em>-Parameter spezifiziert die
+Winkel vom Zenit, in denen die konzentrischen Kreise verlaufen sollen. Der
+Zenit der Kugel ist implizit definiert mit 0.0 Grad; der natürliche Horizont
+liegt bei 90 Grad und der Fußpunkt bei 180 Grad. Der Parameter <em>skyAngle</em> ist
+für aufsteigende Werte im Bereich [0, 180] definiert. Es muß immer ein
+<em>skyColor</em>-Wert mehr angegeben werden als <em>skyAngle</em>-Werte existieren. Der erste
+Farbwert bestimmt die Farbe des Zenits und benötigt keinen <em>skyAngle</em>-Wert. Ist
+der letzte <em>skyAngle</em>-Wert kleiner als 180, dann wird für die Farbe vom letzten
+<em>skyAngle</em> bis zum Fußpunkt der letzte <em>skyColor</em>-Wert verwendet. Die
+Himmelsfarbe wird zwischen den <em>skyColor</em>-Werten linear interpoliert.</p>
+</dd>
+<dd>
+<p>Der <em>groundColor</em>-Parameter spezifiziert die Farbe des Bodens in verschiedenen
+Winkeln auf der Untergrundhalbkugel. Der erste Wert des
+<em>groundColor</em>-Parameters bestimmt die Farbe des Fußpunktes. Der
+<em>groundAngle</em>-Parameter gibt die Winkel an, in denen die Farbe in
+konzentrischen Kreisen verläuft. Der Fußpunkt ist implizit definiert mit 0.0
+Radians. Der Parameter <em>groundAngle</em> ist für aufsteigende Werte im Bereich
+[0.0, p /2] definiert. Es muß immer ein <em>groundColor</em>-Wert mehr angegeben
+werden als <em>groundAngle</em>-Werte existieren. Ist der letzte <em>groundAngle</em>-Wert
+kleiner als p /2, so wird die Region zwischen dem letzten <em>groundAngle</em>-Wert
+und dem Äquator unsichtbar. Die Untergrundfarbe wird linear interpoliert
+zwischen den einzelnen <em>groundColor</em>-Werten.</p>
+</dd>
+<dd>
+<p>Die <em>backUrl</em>-, <em>bottomUrl</em>-, <em>frontUrl</em>-, <em>leftUrl</em>-, <em>rightUrl</em>- und
+<em>topUrl</em>-Parameter spezifizieren einen Satz von Bildern, die ein
+Hintergrundpanorama zwischen den Geometrien und den Hintergrundfarben
+definieren. Das Panorama besteht aus sechs Bildern, von denen jedes auf eine
+Seite eines übergroßen Würfels im lokalen Koordinatensystem projiziert wird.
+Die Bilder werden individuell jeder Seite zugeordnet. Alpha-Werte in den
+Panoramabildern (d. h. Zwei- oder Vier-Komponentenbilder) machen bestimmte
+Regionen halb- oder transparent und ermöglichen das Durchscheinen der
+<em>groundColor</em>- und <em>skyColor</em>-Farben. Oftmals werden auch die <em>bottomUrl</em>-
+und <em>topUrl</em>-Bilder nicht angegeben, um den Himmel und Boden sichtbar zu
+lassen. Alle gängigen VRML-Browser unterstützen bisher die Bildformate JPEG
+und GIF. Hinzu kommt das Format PNG, welches ausdrücklich in der
+Spezifikation VRML 2.0 empfohlen wird. Panoramabilder können eine Komponente
+(Graustufen), zwei Komponenten (Graustufen mit Alphakanal), drei Komponenten
+(RGB), oder vier Komponenten (RGB mit Alphakanal) besitzen.</p>
+</dd>
+<dd>
+<p>Der Betrachter kann sich nicht den Bildern nähern; er kann sich jedoch
+drehen, um das ganze Panorama zu erfassen.</p>
+</dd>
+<dd>
+<p>Der Hintergrund wird nicht durch die <code>fog</code>-Methode (Nebel) beeinflußt. Es ist
+Aufgabe des Szenenautors, die Farben verblassen zu lassen und die Bilder
+entsprechend zu ändern, wenn sich der Betrachter im Nebel befindet.</p>
+</dd>
+<dd>
+<p>Für die Generierung von VRML 1.0 werden nur die Parameter <em>frontUrl</em> und
+<em>skyColor</em> berücksichtigt. Durch die Vielzahl der Parameter wurde bei der
+<a href="#item_background"><code>background</code></a>-Methode die Übergabeform Parameter =&gt; Wert (Hash) gewählt. Dabei
+spielt die Reihenfolge der Parameter keine Rolle; nicht benötigte Parameter
+können weggelassen werden.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
@@ -451,10 +729,14 @@ groundAngle =&gt; '...'
  groundColor  SFColor  '0 0 0'</pre>
 </dd>
 <dd>
-<p>is the short version of <a href="#item_background"><code>background</code></a>. It specifies only colors.</p>
+<p>Die <strong>backgroundcolor</strong>-Methode stellt eine stark vereinfachte Variante der
+<a href="#item_background"><code>background</code></a>-Methode dar. Sie spezifiziert nur die Hintergrundfarben einer
+Szene. Bei der Generierung einer VRML-2.0-Quelle wird der Parameter
+<em>skyColor</em> für den Himmel und <em>groundColor</em> für den Boden verwendet. Für
+VRML-1.0-Quellen wird der zweite Parameter ignoriert.</p>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
@@ -471,15 +753,22 @@ groundAngle =&gt; '...'
  url SFString &quot;&quot;</pre>
 </dd>
 <dd>
-<p>is the short version of <a href="#item_background"><code>background</code></a>. It needs only one image. The
-given Url will assigned to all parts of the background cube.</p>
+<p>Über die Methode <strong>backgroundimage</strong> kann das Hintergrundbild einer Szene
+definiert werden. Dazu muß der Parameter <em>url</em> eine Grafikdatei enthalten.
+Die am häufigsten unterstützten Grafikformate sind GIF, JPEG und PNG. Neben
+diesen stellen einige VRML-Browser auch das BMP-Format dar. Aus Gründen der
+Kompatibilität zur UNIX- und Macintosh-Welt und wegen des übermäßigen
+Platzbedarfs sollte dieses Format nicht einsetzt werden. Die Methode
+<strong>backgroundimage</strong> belegt den kompletten Hintergrund in VRML 1.0 und alle
+sechs Panoramabilder in VRML 2.0 mit dem gleichen Bild. Für eine individuelle
+Zuweisung jedes Panoramateils muß die Methode <a href="#item_background"><code>background</code></a> verwendet werden.</p>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
-    $vrml-&gt;backgroundimage('<a href="http://www.yourdomain.de/bg/stars.gif">http://www.yourdomain.de/bg/stars.gif</a>');</pre>
+    $vrml-&gt;backgroundimage('<a href="http://www.yourdomain.de/bg/sterne.gif">http://www.yourdomain.de/bg/sterne.gif</a>');</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_title">title</a></strong><br />
@@ -492,11 +781,16 @@ given Url will assigned to all parts of the background cube.</p>
  string SFString &quot;&quot;</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Die Angabe eines Titels in der Methode <strong>title</strong> hat keine Auswirkung auf die
+darstellbare Szene. Sie kann lediglich vom Browser als Zusatzinformation
+verwendet werden und wird häufig in dessen Titelleiste angezeigt.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
-    $vrml-&gt;title('My virtual world');</pre>
+    $vrml-&gt;title('Meine virtuelle Welt');</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_info">info</a></strong><br />
@@ -509,11 +803,15 @@ given Url will assigned to all parts of the background cube.</p>
  string MFString []</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Mit der Methode <strong>info</strong> können beliebige Informationen in einer VRML-Datei
+untergebracht werden.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
-    $vrml-&gt;info('last update: 8.05.1997');</pre>
+    $vrml-&gt;info('letzte Änderung: 8.05.1997');</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_worldinfo">worldinfo</a></strong><br />
@@ -527,7 +825,20 @@ given Url will assigned to all parts of the background cube.</p>
  info   MFString []</pre>
 </dd>
 <dd>
-<p>combines <a href="#item_title"><code>title</code></a> and <a href="#item_info"><code>info</code></a>.</p>
+<p>Die Methode <strong>worldinfo</strong> stellt Informationen über die aktuelle Szene zur
+Verfügung. Diese Methode ist nur für Dokumentationszwecke gedacht und hat
+keinen Einfluß auf die VRML-Welt. Im <em>title</em>-Parameter kann der Name oder
+Titel der Welt gespeichert werden, um ihn gegebenenfalls in der Titelleiste
+zu präsentieren. Andere Informationen über die Welt wie Autor, Copyright oder
+Nutzungshinweise können im <em>info</em>-Parameter abgelegt werden. Die Methode
+<strong>worldinfo</strong> kombiniert die Methoden <a href="#item_title"><code>title</code></a> und <a href="#item_info"><code>info</code></a>.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml-&gt;worldinfo('Sofies Welt', 'Jostein Gaarder');</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_navigationinfo">navigationinfo</a></strong><br />
@@ -544,7 +855,50 @@ given Url will assigned to all parts of the background cube.</p>
  avatarSize   MFFloat    [0.25, 1.6, 0.75]</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Mit der Methode <em>navigationinfo</em> können verschiedene Informationen für die
+Steuerung des VRML-Browsers festgelegt werden. Diese Informationen
+beschreiben Eigenschaften des Betrachters und die Art wie er durch die Szene
+navigiert. Die Bewegungsart wird über den Parameter <em>type</em> spezifiziert. Beim
+Gehen (WALK) wirkt die Schwerkraft auf den Betrachter, die ihn auf den
+Untergrund zieht. Dadurch wird es ihm auch möglich, einem Gelände zu folgen.
+Das Gehen erfordert eine aufrechte Haltung (parallel zur y-Achse), die durch
+den Browser realisiert wird. Das Fliegen (FLY) ähnelt dem Gehen, jedoch ohne
+die Wirkung einer Schwerkraft. Sowohl beim Gehen als auch beim Fliegen ist
+die Kollisionserkennung standardmäßig eingeschaltet. Der Mindestabstand
+zwischen dem Betrachter und geometrischen Objekten der Szene kann über den
+ersten Wert des Parameters <em>avatarSize</em> eingestellt werden (voreingestellt sind
+25 cm). Wird dieser unterschritten, kollidiert man. Der zweite Wert des
+Parameters <em>avatarSize</em> bestimmt die Blickhöhe des Betrachters
+(voreingestellt sind 1,6 Meter). Besonders negativ machen sich
+Höhenunterschiede zwischen der aktuellen Blickhöhe und vordefinierten
+Aussichtspunkten (engl. Viewpoints) bemerkbar. Hierbei wird die Höhe
+angepaßt, sowie man sich von der Stelle bewegt, was zu einer Auf- bzw.
+Abwärtsbewegung führt. Der dritte Wert des Parameters <em>avatarSize</em>
+spezifiziert die Höhe eines Körpers den der Betrachter bei eingeschalteter
+Schwerkraft noch überwinden kann (voreingestellt sind 75 cm).</p>
+</dd>
+<dd>
+<p>Die Geschwindigkeit, mit der man sich in der Welt bewegt, spezifiziert der
+Parameter <em>speed</em>. Sie wird in Metern pro Sekunde angegeben und beträgt
+standardmäßig 1,0 m/s (3,6 km/h). Von den Parametern der aktuellen
+Transformation beeinflußt nur der Skalierungsfaktor die Geschwindigkeit.</p>
+</dd>
+<dd>
+<p>Viele VRML-Browser besitzen als zusätzliche Beleuchtung eine Helmlampe, deren
+Lichtstrahlen in Blickrichtung verlaufen. Die Helmlampe ist je nach Browser
+standardmäßig ein- oder ausgeschaltet. Erst in der Spezifikation VRML 2.0
+wurde festgelegt, daß diese beim Start leuchtet, wenn sie nicht explizit
+durch den Parameter <em>headlight</em> ausgeschaltet wurde. Nach dem Laden der Szene
+hat der Betrachter die Möglichkeit, den aktuellen Zustand zu ändern.</p>
+</dd>
+<dd>
+<p>Die Sichtweite des Betrachters kann über den Parameter <em>visibilityLimit</em>
+eingegrenzt werden. Abhängig vom jeweiligen Browser brechen einige die
+Darstellung an dieser Position ab, während andere nur komplette Geometrien
+weglassen.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
@@ -554,9 +908,15 @@ given Url will assigned to all parts of the background cube.</p>
 <dt><strong><a name="item_viewpoint_begin">viewpoint_begin</a></strong><br />
 </dt>
 <dd>
-starts the hidden calculation of viewpoint center and distance for the
-method <a href="#item_viewpoint_auto_set"><code>viewpoint_auto_set()</code></a>. It collects also the viepoints to place
-they in the first part of the VRML source.
+Kameradefinitionen bzw. Aussichtspunkte stehen üblicherweise im vorderen Teil
+einer VRML-Quelle. Da sie aber - bei einer dynamischen Erstellung einer
+VRML-Szene - erst in bestimmten Programmteilen berechnet werden können, gibt
+es die Möglichkeit, die gewünschte Stelle mit der Methode <strong>viewpoint_begin</strong> zu
+markieren. Beim Aufruf der Methode <a href="#item_viewpoint_end"><code>viewpoint_end</code></a> werden die Definitionen an
+der markierten Stelle eingefügt. Während in VRML 2.0 die Aussichtspunkte
+prinzipiell über die ganze Quelle verstreut sein dürfen, müssen sich die
+Camera-Knoten in VRML 1.0 innerhalb eines Switch-Knotens befinden. Nur dann
+kann später zwischen ihnen gewechselt werden.
 </dd>
 <p></p>
 <dt><strong><a name="item_viewpoint">viewpoint</a></strong><br />
@@ -573,14 +933,29 @@ they in the first part of the VRML source.
  jump        SFBool            1</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Die Methode <strong>viewpoint</strong> dient der individuellen Positionierung einer Kamera
+bzw. der Festlegung von bestimmten Aussichtspunkten. Der Parameter
+<em>position</em> spezifiziert die Position, an der sich die Kamera befinden soll.
+Für den Parameter <em>orientation</em> stehen neben der Angabe eines
+SFRotation-Werts auch Synonyme für die häufigsten Richtungen FRONT, LEFT,
+BACK, RIGHT, TOP, BOTTOM und ALL in Form von Zeichenketten zur Verfügung. Der
+Parameter <em>description</em> enthält die Bezeichnung des Aussichtspunktes. Er
+wird später vom VRML-Browser in einem Pulldown-Menü dargestellt und zur
+Auswahl angeboten. Nach jedem Hinzufügen eines neuen Aussichtspunktes wird
+dieser als aktuelle Benutzersicht übernommen. Um das zu verhindern, muß der
+Parameter <em>jump</em> auf 0 gesetzt werden. Den Blickwinkel bestimmt der
+Parameter <em>fieldOfView</em>. Kleine Winkel sind vergleichbar mit einem
+Teleobjektiv, große mit einem Weitwinkelobjektiv.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
     $vrml-&gt;viewpoint('Start','0 0 0','0 0 -1 0',60);</pre>
 </dd>
 <dd>
-<p>is the same like</p>
+<p>ist identisch mit</p>
 </dd>
 <dd>
 <pre>
@@ -600,235 +975,37 @@ they in the first part of the VRML source.
  avatarSize   MFFloat [0.25, 1.6, 0.75]</pre>
 </dd>
 <dd>
-<p>places six viewpoints around the center.</p>
+<p>Eine zeitraubende und ständig wiederkehrende Arbeit ist die Positionierung
+von Aussichtspunkten (engl. Viewpoints) für die Standardansichten von vorn,
+von rechts, von hinten, von links, von oben und von unten. Die Methode
+<strong>viewpoint_set</strong> soll helfen, diese undankbare Aufgabe zu erleichtern. Durch
+ihre Anwendung lassen sich alle Standardeinstellungen mit einer Anweisung
+definieren. Weitere Aussichtspunkte können über die Methode <a href="#item_viewpoint"><code>viewpoint</code></a>
+hinzugefügt werden. Der Parameter <em>avatarSize</em> sichert, daß die Viewpoints
+in der gleichen Höhe angeordnet werden in der sich der Betrachter bewegt.</p>
+</dd>
+<dd>
+<p>Das folgende Beispiel ordnet alle sechs Standardansichten im Abstand von fünf
+Metern um das Zentrum (4 3 0) an:</p>
+</dd>
+<dd>
+<pre>
+    $vrml-&gt;viewpoint_set('4 3 0',5);</pre>
 </dd>
 <p></p>
 <dt><strong><a name="item_viewpoint_auto_set">viewpoint_auto_set</a></strong><br />
 </dt>
 <dd>
-sets all parameters of <a href="#item_viewpoint_set"><code>viewpoint_set</code></a> automatically.
+Setzt alle Parameter von <a href="#item_viewpoint_set"><code>viewpoint_set</code></a> automatisch, voraugesetzt das es
+nach der Geometrieplazierung aufgerufen wird.
 </dd>
 <p></p>
 <dt><strong><a name="item_viewpoint_end">viewpoint_end</a></strong><br />
 </dt>
 <dd>
-close <a href="#item_viewpoint_begin"><code>viewpoint_begin</code></a>.
-</dd>
-<p></p></dl>
-<p>
-</p>
-<h2><a name="shapes">Shapes</a></h2>
-<dl>
-<dt><strong><a name="item_box">box</a></strong><br />
-</dt>
-<dd>
-<em>box('size', 'appearance')</em>
-</dd>
-<dd>
-<pre>
- size       SFVec3f  '2 2 2' # width height depth
- appearance SFString &quot;&quot;      # see Appearance</pre>
+Beendet <a href="#item_viewpoint_begin"><code>viewpoint_begin</code></a>.
 </dd>
 <p></p>
-<dt><strong><a name="item_cone">cone</a></strong><br />
-</dt>
-<dd>
-<em>cone('bottomRadius height', 'appearance')</em>
-</dd>
-<dd>
-<pre>
- bottomRadius height SFVec2f '1 2'
- appearance          SFString &quot;&quot; # see Appearance</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_cylinder">cylinder</a></strong><br />
-</dt>
-<dd>
-<em>cylinder('radius height', 'appearance')</em>
-</dd>
-<dd>
-<pre>
- radius height SFVec2f  '1 2'
- appearance    SFString &quot;&quot; # see Appearance</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_line">line</a></strong><br />
-</dt>
-<dd>
-<em>line('from', 'to', radius, 'appearance', 'path')</em>
-</dd>
-<dd>
-<pre>
- from        SFVec3f   &quot;&quot;
- to          SFVec3f   &quot;&quot;
- radius      SFFloat   0 # 0 = haarline
- appearance  SFString  &quot;&quot;
- path        SFEnum    &quot;&quot; # XYZ, XZY, YXZ, YZX, ZXY, ZYX</pre>
-</dd>
-<dd>
-<p>draws a line (cylinder) between two points with a given radius. If radius
-is '0' only a hairline will be printed. The last parameter specifies the
-devolution along the axes. An empty stands for direct connection.</p>
-</dd>
-<dd>
-<p>Example:</p>
-</dd>
-<dd>
-<pre>
-    new VRML(2)
-    -&gt;begin
-      -&gt;line('1 -1 1', '-3 2 2', 0.03, 'red', 'XZY')
-      -&gt;line('1 -1 1', '-3 2 2', 0.03, 'white')
-    -&gt;end
-    -&gt;print;</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_pyramid">pyramid</a></strong><br />
-</dt>
-<dd>
-<em>pyramid('size', 'appearance')</em>
-</dd>
-<dd>
-<pre>
- size       SFVec3f  '2 2 2' # width height depth
- appearance SFString &quot;&quot;      # see Appearance</pre>
-</dd>
-<dd>
-<p>Example:</p>
-</dd>
-<dd>
-<pre>
-    $vrml-&gt;pyramid('1 1 1','blue,green,red,yellow,white');</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_sphere">sphere</a></strong><br />
-</dt>
-<dd>
-<em>sphere(radius, 'appearance')</em>
-</dd>
-<dd>
-<pre>
- radius     SFFloat  1
- appearance SFString &quot;&quot; # see Appearance</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_elevationgrid">elevationgrid</a></strong><br />
-</dt>
-<dd>
-<em>elevationgrid(height, color, xDimension, zDimension, xSpacing,
-zSpacing, creaseAngle, colorPerVertex, solid)</em>
-</dd>
-<dd>
-<pre>
- height          MFFloat  []
- color           MFColor  [] # resp. material and color
- xDimension      SFInt32  0
- zDimension      SFInt32  0
- xSpacing        SFFloat  1.0
- zSpacing        SFFloat  1.0
- creaseAngle     SFFloat  0
- colorPerVertex  SFBool   1
- solid           SFBool   0</pre>
-</dd>
-<dd>
-<p>If <em>color</em> is not a reference of an ARRAY it would be assumed that <em>color</em>
-is the appearance.</p>
-</dd>
-<dd>
-<p>Example:</p>
-</dd>
-<dd>
-<pre>
-    open(FILE,&quot;&lt;height.txt&quot;);
-    my @height = &lt;FILE&gt;;
-    open(COL,&quot;&lt;color.txt&quot;);
-    my @color = &lt;COL&gt;;
-    $vrml-&gt;navigationinfo([&quot;EXAMINE&quot;,&quot;FLY&quot;],200)
-         -&gt;viewpoint(&quot;Top&quot;,&quot;1900 6000 1900&quot;,&quot;TOP&quot;)
-         -&gt;elevationgrid(\@height, \@color, undef, undef, 250, undef, 0)
-         -&gt;print;</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_text">text</a></strong><br />
-</dt>
-<dd>
-<em>text('string', 'appearance', 'font', 'align')</em>
-</dd>
-<dd>
-<pre>
- string     MFString []
- appearance SFString &quot;&quot; # see Appearance
- font       SFString '1 SERIF PLAIN'
- align      SFEnum   'BEGIN' # BEGIN, MIDDLE, END</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_billtext">billtext</a></strong><br />
-</dt>
-<dd>
-<em>billtext('string', 'appearance', 'font', 'align')</em>
-</dd>
-<dd>
-<pre>
- string     MFString []
- appearance SFString &quot;&quot; # see Appearance
- font       SFString '1 SERIF PLAIN'
- align      SFEnum   'BEGIN' # BEGIN, MIDDLE, END</pre>
-</dd>
-<dd>
-<p>does the same like method <a href="#item_text"><code>text</code></a>, but the text better readable.</p>
-</dd>
-<p></p>
-<dt><strong><a name="item_appearance">Appearance</a></strong><br />
-</dt>
-<dd>
-<em>appearance('type=value1,value2 ; type=...')</em>
-</dd>
-<dd>
-<p>The appearance method specifies the visual properties of geometry by defining
-the material and texture. If more than one type is needed separate the types
-by semicolon. The types can choosen from the following list.</p>
-</dd>
-<dd>
-<p>Note: one character mnemonic are colors
-      two characters mnemonic are values in range of [0..1]
-      more characters are strings like file names or labels</p>
-</dd>
-<dd>
-<pre>
-        d = diffuseColor
-        e = emissiveColor
-        s = specularColor
-        ai = ambientIntensity
-        sh = shininess
-        tr = transparency
-        tex = texture filename,wrapS,wrapT
-        name = names the MovieTexture node (for a later route)</pre>
-</dd>
-<dd>
-<p>The color values can be strings (X11 color names) or RGB-triples. It is
-possible to reduce the intensity of colors (names) by appending a two digit
-value (percent). This value must be separated by an underscore (_) or
-a percent symbol (%). Note: Do not use a percent symbol in URL's. It would
-be decoded in an ascii character.</p>
-</dd>
-<dd>
-<p>Sample (valid color values):
-        '1 1 0' # VRML standard
-        'FFFF00' or 'ffff00', '255 255 0', 'yellow'</p>
-</dd>
-<dd>
-<p>or reduced to 50%
-        '.5 .5 .5' # VRML standard
-        '808080', '128 128 0', 'yellow%50' or 'yellow_50'</p>
-</dd>
-<dd>
-<p>For a list of <em>X11 color names</em> take a look at VRML::Color</p>
-</dd>
-<p></p></dl>
-<p>
-</p>
-<h2><a name="misc">Misc</a></h2>
-<dl>
 <dt><strong><a name="item_directionallight">directionallight</a></strong><br />
 </dt>
 <dd>
@@ -839,11 +1016,26 @@ be decoded in an ascii character.</p>
  direction         SFVec3f  '0 0 -1'
  intensity         SFFloat  1
  ambientIntensity  SFFloat  1
- color             SFColor  '1 1 1' #white
+ color             SFColor  '1 1 1' #weiß
  on                SFBool   1</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Die <strong>directionallight</strong>-Methode beleuchtet Objekte in einer Szene mit parallelem
+Licht gleicher Intensität. Der <em>direction</em>-Parameter spezifiziert die Richtung
+der Strahlen bezogen auf das lokale Koordinatensystem. Das Licht wird von
+einer unendlich weit entfernten Quelle ausgestrahlt und beleuchtet nur die
+Objekte der Gruppe, in der es sich befindet, bzw. deren untergeordnete
+Gruppen. Der <em>intensity</em>-Parameter spezifiziert die Intensität der Lichtquelle.
+Ein Wert von 1 bedeutet maximale Helligkeit. Die Farbe des ausgesendeten
+Lichtes bestimmt der <em>color</em>-Parameter. Über den Parameter <em>on</em> läßt sich der
+Grundzustand der Lichtquelle angeben.</p>
+</dd>
+<dd>
+<p>Alle durchgeführten übergeordneten Transformationen wirken sich auch auf die
+Lichtquelle aus.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
@@ -865,55 +1057,476 @@ be decoded in an ascii character.</p>
  loop        SFBool   0
  pitch       SFFloat  1.0</pre>
 </dd>
-<p></p>
-<dt><strong><a name="item_def">def</a></strong><br />
-</dt>
 <dd>
-<em>def('name')</em>
+<p>Die <em>sound</em>-Methode spezifiziert die räumliche Präsentation von Tönen in
+einer VRML-Szene.</p>
 </dd>
 <dd>
-<pre>
- name SFString &quot;&quot;</pre>
+<p>Der <em>url</em>-Parameter spezifiziert die URL, von der der Klang geladen werden
+soll. Die unterstützen Typen sind meistens WAV im unkomprimierten PCM-Format
+und MPEG-1. Zusätzlich können viele VRML-Browser noch den MIDI-Dateityp 1
+unter Verwendung des General MIDI Patch wiedergeben.</p>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Der <em>description</em>-Parameter gibt eine sprachliche Beschreibung der
+Audio-Quelle an. Ein Browser muß den <em>description</em>-Parameter nicht anzeigen,
+kann es aber während der Wiedergabe des Klangs tun.</p>
 </dd>
 <dd>
-<pre>
-    $vrml-&gt;def('RedSphere')-&gt;sphere(1,'red')</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_use">use</a></strong><br />
-</dt>
-<dd>
-<em>use('name')</em>
+<p>Der <em>location</em>-Parameter bestimmt den Ort im lokalen Koordinatensystem, von
+dem der Sound ausgestrahlt werden soll. Die <strong>sound</strong>-Methode gibt keine Töne
+ab, wenn sie nicht Teil der dargestellten Szene ist; d. h. wenn sie sich in
+einem Teil eines LOD- oder Switch- Knotens befindet der ausgeschaltet ist.</p>
 </dd>
 <dd>
-<pre>
- name SFString &quot;&quot;</pre>
+<p>Der <em>direction</em>-Parameter spezifiziert die Richtung, in die der Sound
+ausgestrahlt werden soll.</p>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Der <em>intensity</em>-Parameter spezifiziert die Wiedergabelautstärke. Der
+Wertebereich geht von 0.0 bis 1.0. Bei einer Intensität von 1.0 wird der Ton
+mit maximaler Lautstärke wiedergegeben; bei 0.0 hingegen herrscht Ruhe.</p>
 </dd>
 <dd>
-<pre>
-    $vrml-&gt;use('RedSphere')</pre>
-</dd>
-<p></p>
-<dt><strong><a name="item_route">route</a></strong><br />
-</dt>
-<dd>
-<em>route('from','to')</em>
+<p>Der <em>loop</em>-Parameter bestimmt, ob das Musikstück einmal oder fortlaufend
+wiedergegeben werden soll.</p>
 </dd>
 <dd>
-<pre>
- FROM.feldname SFString &quot;&quot;
- TO.feldname   SFString &quot;&quot;</pre>
+<p>Der <em>pitch</em>-Parameter spezifiziert ein Vielfaches der Wiedergabefrequenz. Es
+sind nur positive Werte gültig. Ein Wert von Null oder kleiner produziert
+undefinierte Ergebnisse. Die Änderung des <em>pitch</em>-Parameter erzeugt sowohl
+eine Tonhöhenänderung als auch eine Änderung der Wiedergabegeschwindigkeit.
+Ein Wert von 2.0 bedeutet, daß der Klang eine Oktave höher als normal
+gespielt wird und doppelt so schnell. Bei einem gesampelten Klang ändert der
+<em>pitch</em>-Parameter die Wiedergabefrequenz. Im Falle einer MIDI (oder eines
+anderen in Noten aufgezeichneten Musikstücks) wird das Tempo der Wiedergabe
+erhöht und die MIDI-Steuerung entsprechend angepaßt, um den gewünschten
+Effekt zu erzielen.</p>
 </dd>
 <p></p></dl>
 <p>
 </p>
-<h2><a name="interpolators">Interpolators</a></h2>
+<h2><a name="geometrien">Geometrien</a></h2>
+<p>Für die Darstellung von geometrischen Körpern gibt es eine Vielzahl von
+Methoden. Sie benötigen grundsätzlich Dimensionsangaben wie Breite, Höhe oder
+Radius. Darüber hinaus können über den Parameter <em>appearance</em> die Farbe bzw.
+die Oberflächeneigenschaften spezifiziert werden.</p>
+<dl>
+<dt><strong><a name="item_box">box</a></strong><br />
+</dt>
+<dd>
+<em>box('size', 'appearance')</em>
+</dd>
+<dd>
+<pre>
+ size       SFVec3f  '2 2 2' # Breite Höhe Tiefe
+ appearance SFString &quot;&quot;      # siehe Material &amp; Farbe</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>box</strong> definiert einen Quader mit dem Mittelpunkt (0 0 0) im
+lokalen Koordinatensystem. Standardmäßig hat der Quader die Größe von zwei
+Einheiten in jeder Richtung, jeweils von -1 bis +1. Der <em>size</em>-Parameter
+spezifiziert die Ausdehnung entlang der x-, y- und z-Achse und muß bei jeder
+Komponente größer als 0.0 sein. Sind alle drei Angaben gleich, so wird aus
+dem Quader ein Würfel. Der Parameter <em>appearance</em> spezifiziert die Farbe
+bzw. die Oberflächeneigenschaften. Texturen werden auf jede Fläche einzeln
+projiziert.</p>
+</dd>
+<dd>
+<p>Ein Quader erfordert nur die Darstellung von Außenflächen. Die Betrachtung
+der Innenseiten führt zu undefinierten Ergebnissen.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_cone">cone</a></strong><br />
+</dt>
+<dd>
+<em>cone('bottomRadius height', 'appearance')</em>
+</dd>
+<dd>
+<pre>
+ bottomRadius height SFVec2f '1 2'
+ appearance          SFString &quot;&quot; # siehe Material &amp; Farbe</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>cone</strong> spezifiziert einen Kegel, dessen Mittelpunkt (0 0 0) im
+lokalen Koordinatensystem und dessen zentrale Achse auf der y-Achse liegt.
+Der <em>bottomRadius</em>-Parameter bestimmt den Radius des Kegelbodens und der
+<em>height</em>-Parameter die Höhe des Kegels. Standardmäßig hat der Kegel einen
+Radius von 1.0 und eine Höhe von 2.0 mit der Spitze bei y = <em>height</em>/2 und dem
+Boden bei y = -<em>height</em>/2. Beide, <em>bottomRadius</em> und <em>height</em>, müssen größer als
+0.0 sein. Der Parameter <em>appearance</em> spezifiziert die Farbe bzw. die
+Oberflächeneigenschaften.</p>
+</dd>
+<dd>
+<p>Ein Kegel erfordert nur die Darstellung von Außenflächen. Die Betrachtung der
+Innenseiten führt zu undefinierten Ergebnissen.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_cylinder">cylinder</a></strong><br />
+</dt>
+<dd>
+<em>cylinder('radius height', 'appearance')</em>
+</dd>
+<dd>
+<pre>
+ radius height SFVec2f  '1 2'
+ appearance    SFString &quot;&quot; # siehe Material &amp; Farbe</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>cylinder</strong> spezifiziert einen geschlossenen Zylinder
+mit dem Mittelpunkt (0 0 0) im lokalen Koordinatensystem, dessen zentrale
+Achse auf der y-Achse liegt. Standardmäßig hat der Zylinder eine Ausdehnung
+von -1 bis +1 in alle drei Richtungen. Der <em>radius</em>-Parameter bestimmt den
+Radius des Zylinders und der <em>height</em>-Parameter die Höhe entlang der zentralen
+Achse. Beide, <em>radius</em> und <em>height</em>, müssen größer als 0.0 sein. Der Parameter
+<em>appearance</em> spezifiziert die Farbe bzw. die Oberflächeneigenschaften.</p>
+</dd>
+<dd>
+<p>Ein Zylinder erfordert nur die Darstellung von Außenflächen. Die Betrachtung
+der Innenseiten führt zu undefinierten Ergebnissen.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_line">line</a></strong><br />
+</dt>
+<dd>
+<em>line('from', 'to', radius, 'appearance', 'path')</em>
+</dd>
+<dd>
+<pre>
+ from        SFVec3f   &quot;&quot;
+ to          SFVec3f   &quot;&quot;
+ radius      SFFloat   0 # 0 = Haarlinie
+ appearance  SFString  &quot;&quot;
+ path        SFEnum    &quot;&quot; # XYZ, XZY, YXZ, YZX, ZXY, ZYX</pre>
+</dd>
+<dd>
+<p>In VRML erfolgt die Positionierung eines Körpers durch die Angabe eines
+Raumpunktes und der Richtung im Raum (Vektor). Diese Vorgehensweise erweist
+sich dann als besonders nachteilig, wenn zwei Punkte durch einen Körper
+miteinander verbunden werden müssen. Der VRML-Knoten <code>IndexedLineSet</code> bietet
+nur die Möglichkeit, zwei Punkte durch Linien in einer Standardstrichstärke
+zu verbinden. Um eine variable Linienstärke zu realisieren, muß ein Zylinder
+als Linienersatz dienen. Die Methode <strong>line</strong> führt alle notwendigen Berechnungen
+durch, um diesen Zylinder korrekt zu plazieren. Die Parameter <em>from</em> und <em>to</em>
+bestimmen den Start- und Endpunkt der Linie. Der Parameter <em>radius</em> gibt den
+Radius des Zylinders vor, der für die Verbindung eingesetzt wird. Ob die
+Linie einen direkten oder einen orthogonalen Verlauf entlang der x-, y- und
+z-Achsen nehmen soll, spezifiziert der Parameter <em>path</em>. Bei leerem Parameter
+wird die direkte Verbindung gewählt.</p>
+</dd>
+<dd>
+<p>In dem folgenden Beispiel erzeugt die erste Linie einen orthogonalen
+Linienverlauf beginnend an der Position '1 -1 1', der sich zunächst entlang
+der x-Achse bewegt, dann in Richtung der z-Achse und schließlich parallel zur
+y-Achse an der Koordinate '-3 2 2' endet. Der Zylinder hat einen Durchmesser
+von drei Zentimetern. Der zweite Zylinder verbindet beide Koordinaten auf
+direktem Weg miteinander.</p>
+</dd>
+<dd>
+<pre>
+    new VRML(2)
+    -&gt;begin
+      -&gt;line('1 -1 1', '-3 2 2', 0.03, 'red', 'XZY')
+      -&gt;line('1 -1 1', '-3 2 2', 0.03, 'white')
+    -&gt;end
+    -&gt;print;</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_pyramid">pyramid</a></strong><br />
+</dt>
+<dd>
+<em>pyramid('size', 'appearance')</em>
+</dd>
+<dd>
+<pre>
+ size       SFVec3f  '2 2 2' # Breite Höhe Tiefe
+ appearance SFString &quot;&quot;      # siehe Material &amp; Farbe</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>pyramid</strong> definiert eine Pyramide mit dem Mittelpunkt (0 0 0) im
+lokalen Koordinatensystem. Standardmäßig hat der Pyramide die Größe von zwei
+Einheiten in jeder Richtung, jeweils von -1 bis +1. Der <em>size</em>-Parameter
+spezifiziert die Ausdehnung entlang der x-, y- und z-Achse und muß bei jeder
+Komponente größer als 0.0 sein. Der Parameter <em>appearance</em> spezifiziert die
+Farbe bzw. die Oberflächeneigenschaften. Werden mehrere Farben angegeben
+(durch Kommata getrennt), so wird jede Seite mit der entsprechen Farbe
+belegt.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml-&gt;pyramid('1 1 1','blue,green,red,yellow,white');</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_sphere">sphere</a></strong><br />
+</dt>
+<dd>
+<em>sphere(radius, 'appearance')</em>
+</dd>
+<dd>
+<pre>
+ radius     SFFloat  1
+ appearance SFString &quot;&quot; # siehe Material &amp; Farbe</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>sphere</strong> spezifiziert eine Kugel mit dem Mittelpunkt (0 0 0) im
+lokalen Koordinatensystem. Der <em>radius</em>-Parameter bestimmt den Radius der Kugel
+und muß größer als 0.0 sein. Der Parameter <em>appearance</em> spezifiziert die Farbe
+bzw. die Oberflächeneigenschaften.</p>
+</dd>
+<dd>
+<p>Wenn eine Textur auf die Kugel gelegt wird, umhüllt sie die ganze Oberfläche,
+beginnend von der Rückseite entgegen dem Uhrzeigersinn. Die Textur hat eine
+Naht an der Rückseite, wo die Fläche x=0 die Kugel schneidet und die z-Werte
+negativ sind.</p>
+</dd>
+<dd>
+<p>Eine Kugel erfordert nur die Darstellung von Außenflächen. Die Betrachtung
+der Innenseiten führt zu undefinierten Ergebnissen.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_pointset">pointset</a></strong><br />
+</dt>
+<dd>
+<em>pointset(coord, color)</em>
+</dd>
+<dd>
+<pre>
+ coord           MFVec3f  []
+ color           MFColor  []  # bzw. Material &amp; Farbe</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_elevationgrid">elevationgrid</a></strong><br />
+</dt>
+<dd>
+<em>elevationgrid(height, color, xDimension, zDimension, xSpacing, zSpacing,
+creaseAngle, colorPerVertex, solid)</em>
+</dd>
+<dd>
+<pre>
+ height          MFFloat  []
+ color           MFColor  []  # bzw. Material &amp; Farbe
+ xDimension      SFInt32  0
+ zDimension      SFInt32  0
+ xSpacing        SFFloat  1.0
+ zSpacing        SFFloat  1.0
+ creaseAngle     SFFloat  0
+ colorPerVertex  SFBool   1
+ solid           SFBool   0</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>elevationgrid</strong> spezifiziert ein Höhenmodell durch ein
+regelmäßiges Gitter. Der Parameter <em>height</em> gibt dabei eine Anzahl von
+Höhenwerten vor zu denen jeweils ein Farbwert (bei <em>colorPerVertex</em> gleich
+1) gehört. Wird <em>colorPerVertex</em> auf 0 gesetzt, so werden die Flächen
+zwischen vier Punkten eingefärbt, d.h. es wird ein Farbwert pro Dimension
+(x,z) weniger benötigt. Der Parameter <em>height</em> kann als Referenz auf ein
+Array - welches eine x-Zeile enthält - angegeben werden. In diesem Fall wird
+die Anzahl der Elemente als <em>xDimension</em> und die Anzahl der Zeilen als
+<em>zDimension</em> interpretiert. Sie sollte dann nicht nochmals ermittelt werden.
+Wird der Parameter <em>color</em> nicht als Referenz auf ein ARRAY übergeben, so
+wird angenommen, daß es sich um eine Farb- bzw. Texturangabe handelt.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    open(FILE,&quot;&lt;height.txt&quot;);
+    my @height = &lt;FILE&gt;;
+    open(COL,&quot;&lt;color.txt&quot;);
+    my @color = &lt;COL&gt;;
+    $vrml-&gt;navigationinfo([&quot;EXAMINE&quot;,&quot;FLY&quot;],200)
+         -&gt;viewpoint(&quot;Top&quot;,&quot;1900 6000 1900&quot;,&quot;TOP&quot;)
+         -&gt;elevationgrid(\@height, \@color, undef, undef, 250, undef, 0)
+         -&gt;print;</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_torus">torus</a></strong><br />
+</dt>
+<dd>
+<em>torus('radius1 radius2 startAngle endAngle stepAngle', 'appearance')</em>
+</dd>
+<dd>
+<pre>
+ radius1 radius2 startAngle endAngle stepAngle SFString  '1 1 0 360 10'
+ appearance    SFString &quot;&quot; # siehe Material &amp; Farbe</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>torus</strong> spezifiziert einen Torus mit dem Mittelpunkt (0 0 0)
+im lokalen Koordinatensystem, dessen zentrale Achse auf der y-Achse liegt.
+Standardmäßig hat der Torus eine Ausdehnung von -1 bis +1 in alle drei
+Richtungen. Der <em>radius1</em>-Parameter bestimmt den Radius des Torus
+und der <em>radius2</em>-Parameter den Radius entlang der y-Achse.
+Beide, <em>radius1</em> und <em>radius2</em>, müssen größer als 0.0 sein. Der Parameter
+<em>appearance</em> spezifiziert die Farbe bzw. die Oberflächeneigenschaften.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_text">text</a></strong><br />
+</dt>
+<dd>
+<em>text('string', 'appearance', 'font', 'align')</em>
+</dd>
+<dd>
+<pre>
+ string     MFString []
+ appearance SFString &quot;&quot; # siehe Material &amp; Farbe
+ font       SFString '1 SERIF PLAIN'
+ align      SFEnum   'BEGIN' # BEGIN, MIDDLE, END</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>text</strong> spezifiziert eine flache, zweiseitige Zeichenkette, die
+in der z-Ebene des lokalen Koordinatensystems positioniert wird. Der
+Parameter string kann eine Liste von Zeichenketten enthalten, wobei jeder
+Eintrag in einer neuen Zeile dargestellt wird. Der Parameter <em>appearance</em>
+spezifiziert die Farbe bzw. die Oberflächeneigenschaften, die für den
+kompletten Text gültig ist. Der Parameter font gliedert sich in drei Teile
+<em>size</em>, <em>family</em> und <em>style</em>, jeweils durch ein Leerzeichen getrennt. Der
+erste Wert <em>size</em> spezifiziert die Schriftgröße (Schriftgrad), bezogen auf
+das lokale Koordinatensystem der <a href="#item_text"><code>text</code></a>-Methode. Er muß immer größer als 0.0
+sein. Der zweite Wert <em>family</em> enthält eine Zeichenkette in Großbuchstaben,
+welche die Font-Familie spezifiziert. Der Browser bestimmt jedoch
+letztendlich, welcher Font aus dieser Familie zum Einsatz kommt.
+Üblicherweise werden von den Browsern mindestens SERIF für einen Serif-Font
+wie Times Roman, SANS für einen Sans-Serif-Font wie Helvetica und TYPEWRITER
+für einen Font mit konstanter Buchstabenbreite wie Courier unterstützt. Ein
+leerer Wert für <em>family</em> ist identisch mit SERIF. Der Parameter <em>style</em>
+kann die Werte PLAIN, BOLD, ITALIC und BOLDITALIC annehmen.</p>
+</dd>
+<dd>
+<pre>
+    PLAIN  (keine Besonderheiten, Voreinstellung)
+    BOLD   (fett)
+    ITALIC (kursiv)
+    BOLDITALIC (fett und kursiv)</pre>
+</dd>
+<dd>
+<p>Der Parameter <em>align</em> gibt die Ausrichtung des Textes an. Es stehen folgende
+Werte zur Verfügung:</p>
+</dd>
+<dd>
+<pre>
+    BEGIN  bzw. LEFT   (linksbündig, Voreinstellung)
+    MIDDLE bzw. CENTER (zentriert)
+    END    bzw. RIGHT  (rechtsbündig)</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_billtext">billtext</a></strong><br />
+</dt>
+<dd>
+<em>billtext('string', 'appearance', 'font', 'align')</em>
+</dd>
+<dd>
+<pre>
+ string     MFString []
+ appearance SFString &quot;&quot; # siehe Material &amp; Farbe
+ font       SFString '1 SERIF PLAIN'
+ align      SFEnum   'BEGIN' # BEGIN, MIDDLE, END</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>billtext</strong> ist äquivalent zur Methode <a href="#item_text"><code>text</code></a> mit der
+zusätzlichen Eigenschaft, daß der Text immer dem Betrachter zugewandt bleibt.
+Sie kombiniert die Methoden <strong>billboard</strong> und <a href="#item_text"><code>text</code></a>, da es häufig vorkommt,
+daß die Textinformationen einer Szene aus allen Richtungen lesbar sein
+müssen.</p>
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="material___farbe">Material &amp; Farbe</a></h2>
+<p>Das Erscheinungsbild von geometrischen Objekten (engl. Shape) wird in VRML
+2.0 durch den Appearance-Knoten bestimmt. Dieser kann als Kindknoten einen
+Material- und einen Texture-Knoten enthalten. In VRML 1.0 definiert der
+letzte Material- bzw. Texture-Knoten das Aussehen aller darauf folgenden
+Objekte. Diese unterschiedliche Verfahrensweise zur Angabe des
+Erscheinungsbildes eines geometrischen Objekts erschwert die flexible Ausgabe
+einer Szene in einer beliebigen Spezifikation. Das VRML-Modul ermöglicht
+jedoch eine einfache und benutzerfreundliche Farb- bzw. Texturangabe. Es
+bietet verschiedene Varianten der Materialzusammensetzung nach folgender
+Schema:</p>
+<pre>
+    'Eigenschaft1=Liste1; Eigenschaft2=Farbe1,Farbe2; ...'</pre>
+<p>wobei <em>Eigenschaft</em> die Werte:</p>
+<pre>
+    a - ambientColor (nur VRML 1.0)
+    d - diffuseColor
+    e - emissiveColor
+    s - specularColor</pre>
+<pre>
+    ai - ambientIntensity (nur VRML 2.0)
+    sh - shininess
+    tr - transparency</pre>
+<pre>
+    tex - filename, wrapS, wrapT
+    textrans - Zeichenkette oder Ref. auf einen TextureTransform-Knoten</pre>
+<pre>
+    def    - benennt den Appearance-Knoten
+    defmat - benennt den Material-Knoten
+    deftex - benennt den Image- bzw. MovieTexture-Knoten</pre>
+<p>annehmen kann und <em>Liste</em> eine Anzahl von Materialien definiert, die durch
+Kommata getrennt werden müssen. Das Kürzel für einen Farbwert besteht dabei
+aus einem Buchstaben und das Kürzel einer Intensität aus zwei Buchstaben.
+Drei und mehr Buchstaben sind für Definitionen und Texturen vorgesehen. Das
+Modul erkennt selbständig, ob es sich um eine ImageTexture (GIF, JPEG, PNG,
+BMP) oder um ein Video (AVI, MPEG, MOV) handelt. Mehrere Eigenschaften können
+kombiniert werden, indem diese durch ein Semikolon voneinander getrennt
+werden. Farbwerte können als RGB-Tripel oder als Name angegeben werden.
+Es gibt vier Schreibweisen, um eine Farbe (z. B. intensives Gelb) zu
+definieren.</p>
+<pre>
+    '1 1 0' (VRML-Standard)
+    'FFFF00' oder 'ffff00'
+    '255 255 0'
+    'yellow'</pre>
+<p>Die beiliegende Version des VRML-Moduls enthält alle X11-Farbnamen. Jedem
+Farbnamen kann ein zweistelliger Zahlenwert folgen, der die Helligkeit linear
+verringert. Dieser prozentuale Anteil muß von dem Farbnamen durch ein
+spezielles Zeichen ( % _ ) getrennt werden. Hier bietet sich das
+Prozentzeichen als intuitive Gedankenstütze an. Von der Verwendung dieses
+Zeichens innerhalb eines Parameters einer URL-Adresse ist jedoch abzuraten,
+da Prozentzeichen, die von Ziffern gefolgt werden, in entsprechende
+ASCII-Zeichen umgewandelt werden. Es wird deshalb empfohlen, in URL-Adressen,
+insbesondere im QUERY_STRING, den Unterstrich (_) als Trennsymbol zu
+verwenden !</p>
+<p>Analog zum vorherigen Beispiel können vier verschiedene Schreibweisen
+eingesetzt werden, um die Intensität einer Farbe (z. B. Gelb) zu verringern.</p>
+<pre>
+    '.5 .5 0' (VRML-Standard)
+    '808000'
+    '128 128 0'
+    'yellow%50'</pre>
+<p>Abschließend noch zwei Beispiele für identische Farbwerte:</p>
+<pre>
+    yellow%100 = yellow_100 = yellow (gelb)</pre>
+<pre>
+    white%0 = black (schwarz)</pre>
+<p>Eine Liste der verfügbaren Farbnamen befindet sich im Modul VRML::Color.</p>
+<dl>
+<dt><strong><a name="item_appearance">appearance</a></strong><br />
+</dt>
+<dd>
+<em>appearance('Typ=Wert1,Wert2 ; Typ=...')</em>
+</dd>
+<dd>
+<p>Die Methode <strong>appearance</strong> wird implizit beim Gebrauch der Geometriemethoden
+aufgerufen. Sie realisiert die obige Synatx. Normalerweise wird sie nicht
+anderweitig benötigt.</p>
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="interpolatoren">Interpolatoren</a></h2>
+<p>Für die Erstellung von Animationen sind Interpolatoren unentbehrlich. Sie stehen
+für fast alle Datentypen zur Verfügung. Grundsätzlich besitzen alle
+Interpolatoren als Parameter einen Namen, eine Liste von Stützstellen und eine
+dazugehörige Liste mit Funktionswerten. Die Stützstellen, auch <code>keys</code> genannt,
+liegen immer im Bereich von 0.0 bis 1.0. Zu jedem <code>key</code> muß es einen Funktionswert
+vom Typ des Interpolators geben. Zwischen den <code>keys</code> wird linear interpoliert. Um
+eine bessere Interpolation als die stückweise lineare Interpolation zu erzielen,
+muß man sich einen eigenen Interpolator schreiben. Für ganze Zahlen gibt es
+keinen Interpolator.</p>
 <dl>
 <dt><strong><a name="item_interpolator">interpolator</a></strong><br />
 </dt>
@@ -926,12 +1539,42 @@ be decoded in an ascii character.</p>
  type      SFEnum   &quot;&quot; # Color, Coordinate, Normal, Orientation,
                        # Position und Scalar
  keys      MFFloat  [] # [0,1]
- keyValues MF...    [] # Type of Interpolator</pre>
+ keyValues MF...    [] # Typ des Interpolators</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>interpolator</strong> erzeugt einen benannten Interpolator, der linear
+zwischen den Funktionswerten des im Parameters <em>type</em> spezifizierten Datentyps
+interpoliert. Als Typen stehen zur Auswahl: Color, Coordinate, Normal,
+Orientation, Position und Scalar. Der Parameter <em>name</em> enthält den Bezeichner,
+über den der Interpolator beispielsweise in einer <a href="#item_route"><code>route</code></a>-Methode referenziert
+werden kann.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml-&gt;interpolator('RotBlau', 'Color', [0,1], ['1 0 0', '0 0 1']);</pre>
 </dd>
 <p></p></dl>
 <p>
 </p>
-<h2><a name="sensors">Sensors</a></h2>
+<h2><a name="sensoren">Sensoren</a></h2>
+<p>Sensoren ermöglichen eine direkte Wechselwirkung des Betrachters mit Objekten
+einer Szene. Die Sensoren in VRML 2.0 gliedern sich in zwei Kategorien:
+Geometriesensoren und Zeitsensoren. Ein Teil der Geometriesensoren - Cylinder-,
+Plane- und SphereSensor - liefern Ereignisse, wenn die mit ihnen verbundenen
+Objekte aktiviert und bewegt werden. Andere Sensoren, wie der Proximity- oder
+der Visibility-Sensor, reagieren schon beim Betreten oder Sichtbarwerden eines
+Bereiches. Die erzeugten Ereignisse können von Interpolator- oder Script-Knoten
+verarbeitet werden, die wiederum Ereignisse für andere Knoten generieren. Die
+Ereignisse einiger Sensoren können auch direkt an einen Transform-Knoten
+weitergeleitet werden.</p>
+<p>Für den Ablauf von Animationen ist der TimeSensor von besonderer Bedeutung. Er
+kann in kontinuierlichen Abständen Ereignisse liefern, die an Skripte oder
+Interpolatoren gesendet werden.</p>
+<p>Alle Sensoren benötigen grundsätzlich einen Namen für die referenzierende
+<a href="#item_route"><code>route</code></a>-Anweisung. Dieser wird immer im Parameter <em>name</em> spezifiziert.</p>
 <dl>
 <dt><strong><a name="item_cylindersensor">cylindersensor</a></strong><br />
 </dt>
@@ -948,6 +1591,10 @@ be decoded in an ascii character.</p>
  autoOffset SFBool   1
  enabled    SFBool   1</pre>
 </dd>
+<dd>
+<p>Der Cylinder-Sensor generiert Ereignisse, sobald der Benutzer einen virtuellen
+Zylinder anklickt.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_planesensor">planesensor</a></strong><br />
 </dt>
@@ -963,6 +1610,10 @@ be decoded in an ascii character.</p>
  autoOffset   SFBool  1
  enabled      SFBool  1</pre>
 </dd>
+<dd>
+<p>Der Plane-Sensor generiert Ereignisse, sobald der Benutzer eine virtuelle Ebene
+anklickt.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_proximitysensor">proximitysensor</a></strong><br />
 </dt>
@@ -976,6 +1627,11 @@ be decoded in an ascii character.</p>
  center  SFVec3f  '0 0 0'
  enabled SFBool   1</pre>
 </dd>
+<dd>
+<p>Der Proximity-Sensor generiert Ereignisse, sobald sich der Benutzer innerhalb
+eines bestimmten (quaderförmigen) Bereichs um ein bestimmtes Objekt bzw. einen
+bestimmten Koordinatenpunkt bewegt.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_spheresensor">spheresensor</a></strong><br />
 </dt>
@@ -988,6 +1644,10 @@ be decoded in an ascii character.</p>
  offset     SFRotation '0 1 0 0'
  autoOffset SFBool     1
  enabled    SFBool     1</pre>
+</dd>
+<dd>
+<p>Der Sphere-Sensor generiert Ereignisse, sobald der Benutzer eine virtuelle Kugel
+anklickt.</p>
 </dd>
 <p></p>
 <dt><strong><a name="item_timesensor">timesensor</a></strong><br />
@@ -1004,6 +1664,10 @@ be decoded in an ascii character.</p>
  stopTime      SFFloat  0
  enabled       SFBool   1</pre>
 </dd>
+<dd>
+<p>Der Time-Sensor generiert Ereignisse, die Zeitwerte enthalten. Diese
+Zeitwerte können beispielsweise Animationen steuern.</p>
+</dd>
 <p></p>
 <dt><strong><a name="item_touchsensor">touchsensor</a></strong><br />
 </dt>
@@ -1016,16 +1680,24 @@ be decoded in an ascii character.</p>
     enabled SFBool   1</pre>
 </dd>
 <dd>
-<p>Example:</p>
+<p>Der Touch-Sensor generiert Ereignisse, sobald sich der Benutzer mit dem
+Mauszeiger über ein bestimmtes Objektteil bewegt und dieses anklickt.</p>
+</dd>
+<dd>
+<p>Das folgende Beispiel stellt eine weiße Kugel dar, die bei Aktivierung mit rotem
+Licht bestrahlt wird.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
 </dd>
 <dd>
 <pre>
     $vrml
     -&gt;begin
-        -&gt;touchsensor('Switch')
+        -&gt;touchsensor('Schalter')
         -&gt;sphere(1,'white')
-        -&gt;def('Light')-&gt;directionallight(&quot;&quot;, 1, 0, 'red', 0)
-        -&gt;route('Switch.isActive', 'Light.on')
+        -&gt;def('Licht')-&gt;directionallight(&quot;&quot;, 1, 0, 'red', 0)
+        -&gt;route('Schalter.isActive', 'Licht.on')
     -&gt;end
     -&gt;print-&gt;save;</pre>
 </dd>
@@ -1042,15 +1714,114 @@ be decoded in an ascii character.</p>
     center  SFVec3f  '0 0 0'
     enabled SFBool   1</pre>
 </dd>
+<dd>
+<p>Der Visibility-Sensor generiert Ereignisse, sobald ein Teil eines
+quaderförmigen Bereiches in das Blickfeld des Betrachters eintritt oder aus
+dem Blickfeld verschwindet.</p>
+</dd>
+<p></p></dl>
+<p>
+</p>
+<h2><a name="sonstiges">Sonstiges</a></h2>
+<dl>
+<dt><strong><a name="item_route">route</a></strong><br />
+</dt>
+<dd>
+<em>route('from','to')</em>
+</dd>
+<dd>
+<pre>
+ FROM.feldname SFString &quot;&quot;
+ TO.feldname   SFString &quot;&quot;</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>route</strong> stellt die Verbindung zwischen einem Knoten, der Ereignisse
+sendet, und einem Knoten, der dieses Ereignis empfängt her. Das Verständnis der
+Beziehungen zwischen den Sende- und Empfangsfeldern der jeweiligen Knoten ist
+Voraussetzung für das erfolgreiche Weiterleiten (routen) von Ereignissen. Der
+Parameter <em>FROM.feldname</em> spezifiziert das Feld eines benannten Knotens, von
+dem das Ereignis gesendet wird. Der Parameter <em>TO.feldname</em> spezifiziert das
+Feld eines benannten Knotens, welches das Ereignis erhalten soll. Als Werte
+dieser Parameter können nur mit def benannte Objekte verwendet werden, bei denen
+die Datentypen übereinstimmen. Ein Beispiel für die Weiterleitung von
+Ereignissen ist im Abschnitt Sensoren zu finden.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_def">def</a></strong><br />
+</dt>
+<dd>
+<em>def('name')</em>
+</dd>
+<dd>
+<pre>
+ name SFString &quot;&quot;</pre>
+</dd>
+<dd>
+<p>Die Benennung eines Knotens ist Grundvoraussetzung für die Wiederverwendung
+(Instanzierung) und das Weiterleiten von Ereignissen. Namen von Knoten,
+Feldern, Ereignissen und Prototypen dürfen nicht mit einer Ziffer beginnen
+und keines der folgenden Zeichen enthalten:</p>
+</dd>
+<dd>
+<pre>
+    Steuerzeichen (ASCII 0 bis 31)
+    Leerzeichen
+    einfache und doppelte Anführungszeichen
+    Kommentarzeichen #
+    Komma, Punkt und Semikolon
+    Plus- und Minus-Zeichen
+    Klammern
+    Backslash</pre>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml-&gt;def('Kugel')-&gt;sphere(1,'red')</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_use">use</a></strong><br />
+</dt>
+<dd>
+<em>use('name')</em>
+</dd>
+<dd>
+<pre>
+ name SFString &quot;&quot;</pre>
+</dd>
+<dd>
+<p>Die Methode <strong>use</strong> dient der Referenzierung bzw. Instanzierung eines mit der
+Methode def definierten Objekts. Als einzigen Parameter benötigt sie den
+Namen des Objekts.</p>
+</dd>
+<dd>
+<p>Beispiel:</p>
+</dd>
+<dd>
+<pre>
+    $vrml-&gt;use('Kugel')</pre>
+</dd>
 <p></p></dl>
 <p>
 </p>
 <hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
+<p>VRML::VRML1</p>
+<p>VRML::VRML1::Standard</p>
 <p>VRML::VRML2</p>
 <p>VRML::VRML2::Standard</p>
 <p>VRML::Base</p>
-<p><a href="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</a> for a description of <em>VRML-modules</em> and how to obtain it.</p>
+<p>VRML::Color</p>
+<p>Siehe auch <a href="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</a> für weitere
+Informationen zu den <em>VRML-Modulen</em> und wie man sie einsetzen kann.</p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>Nicht alle Methoden wurden ausgiebig getestet. Manche Programmierer würden
+sicher die Reihenfolge der Parameter anders wählen. Ich arbeite daran, in
+einer der nächsten Versionen benannte Parameter einzusetzen.</p>
 <p>
 </p>
 <hr />
