@@ -1,32 +1,31 @@
 package VRML::Base;
 
 ############################## Copyright ##############################
-#								      #
-# This program is Copyright 1996,1998 by Hartmut Palm.		      #
-# This program is free software; you can redistribute it and/or	      #
-# modify it under the terms of the GNU General Public License	      #
+#                                                                     #
+# This program is Copyright 1996,1998 by Hartmut Palm.                #
+# This program is free software; you can redistribute it and/or       #
+# modify it under the terms of the GNU General Public License         #
 # as published by the Free Software Foundation; either version 2      #
-# of the License, or (at your option) any later version.	      #
-# 								      #
+# of the License, or (at your option) any later version.              #
+#                                                                     #
 # This program is distributed in the hope that it will be useful,     #
 # but WITHOUT ANY WARRANTY; without even the implied warranty of      #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
-# GNU General Public License for more details.			      #
-# 								      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       #
+# GNU General Public License for more details.                        #
+#                                                                     #
 # If you do not have a copy of the GNU General Public License write   #
 # to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
-# MA 02139, USA.						      #
-#								      #
+# MA 02139, USA.                                                      #
+#                                                                     #
 #######################################################################
 
 require 5.000;
 use strict;
-use vars qw($VERSION);
+use vars qw($VERSION $PI $PI_2);
 
-$VERSION = "1.03";
-$::pi = 3.1415926;
-$::pi_2 = $::pi/2;
-$::pi_2 += 0; # prevent warnings
+$VERSION = "1.07";
+$PI = 3.1415926;
+$PI_2 = $PI/2;
 
 sub new {
     my $class = shift;
@@ -59,7 +58,7 @@ sub browser {
     my $self = shift;
     return unless $_[0]; # @_ wouldn't work on PC
     ($self->{'BROWSER'}) = join("+",@_);
-    $self->VRML_put("# Set Browser to: '$self->{'browser'}'\n")
+    $self->_put("# Set Browser to: '$self->{'browser'}'\n")
       if $self->{'DEBUG'};
     return $self;
 }
@@ -69,28 +68,28 @@ sub browser {
 #
 #####################################################################
 
-sub VRML_init {
+sub _init {
     my $self = shift;
     my $vrml = shift;
     $self->{'VRML'} = [$vrml];
     return $self;
 }
 
-sub VRML_add {
+sub _add {
     my $self = shift;
     my $vrml = shift;
     ${$self->{'VRML'}}[$#{$self->{'VRML'}}] .= $vrml;
     return $self;
 }
 
-sub VRML_put {
+sub _put {
     my $self = shift;
     my $vrml = shift;
     push @{$self->{'VRML'}}, $vrml;
     return $self;
 }
 
-sub VRML_row {
+sub _row {
     my $self = shift;
     my ($row) = @_;
     my $vrml = $self->{'TAB'}.$row;
@@ -98,7 +97,7 @@ sub VRML_row {
     return $self;
 }
 
-sub VRML_swap {
+sub _swap {
     my $self = shift;
     my $element1 = pop @{$self->{'VRML'}};
     my $element2 = pop @{$self->{'VRML'}};
@@ -107,12 +106,12 @@ sub VRML_swap {
     return $self;
 }
 
-sub VRML_pos {
+sub _pos {
     my $self = shift;
     return $#{$self->{'VRML'}};
 }
 
-sub VRML_trim {
+sub _trim {
     my $self = shift;
     my ($index) = @_;
     $index = $#{$self->{'VRML'}} unless defined $index;
@@ -124,7 +123,7 @@ sub VRML_trim {
 sub debug {
     my $self = shift;
     $self->{'DEBUG'} = shift;
-    $self->VRML_put("# Set Debug Level to: $self->{'DEBUG'}\n");
+    $self->_put("# Set Debug Level to $self->{'DEBUG'}\n");
     return $self;
 }
 
@@ -133,24 +132,32 @@ sub display_vars {
     my @keys = @_ ? @_ : sort keys %$self;
     my $key;
     foreach $key (@keys) {
-	unless (defined $self->{$key}) {
-	    print "# $key => undef\n";
-	    next;
-	}
-	print "# $key => $self->{$key}";
-	print " [".(join(', ',@{$self->{$key}}))."]" if defined
-	  ref($self->{$key}) && ref($self->{$key}) eq "ARRAY" &&
-	  $key ne "VRML";
-	print " [".(join(', ',sort keys %{$self->{$key}}))."]"
-	  if defined ref($self->{$key}) && ref($self->{$key}) eq "HASH";
-	print "\n";
+        unless (defined $self->{$key}) {
+            print "# $key => undef\n";
+            next;
+        }
+        print "# $key => $self->{$key}";
+        print " [".(join(', ',@{$self->{$key}}))."]" if defined
+          ref($self->{$key}) && ref($self->{$key}) eq "ARRAY" &&
+          $key ne "VRML";
+        print " [".(join(', ',sort keys %{$self->{$key}}))."]"
+          if defined ref($self->{$key}) && ref($self->{$key}) eq "HASH";
+        print "\n";
     }
     return $self;
 }
 
+sub string_to_array  {
+    my $self = shift;
+    my $pt = shift;
+    return @$pt if ref $pt eq 'ARRAY';
+    # remove leading/trailing spaces!
+    my $tmp = $pt; $tmp =~ s/^\s+//; $tmp =~ s/\s+$//;
+    return split(/\s+/,$tmp);
+}
 
 #--------------------------------------------------------------------
-#	Insert Comments
+#       Insert Comments
 #--------------------------------------------------------------------
 sub comment {
     my $self = shift;
@@ -161,28 +168,48 @@ sub comment {
 }
 
 #--------------------------------------------------------------------
-#	In-/Output VRML
+#       In-/Output VRML
 #--------------------------------------------------------------------
 sub insert {
     my $self = shift;
     my $string = shift;
+    $string =~ s/^\s+|\s+$//g;
+    $string = $self->{'TAB'}.$string;
+    $string =~ s/\n/\n$self->{'TAB'}/g;
     push @{$self->{'VRML'}}, $string."\n";
     return $self;
 }
 
 sub insert__DATA__ {
     my $self = shift;
+    $self->{'DATApos'} = tell(main::DATA) unless defined $self->{'DATApos'};
+    print "     self->{'DATApos'}=$self->{'DATApos'}\n" if $self->{'DEBUG'};
     push @{$self->{'VRML'}}, <main::DATA>,"\n";
+    seek(main::DATA,$self->{'DATApos'},0);
     return $self;
 }
 
 sub include {
     my $self = shift;
-    my $filename = shift;
-    return $self if !defined $filename || $filename eq "";
-    open(INCLUDE, "<$filename") || die;
-    push @{$self->{'VRML'}}, <INCLUDE>;
-    close(INCLUDE);
+    my @filename = @_;
+    return $self if !defined $filename[0] || $filename[0] eq "";
+    foreach (@filename) {
+        open(INCLUDE, "<$_") || die "Can't include \"$_\"\n$!\n";
+        push @{$self->{'VRML'}}, <INCLUDE>;
+        push @{$self->{'VRML'}}, "\n";
+        close(INCLUDE);
+    }
+    return $self;
+}
+
+sub format {
+    my $self = shift;
+    my $format = shift;
+    if (defined $format && $format eq "none") {
+        map { s/^[\t ]+//; s/\n[\t ]+/\n/g; s/\t+/ /g; s/ +/ /g; } @{$self->{'VRML'}};
+    } else {
+        map { s/    / /g; s/\t/  /g; } @{$self->{'VRML'}};
+    }
     return $self;
 }
 
@@ -194,12 +221,12 @@ sub print {
     print "Content-type: $self->{'Content-type'}\n\n"
       if $self->{'Content-type'} && $mime;
     if ($pipe) {
-	open(PIPE, "|$pipe") || die; select PIPE; $|=1;
-	for (@{$self->{'VRML'}}) { print; }
-	select STDOUT;
-	close(PIPE);
+        open(PIPE, "|$pipe") || die; select PIPE; $|=1;
+        for (@{$self->{'VRML'}}) { print; }
+        select STDOUT;
+        close(PIPE);
     } else {
-	for (@{$self->{'VRML'}}) { print; }
+        for (@{$self->{'VRML'}}) { print; }
     }
     return $self;
 }
@@ -209,15 +236,15 @@ sub save {
     my $filename = shift;
     my $pipe = shift;
     unless (defined $filename) {
-	($filename) = $0 =~ m/(.*)\./;
-	$filename .= ".wrl";
+        ($filename) = $0 =~ m/(.*)\./;
+        $filename .= ".wrl";
     }
     open(VRMLFILE, ">$filename") ||
       die "Can't create file: \"$filename\" ($!)\n";
     if ($pipe) {
-	print VRMLFILE "Can't pipe to \"$pipe\"\n";
-	close(VRMLFILE);
-	open(VRMLFILE, "| $pipe > $filename") || die;
+        print VRMLFILE "Can't pipe to \"$pipe\"\n";
+        close(VRMLFILE);
+        open(VRMLFILE, "| $pipe > $filename") || die;
     }
     for (@{$self->{'VRML'}}) { print VRMLFILE; }
     close(VRMLFILE);
@@ -240,23 +267,30 @@ sub escape {
 
 sub ascii {
     my $self = shift;
-    local $_ = shift;
-    s/[\204\344\365]/ae/g;
-    s/[\224\366]/oe/g;
-    s/[\201\374]/ue/g;
-    s/[\216\304]/Ae/g;
-    s/[\231\305\326]/Oe/g;
-    s/[\263\334]/Ue/g;
-    s/[\257\337]/sz/g;
-    s/[\000-\010\013-\037\177-\377]/_/g;
-    return $_;
+    local $_ = undef;
+    foreach (@_) {
+        s/[\204\344\365]/ae/g;
+        s/[\224\366]/oe/g;
+        s/[\201\374]/ue/g;
+        s/[\216\304]/Ae/g;
+        s/[\231\305\326]/Oe/g;
+        s/[\263\334]/Ue/g;
+        s/[\257\337]/sz/g;
+        s/[\000-\010\013-\037\177-\377]/_/g;
+    }
+    return (@_) if wantarray;
+    return $_[0];
 }
 
 sub utf8 {
     my $self = shift;
-    local $_ = shift;
-    s/[\000-\010\013-\037]/_/g;
-    return $_;
+    local $_ = undef;
+    #foreach (@_) {
+    #    s/[\201\374]/\x00\x75\x03\x08/g;
+    #    s/(.)/\x00$1/g;
+    #}
+    return (@_) if wantarray;
+    return $_[0];
 }
 
 sub xyz {

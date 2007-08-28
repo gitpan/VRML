@@ -1,49 +1,52 @@
 package VRML;
 
 ############################## Copyright ##############################
-#								      #
-# This program is Copyright 1996,1998 by Hartmut Palm.		      #
-# This program is free software; you can redistribute it and/or	      #
-# modify it under the terms of the GNU General Public License	      #
+#                                                                     #
+# This program is Copyright 1996,1998 by Hartmut Palm.                #
+# This program is free software; you can redistribute it and/or       #
+# modify it under the terms of the GNU General Public License         #
 # as published by the Free Software Foundation; either version 2      #
-# of the License, or (at your option) any later version.	      #
-# 								      #
+# of the License, or (at your option) any later version.              #
+#                                                                     #
 # This program is distributed in the hope that it will be useful,     #
 # but WITHOUT ANY WARRANTY; without even the implied warranty of      #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	      #
-# GNU General Public License for more details.			      #
-# 								      #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       #
+# GNU General Public License for more details.                        #
+#                                                                     #
 # If you do not have a copy of the GNU General Public License write   #
 # to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,     #
-# MA 02139, USA.						      #
-#								      #
+# MA 02139, USA.                                                      #
+#                                                                     #
 #######################################################################
 
 require 5.000;
 use strict;
 use vars qw(@ISA $VERSION);
-$VERSION="1.04";
+$VERSION="1.10";
 
 sub new {
     my $class = shift;
     my ($version) = @_ ? @_ : 0;
     my $self;
     if ( $version == 2 || $version == 97 ) {
-	require VRML::VRML2;
-	@ISA = qw(VRML::VRML2);
-	$self = new VRML::VRML2;
+        require VRML::VRML2;
+        @ISA = qw(VRML::VRML2);
+        $self = new VRML::VRML2;
     } elsif ( $version == 1 ) {
-	require VRML::VRML1;
-	@ISA = qw(VRML::VRML1);
-	$self = new VRML::VRML1;
+        require VRML::VRML1;
+        @ISA = qw(VRML::VRML1);
+        $self = new VRML::VRML1;
     } else {
-	require VRML::VRML1;
-	@ISA = qw(VRML::VRML1);
-	$self = new VRML::VRML1;
+        require VRML::VRML1;
+        @ISA = qw(VRML::VRML1);
+        $self = new VRML::VRML1;
     }
     return bless $self, $class;
 }
 
+sub DESTROY {
+    my $self = shift;
+}
 1;
 
 __END__
@@ -166,7 +169,7 @@ Example:
     new VRML
     ->begin
       ->at('0 0.1 -0.3')
-	->sphere(1,'red')
+        ->sphere(1,'red')
       ->back
     ->end
     ->print;
@@ -274,8 +277,8 @@ Example:
 
     $vrml
     ->lod_begin('30')
-      ->text('gut lesbar')
-      ->group_begin->group_end # leere Gruppe
+      ->text('good readable')
+      ->group_begin->group_end # empty Group
     ->lod_end
 
 =item lod_end
@@ -295,7 +298,7 @@ close C<switch_begin>.
 
 =item transform_begin
 
-F<transform_begin('type=value','type=value', ...)
+F<transform_begin('type=value','type=value', ...)>
 
 I<Where type can be:>
 
@@ -392,7 +395,7 @@ given Url will assigned to all parts of the background cube.
 
 Example:
 
-    $vrml->backgroundimage('http://www.yourdomain.de/bg/sterne.gif');
+    $vrml->backgroundimage('http://www.yourdomain.de/bg/stars.gif');
 
 =item title
 
@@ -402,7 +405,7 @@ F<title('string')>
 
 Example:
 
-    $vrml->title('Meine virtuelle Welt');
+    $vrml->title('My virtual world');
 
 =item info
 
@@ -412,7 +415,7 @@ F<info('string')>
 
 Example:
 
-    $vrml->info('letzte Änderung: 8.05.1997');
+    $vrml->info('last update: 8.05.1997');
 
 =item worldinfo
 
@@ -551,8 +554,8 @@ F<sphere(radius, 'appearance')>
 
 =item elevationgrid
 
-F<elevationgrid(height, color, xDimension, zDimension, xSpacing, zSpacing,
-creaseAngle, colorPerVertex, solid)>
+F<elevationgrid(height, color, xDimension, zDimension, xSpacing,
+zSpacing, creaseAngle, colorPerVertex, solid)>
 
  height          MFFloat  []
  color           MFColor  [] # resp. material and color
@@ -561,7 +564,7 @@ creaseAngle, colorPerVertex, solid)>
  xSpacing        SFFloat  1.0
  zSpacing        SFFloat  1.0
  creaseAngle     SFFloat  0
- colorPerVertex	 SFBool   1
+ colorPerVertex  SFBool   1
  solid           SFBool   0
 
 If I<color> is not a reference of an ARRAY it would be assumed that I<color>
@@ -576,7 +579,7 @@ Example:
     $vrml->navigationinfo(["EXAMINE","FLY"],200)
          ->viewpoint("Top","1900 6000 1900","TOP")
          ->elevationgrid(\@height, \@color, undef, undef, 250, undef, 0)
-	 ->print;
+         ->print;
 
 =item text
 
@@ -612,14 +615,14 @@ Note: one character mnemonic are colors
       two characters mnemonic are values in range of [0..1]
       more characters are strings like file names or labels
 
-	d = diffuseColor
-	e = emissiveColor
-	s = specularColor
-	ai = ambientIntensity
-	sh = shininess
-	tr = transparency
-	tex = texture filename,wrapS,wrapT
-	name = names the MovieTexture node (for a later route)
+        d = diffuseColor
+        e = emissiveColor
+        s = specularColor
+        ai = ambientIntensity
+        sh = shininess
+        tr = transparency
+        tex = texture filename,wrapS,wrapT
+        name = names the MovieTexture node (for a later route)
 
 The color values can be strings (X11 color names) or RGB-triples. It is
 possible to reduce the intensity of colors (names) by appending a two digit
@@ -628,12 +631,12 @@ a percent symbol (%). Note: Do not use a percent symbol in URL's. It would
 be decoded in an ascii character.
 
 Sample (valid color values):
-	'1 1 0' # VRML standard
-	'FFFF00' or 'ffff00', '255 255 0', 'yellow'
+        '1 1 0' # VRML standard
+        'FFFF00' or 'ffff00', '255 255 0', 'yellow'
 
 or reduced to 50%
-	'.5 .5 .5' # VRML standard
-	'808080', '128 128 0', 'yellow%50' or 'yellow_50'
+        '.5 .5 .5' # VRML standard
+        '808080', '128 128 0', 'yellow%50' or 'yellow_50'
 
 
 For a list of I<X11 color names> take a look at VRML::Color
@@ -651,7 +654,7 @@ F<directionallight('direction', intensity, ambientIntensity, 'color', on)>
  direction         SFVec3f  '0 0 -1'
  intensity         SFFloat  1
  ambientIntensity  SFFloat  1
- color             SFColor  '1 1 1' #weiß
+ color             SFColor  '1 1 1' #white
  on                SFBool   1
 
 Example:
@@ -785,10 +788,10 @@ Example:
 
     $vrml
     ->begin
-	->touchsensor('Switch')
-	->sphere(1,'white')
-	->def('Light')->directionallight("", 1, 0, 'red', 0)
-	->route('Switch.isActive', 'Light.on')
+        ->touchsensor('Switch')
+        ->sphere(1,'white')
+        ->def('Light')->directionallight("", 1, 0, 'red', 0)
+        ->route('Switch.isActive', 'Light.on')
     ->end
     ->print->save;
 
@@ -805,7 +808,7 @@ F<visibitysensor('name',size,center,enabled)>
 
 =head1 SEE ALSO
 
-VRML
+VRML::VRML2
 
 VRML::VRML2::Standard
 

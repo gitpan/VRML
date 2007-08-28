@@ -1,132 +1,75 @@
-    <HTML> 
-	<HEAD> 
-	    <TITLE>VRML::VRML2 - VRML methods with the VRML 2.0/97 standard
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VRML::VRML2 - VRML methods with the VRML 2.0/97 standard</title>
+<link rev="made" href="mailto:" />
+</head>
 
-</TITLE> 
-	</HEAD>
+<body style="background-color: white">
 
-	<BODY>
-
+<p><a name="__index__"></a></p>
 <!-- INDEX BEGIN -->
 
-<UL>
+<ul>
 
-	<LI><A HREF="#NAME">NAME</A>
-	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
-	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
-	<LI><A HREF="#SEE_ALSO">SEE ALSO</A>
-	<LI><A HREF="#AUTHOR">AUTHOR</A>
-</UL>
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
 <!-- INDEX END -->
 
-<HR>
-<P>
-<H1><A NAME="NAME">NAME
-
-</A></H1>
-VRML::VRML2 - VRML methods with the VRML 2.0/97 standard
-
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="SYNOPSIS">SYNOPSIS
-
-</A></H1>
-<PRE>  use VRML::VRML2;
-</PRE>
-
-<P>
-
-<PRE>  $vrml = new VRML::VRML2;
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>VRML::VRML2 - VRML methods with the VRML 2.0/97 standard</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  use VRML::VRML2;</pre>
+<pre>
+  $vrml = new VRML::VRML2;
   $vrml-&gt;browser('Cosmo Player 2.0','Netscape');
   $vrml-&gt;at('-15 0 20');
   $vrml-&gt;box('5 3 1','yellow');
   $vrml-&gt;back;
   $vrml-&gt;print;
-  $vrml-&gt;save;
-</PRE>
-
-<P>
-
-<PRE>  OR with the same result
-</PRE>
-
-<P>
-
-<PRE>  use VRML::VRML2;
-</PRE>
-
-<P>
-
-<PRE>  VRML::VRML2-&gt;new
+  $vrml-&gt;save;</pre>
+<pre>
+  OR with the same result</pre>
+<pre>
+  use VRML::VRML2;</pre>
+<pre>
+  VRML::VRML2-&gt;new
   -&gt;browser('Cosmo Player 2.0','Netscape')
   -&gt;at('-15 0 20')-&gt;box('5 3 1','yellow')-&gt;back
-  -&gt;print-&gt;save;
-</PRE>
+  -&gt;print-&gt;save;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The methods are identically implemented in VRML::VRML1 and VRML::VRML2. They
+described in modul VRML.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>VRML</p>
+<p>VRML::Base</p>
+<p>VRML::Color</p>
+<p><a href="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</a> for a description of
+<em>VRML-modules</em> and how to obtain it.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Hartmut Palm <em>&lt;<a href="mailto:palm@gfz-potsdam.de">palm@gfz-potsdam.de</a>&gt;</em></p>
+<p>Homepage <a href="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</a></p>
 
-<P>
+</body>
 
-<P>
-<HR>
-<H1><A NAME="DESCRIPTION">DESCRIPTION
-
-</A></H1>
-The methods are identically implemented in VRML::VRML1 and VRML::VRML2.
-They described in modul VRML.
-
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="SEE_ALSO">SEE ALSO
-
-</A></H1>
-VRML
-
-
-<P>
-
-VRML::Base
-
-
-<P>
-
-VRML::Color
-
-
-<P>
-
-<A
-HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
-for a description of
-<EM>VRML-modules</EM> and how to obtain it.
-
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="AUTHOR">AUTHOR
-
-</A></H1>
-Hartmut Palm <EM>&lt;palm@gfz-potsdam.de&gt;</EM>
-
-
-
-
-<P>
-
-Homepage <A
-HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
-
-
-
-<P>
-
-</DL>
-    </BODY>
-
-    </HTML>
+</html>

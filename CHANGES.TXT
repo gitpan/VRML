@@ -1,3 +1,20 @@
+1.09
+* add method "pointset" to VRML::VRML2
+* bug in method line fixed
+
+1.08
+* add method "torus" to VRML::VRML2
+
+1.07
+* add "language" to method text
+
+1.06 
+* remove a bug in VRML::VRML2::Standard::IndexedFaceSet (Thanx Bridget Kenyon)
+
+1.05
+* add "textrans" to method "appearance" in VRML::VRML2
+* ROUTEs now moved at the end of nodes
+
 1.04
 * add appearance to method "elevationgrid" in VRML::VRML2
 

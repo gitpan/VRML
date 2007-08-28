@@ -1,93 +1,58 @@
-    <HTML> 
-	<HEAD> 
-	    <TITLE>Color.pm - color functions and X11 color names
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Color.pm - color functions and X11 color names</title>
+<link rev="made" href="mailto:" />
+</head>
 
-</TITLE> 
-	</HEAD>
+<body style="background-color: white">
 
-	<BODY>
-
+<p><a name="__index__"></a></p>
 <!-- INDEX BEGIN -->
 
-<UL>
+<ul>
 
-	<LI><A HREF="#NAME">NAME</A>
-	<LI><A HREF="#SYNOPSIS">SYNOPSIS</A>
-	<LI><A HREF="#DESCRIPTION">DESCRIPTION</A>
-	<LI><A HREF="#BUGS">BUGS</A>
-	<LI><A HREF="#SEE_ALSO">SEE ALSO</A>
-	<LI><A HREF="#AUTHOR">AUTHOR</A>
-</UL>
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
 <!-- INDEX END -->
 
-<HR>
-<P>
-<H1><A NAME="NAME">NAME
-
-</A></H1>
-Color.pm - color functions and X11 color names
-
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="SYNOPSIS">SYNOPSIS
-
-</A></H1>
-<PRE>    use VRML::Color;
-</PRE>
-
-<P>
-
-<PRE>    my $color = rgb_color('red');
-</PRE>
-
-<P>
-
-<PRE>      or with the same result
-</PRE>
-
-<P>
-
-<PRE>    my $color = rgb_color('FF0000');
-</PRE>
-
-<P>
-
-<PRE>      or with the same result
-</PRE>
-
-<P>
-
-<PRE>    my $color = rgb_color('255 0 0');
-</PRE>
-
-<P>
-
-<PRE>      naturally works
-</PRE>
-
-<P>
-
-<PRE>    my $color = rgb_color('1 0 0');
-</PRE>
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="DESCRIPTION">DESCRIPTION
-
-</A></H1>
-<EM>X11 colornames are:</EM>
-
-
-
-
-<P>
-
-<PRE>        aliceblue
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Color.pm - color functions and X11 color names</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+    use VRML::Color;</pre>
+<pre>
+    my $color = rgb_color('red');</pre>
+<pre>
+      or with the same result</pre>
+<pre>
+    my $color = rgb_color('FF0000');</pre>
+<pre>
+      or with the same result</pre>
+<pre>
+    my $color = rgb_color('255 0 0');</pre>
+<pre>
+      naturally works</pre>
+<pre>
+    my $color = rgb_color('1 0 0');</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><em>X11 colornames are:</em></p>
+<pre>
+        aliceblue
         antiquewhite
         aqua
         aquamarine
@@ -226,66 +191,30 @@ Color.pm - color functions and X11 color names
         white
         whitesmoke
         yellow
-        yellowgreen
-</PRE>
-
-<P>
-
-You can also use
-
-
-<P>
-
-<PRE>        red_40 = '0.4 0 0'
+        yellowgreen</pre>
+<p>You can also use</p>
+<pre>
+        red_40 = '0.4 0 0'
         yellow%30 = '0.3 0.3 0'
-        gray%30 = '0.7 0.7 0.7' !!!
-</PRE>
+        gray%30 = '0.7 0.7 0.7' !!!</pre>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>X11-green is 0x008000. In VRML it should be 0x00FF00.
+This module will set 'green' to '0 1 0' instead of '0 0.5 0'.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</a> for a description of <em>VRML-modules</em> and how to obtain it.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Hartmut Palm <em>&lt;<a href="mailto:palm@gfz-potsdam.de">palm@gfz-potsdam.de</a>&gt;</em></p>
+<p>Homepage <a href="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</a></p>
 
-<P>
+</body>
 
-<P>
-<HR>
-<H1><A NAME="BUGS">BUGS
-
-</A></H1>
-X11-green is 0x008000. In VRML it should be 0x00FF00. This module will set
-'green' to '0 1 0' instead of '0 0.5 0'.
-
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="SEE_ALSO">SEE ALSO
-
-</A></H1>
-<A
-HREF="http://www.gfz-potsdam.de/~palm/vrmlperl/">http://www.gfz-potsdam.de/~palm/vrmlperl/</A>
-for a description of <EM>VRML-modules</EM> and how to obtain it.
-
-
-<P>
-
-<P>
-<HR>
-<H1><A NAME="AUTHOR">AUTHOR
-
-</A></H1>
-Hartmut Palm <EM>&lt;palm@gfz-potsdam.de&gt;</EM>
-
-
-
-
-<P>
-
-Homepage <A
-HREF="http://www.gfz-potsdam.de/~palm/">http://www.gfz-potsdam.de/~palm/</A>
-
-
-
-<P>
-
-</DL>
-    </BODY>
-
-    </HTML>
+</html>
